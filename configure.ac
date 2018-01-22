@@ -3,9 +3,10 @@
 
 AC_PREREQ([2.69])
 AC_INIT([thpronun],
-        [0.0.0],
+        m4_esyscmd([build-aux/git-version-gen]),
         [theppitak@gmail.com])
 AC_CONFIG_SRCDIR([sylstring/sylcomp.h])
+AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIRS([m4])
 
 AM_INIT_AUTOMAKE(dist-xz no-dist-gzip)
