@@ -27,6 +27,16 @@ Syl::Syl (char iConst1, char iConst2, char vowel, char eConst, char tone)
 {
 }
 
+inline
+Syl::Syl (const std::string& aSylStr)
+  : iConst1 (static_cast<EInitConst> (aSylStr.at (0))),
+    iConst2 (static_cast<ESecInitConst> (aSylStr.at (1))),
+    vowel (static_cast<EVowel> (aSylStr.at (2))),
+    eConst (static_cast<EEndConstClass> (aSylStr.at (3))),
+    tone (static_cast<ETone> (aSylStr.at (4)))
+{
+}
+
 ///////////////////////
 //  class SylString  //
 ///////////////////////

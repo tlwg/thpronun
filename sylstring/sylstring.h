@@ -15,6 +15,8 @@ public:
     Syl (EInitConst iConst1, ESecInitConst iConst2, EVowel vowel,
          EEndConstClass eConst, ETone tone);
     Syl (char iConst1, char iConst2, char vowel, char eConst, char tone);
+    // c-tor with string of length 5
+    Syl (const std::string& aSylStr);
 
     std::string toThai() const;
     std::string toRoman() const;
