@@ -27,13 +27,16 @@ private:
     ETone          tone;
 };
 
-class SylString : public std::list<Syl> {
+class SylString {
 public:
     SylString& operator= (const Syl& syl);
     SylString& operator+= (const Syl& syl);
 
     std::string toThai() const;
     std::string toRoman() const;
+
+private:
+    std::list<Syl> mSyls;
 };
 
 #include "sylstring.inl"

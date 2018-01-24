@@ -34,14 +34,14 @@ Syl::Syl (char iConst1, char iConst2, char vowel, char eConst, char tone)
 inline SylString&
 SylString::operator= (const Syl& syl)
 {
-    this->clear();
+    mSyls.clear();
     return *this += syl;
 }
 
 inline SylString&
 SylString::operator+= (const Syl& syl)
 {
-    this->push_back (syl);
+    mSyls.push_back (syl);
     return *this;
 }
 

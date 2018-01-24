@@ -642,9 +642,9 @@ SylString::toThai() const
 {
     string output;
 
-    auto i = this->begin();
+    auto i = mSyls.begin();
     output = i->toThai();
-    while (++i != this->end()) {
+    while (++i != mSyls.end()) {
         output += '-' + i->toThai();
     }
 
@@ -656,7 +656,7 @@ SylString::toRoman() const
 {
     string output;
 
-    for (auto const& s : *this) {
+    for (auto const& s : mSyls) {
         output += s.toRoman();
     }
 
