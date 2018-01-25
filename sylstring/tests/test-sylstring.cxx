@@ -259,9 +259,9 @@ TestRomanPronun()
     syls += Syl ("r_Tm2");
     syls += Syl ("r_Og0");
     syls += Syl ("r_Yn0");
-    romanized = syls.toRoman();
+    romanized = syls.toRoman (true);
     if (romanized !=
-        "maeolaedeklelenchoechoeklueadoenklueakkhuaklingruamrongrian")
+        "Maeolaedeklelenchoechoeklueadoenklueakkhuaklingruamrongrian")
     {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
         isSuccess = false;

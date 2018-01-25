@@ -5,6 +5,7 @@
 #include "sylstring.h"
 
 #include <cassert>
+#include <cctype>
 #include <utility>
 #include <unordered_set>
 #include <unordered_map>
@@ -737,12 +738,17 @@ SylString::toThai() const
 }
 
 string
-SylString::toRoman() const
+SylString::toRoman (bool isCapitalize) const
 {
     string output;
 
-    for (auto const& s : mSyls) {
-        output += s.toRoman();
+    auto i = mSyls.begin();
+    output = i->toRoman();
+    if (isCapitalize) {
+        output[0] = toupper (output[0]);
+    }
+    while (++i != mSyls.end()) {
+        output += i->toRoman();
     }
 
     return output;

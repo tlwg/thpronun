@@ -35,7 +35,7 @@ public:
     SylString& operator+= (const Syl& syl);
 
     std::string toThai() const;
-    std::string toRoman() const;
+    std::string toRoman (bool isCapitalize = false) const;
 
 private:
     std::list<Syl> mSyls;
