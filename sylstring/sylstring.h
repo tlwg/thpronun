@@ -11,6 +11,8 @@
 #include <string>
 
 class Syl {
+    friend class SylString;
+
 public:
     Syl (EInitConst iConst1, ESecInitConst iConst2, EVowel vowel,
          EEndConstClass eConst, ETone tone);

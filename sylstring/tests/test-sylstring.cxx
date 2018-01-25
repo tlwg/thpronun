@@ -267,6 +267,44 @@ TestRomanPronun()
         isSuccess = false;
     }
 
+    // Test hyphenation cases
+
+    // สง่า = sa-nga
+    syls = Syl ("s_a_1");
+    syls += Syl ("g_A_1");
+    romanized = syls.toRoman();
+    if (romanized != "sa-nga") {
+        cerr << "Wrong romanization '" << romanized << "'" << endl;
+        isSuccess = false;
+    }
+
+    // บังอร = bang-on
+    syls = Syl ("b_ag0");
+    syls += Syl ("?_Cn0");
+    romanized = syls.toRoman();
+    if (romanized != "bang-on") {
+        cerr << "Wrong romanization '" << romanized << "'" << endl;
+        isSuccess = false;
+    }
+
+    // สะอาด = sa-at
+    syls = Syl ("s_a_1");
+    syls += Syl ("?_At1");
+    romanized = syls.toRoman();
+    if (romanized != "sa-at") {
+        cerr << "Wrong romanization '" << romanized << "'" << endl;
+        isSuccess = false;
+    }
+
+    // สำอาง = sam-ang
+    syls = Syl ("s_am4");
+    syls += Syl ("?_Ag0");
+    romanized = syls.toRoman();
+    if (romanized != "sam-ang") {
+        cerr << "Wrong romanization '" << romanized << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 

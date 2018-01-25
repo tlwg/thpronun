@@ -747,7 +747,17 @@ SylString::toRoman (bool isCapitalize) const
     if (isCapitalize) {
         output[0] = toupper (output[0]);
     }
-    while (++i != mSyls.end()) {
+    for (auto prev = i++; i != mSyls.end(); prev = i++) {
+        // According to Royal Institute, insert hyphen for 3 cases:
+        //   1. prev->eConst == NONE and i->iConst1 == NGA
+        //   2. prev->eConst == KONG and i->iConst1 == A
+        //   3. i->iConst1 == A
+        if (EInitConst::A == i->iConst1
+            || (EEndConstClass::NONE == prev->eConst
+                && EInitConst::NGA == i->iConst1))
+        {
+            output += '-';
+        }
         output += i->toRoman();
     }
 
