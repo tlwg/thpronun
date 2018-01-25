@@ -627,10 +627,95 @@ Syl::toThai() const
 // Romanized Syllable Pronunciation Generation
 //
 
+#define IC EInitConst
+static const unordered_map<EInitConst, string>
+RomanInitConstTbl_ = {
+    { IC::KA,   "k"  },  // ก
+    { IC::KHA,  "kh" },  // ข ฃ ค ฅ ฆ
+    { IC::NGA,  "ng" },  // ง
+    { IC::JA,   "ch" },  // จ
+    { IC::CHA,  "ch" },  // ฉ ช ฌ
+    { IC::YA,   "y"  },  // ญ ย
+    { IC::DA,   "d"  },  // ฎ ด
+    { IC::TA,   "t"  },  // ฏ ต
+    { IC::THA,  "th" },  // ฐ ฑ ฒ ถ ท ธ
+    { IC::NA,   "n"  },  // ณ น
+    { IC::BA,   "b"  },  // บ
+    { IC::PA,   "p"  },  // ป
+    { IC::PHA,  "ph" },  // ผ พ ภ
+    { IC::FA,   "f"  },  // ฝ ฟ
+    { IC::MA,   "m"  },  // ม
+    { IC::RA,   "r"  },  // ร
+    { IC::LA,   "l"  },  // ล ฬ
+    { IC::WA,   "w"  },  // ว
+    { IC::SA,   "s"  },  // ซ ศ ษ ส
+    { IC::HA,   "h"  },  // ห ฮ
+    { IC::A,    ""   },  // อ
+};
+#undef IC
+
+#define SC ESecInitConst
+static const unordered_map<ESecInitConst, string>
+RomanSecInitConstTbl_ = {
+    { SC::NONE,  ""  },
+    { SC::RA,    "r" },  // ร ควบ
+    { SC::LA,    "l" },  // ล ควบ
+    { SC::WA,    "w" },  // ว ควบ
+};
+#undef SC
+
+#define VW EVowel
+static const unordered_map<EVowel, string>
+RomanVowelTbl_ = {
+    { VW::A,     "a"   },  // อะ
+    { VW::AA,    "a"   },  // อา
+    { VW::I,     "i"   },  // อิ
+    { VW::II,    "i"   },  // อี
+    { VW::UE,    "ue"  },  // อึ
+    { VW::UEE,   "ue"  },  // อือ
+    { VW::U,     "u"   },  // อุ
+    { VW::UU,    "u"   },  // อู
+    { VW::E,     "e"   },  // เอะ
+    { VW::EE,    "e"   },  // เอ
+    { VW::AE,    "ae"  },  // แอะ
+    { VW::AEE,   "ae"  },  // แอ
+    { VW::IA,    "ia"  },  // เอียะ
+    { VW::IAA,   "ia"  },  // เอีย
+    { VW::UEA,   "uea" },  // เอือะ
+    { VW::UEAA,  "uea" },  // เอือ
+    { VW::UA,    "ua"  },  // อัวะ
+    { VW::UAA,   "ua"  },  // อัว
+    { VW::O,     "o"   },  // โอะ
+    { VW::OO,    "o"   },  // โอ
+    { VW::AU,    "o"   },  // เอาะ
+    { VW::AUU,   "o"   },  // ออ
+    { VW::OE,    "oe"  },  // เออะ
+    { VW::OEE,   "oe"  },  // เออ
+};
+#undef VW
+
+#define EC EEndConstClass
+static const unordered_map<EEndConstClass, string>
+RomanEndConstTbl_ = {
+    { EC::NONE,  ""   },  // แม่ ก กา
+    { EC::KOK,   "k"  },  // แม่กก
+    { EC::KOT,   "t"  },  // แม่กด
+    { EC::KOP,   "p"  },  // แม่กบ
+    { EC::KONG,  "ng" },  // แม่กง
+    { EC::KON,   "n"  },  // แม่กน
+    { EC::KOM,   "m"  },  // แม่กม
+    { EC::KOEY,  "i"  },  // แม่เกย
+    { EC::KOEW,  "o"  },  // แม่เกอว
+};
+#undef EC
+
 string
 Syl::toRoman() const
 {
-    return string();
+    return RomanInitConstTbl_.at (iConst1)
+           + RomanSecInitConstTbl_.at (iConst2)
+           + RomanVowelTbl_.at (vowel)
+           + RomanEndConstTbl_.at (eConst);
 }
 
 ///////////////////////
