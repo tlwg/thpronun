@@ -341,7 +341,7 @@ ThaiSylUEE (EInitConst iConst1, ESecInitConst iConst2, EEndConstClass eConst,
 {
     auto iConstTonePair
         = IsDeadSyl (false, eConst)
-              ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
+              ? ThaiDeadLongIConstTonePair (iConst1, iConst2, tone)
               : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
     return iConstTonePair.first + SARA_UEE_STR + iConstTonePair.second
                + (EEndConstClass::NONE == eConst

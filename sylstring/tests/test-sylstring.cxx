@@ -134,6 +134,27 @@ TestThaiPronun()
         isSuccess = false;
     }
 
+    // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
+    syls = Syl ("m_V_0");
+    syls += Syl ("m_Vt2");
+    syls += Syl ("krIt1");
+    syls += Syl ("k_ug2");
+    syls += Syl ("P_Un3");
+    syls += Syl ("n_vg1");
+    syls += Syl ("s_ig1");
+    syls += Syl ("m_i_3");
+    syls += Syl ("m_I_0");
+    syls += Syl ("g_U_0");
+    syls += Syl ("l_u_3");
+    syls += Syl ("r_v_3");
+    thaiPronun = syls.toThai();
+    if (thaiPronun !=
+        u8"มือ-มืด-กฺรีด-กุ้ง-พู้น-หฺนึ่ง-สิ่ง-มิ-มี-งู-ลุ-รึ")
+    {
+        cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 
@@ -262,6 +283,26 @@ TestRomanPronun()
     romanized = syls.toRoman (true);
     if (romanized !=
         "Maeolaedeklelenchoechoeklueadoenklueakkhuaklingruamrongrian")
+    {
+        cerr << "Wrong romanization '" << romanized << "'" << endl;
+        isSuccess = false;
+    }
+
+    // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
+    syls = Syl ("m_V_0");
+    syls += Syl ("m_Vt2");
+    syls += Syl ("krIt1");
+    syls += Syl ("k_ug2");
+    syls += Syl ("P_Un3");
+    syls += Syl ("n_vg1");
+    syls += Syl ("s_ig1");
+    syls += Syl ("m_i_3");
+    syls += Syl ("m_I_0");
+    syls += Syl ("g_U_0");
+    syls += Syl ("l_u_3");
+    syls += Syl ("r_v_3");
+    romanized = syls.toRoman (false);
+    if (romanized != u8"muemuetkritkungphunnuengsingmimi-ngulurue")
     {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
         isSuccess = false;
