@@ -307,42 +307,28 @@ ThaiSylAA (EInitConst iConst1, ESecInitConst iConst2, EEndConstClass eConst,
                + ThaiEndConstTbl_.at (eConst);
 }
 
-// อิ้-, อึ้-, อุ้-
+// อิ้-, อี้-, อึ้-, อุ้-, อู้-
 static string
-ThaiSylBelowAboveShort (EInitConst iConst1, ESecInitConst iConst2,
-                        EVowel vowel, EEndConstClass eConst, ETone tone)
+ThaiSylBelowAbove (EInitConst iConst1, ESecInitConst iConst2, bool isShort,
+                   EVowel vowel, EEndConstClass eConst, ETone tone)
 {
-    assert (EVowel::I == vowel || EVowel::UE == vowel || EVowel::U == vowel);
+    assert (EVowel::I == vowel || EVowel::II == vowel
+            || EVowel::UE == vowel
+            || EVowel::U == vowel || EVowel::UU == vowel);
 
     static const unordered_map<EVowel, string> vowelTbl = {
         { EVowel::I,  SARA_I_STR },
+        { EVowel::II,  SARA_II_STR },
         { EVowel::UE, SARA_UE_STR },
         { EVowel::U,  SARA_U_STR },
-    };
-
-    auto iConstTonePair
-        = IsDeadSyl (true, eConst)
-              ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-    return iConstTonePair.first + vowelTbl.at (vowel) + iConstTonePair.second
-               + ThaiEndConstTbl_.at (eConst);
-}
-
-// อี้-, อู้-
-static string
-ThaiSylBelowAboveLong (EInitConst iConst1, ESecInitConst iConst2,
-                       EVowel vowel, EEndConstClass eConst, ETone tone)
-{
-    assert (EVowel::II == vowel || EVowel::UU == vowel);
-
-    static const unordered_map<EVowel, string> vowelTbl = {
-        { EVowel::II,  SARA_II_STR },
         { EVowel::UU,  SARA_UU_STR },
     };
 
     auto iConstTonePair
-        = IsDeadSyl (false, eConst)
-              ? ThaiDeadLongIConstTonePair (iConst1, iConst2, tone)
+        = IsDeadSyl (isShort, eConst)
+              ? (isShort
+                     ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
+                     : ThaiDeadLongIConstTonePair (iConst1, iConst2, tone))
               : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
     return iConstTonePair.first + vowelTbl.at (vowel) + iConstTonePair.second
                + ThaiEndConstTbl_.at (eConst);
@@ -569,13 +555,13 @@ Syl::toThai() const
         case EVowel::I:
         case EVowel::UE:
         case EVowel::U:
-            return ThaiSylBelowAboveShort (iConst1, iConst2, vowel, eConst,
-                                           tone);
+            return ThaiSylBelowAbove (iConst1, iConst2, true, vowel,
+                                      eConst, tone);
 
         case EVowel::II:
         case EVowel::UU:
-            return ThaiSylBelowAboveLong (iConst1, iConst2, vowel, eConst,
-                                          tone);
+            return ThaiSylBelowAbove (iConst1, iConst2, false, vowel,
+                                      eConst, tone);
 
         case EVowel::UEE:
             return ThaiSylUEE (iConst1, iConst2, eConst, tone);
