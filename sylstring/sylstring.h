@@ -33,6 +33,10 @@ private:
 
 class SylString {
 public:
+    SylString();
+    SylString (const SylString& other);
+    SylString (SylString&& other);
+
     SylString& operator= (const Syl& syl);
     SylString& operator+= (const Syl& syl);
 
