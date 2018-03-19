@@ -10,11 +10,3 @@ IsShortVowel (EVowel v)
     return std::islower (static_cast<int> (v));
 }
 
-inline bool
-IsDeadEndConstClass (EEndConstClass c)
-{
-    return EEndConstClass::KOK == c ||
-           EEndConstClass::KOT == c ||
-           EEndConstClass::KOP == c;
-}
-

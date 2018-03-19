@@ -1,4 +1,4 @@
-SUBDIRS = sylstring
+SUBDIRS = thortho sylstring
 
 dist-hook:
 	echo $(VERSION) > $(distdir)/VERSION

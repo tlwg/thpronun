@@ -1,4 +1,4 @@
-#include "sylstring/sylcomp.h"
+#include "thortho/thcons.h"
 
 #include <iostream>
 #include <iomanip>

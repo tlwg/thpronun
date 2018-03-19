@@ -5,6 +5,8 @@
 #ifndef SYLCOMP_H
 #define SYLCOMP_H
 
+#include "thortho/thcons.h"
+
 // Internal syllable encoding
 // Ex:
 //   กก   -> k_ok1
@@ -75,20 +77,8 @@ enum class EVowel {
 bool
 IsShortVowel (EVowel v);
 
-enum class EEndConstClass {
-    NONE = '_', // แม่ ก กา
-    KOK  = 'k', // แม่กก
-    KOT  = 't', // แม่กด
-    KOP  = 'p', // แม่กบ
-    KONG = 'g', // แม่กง
-    KON  = 'n', // แม่กน
-    KOM  = 'm', // แม่กม
-    KOEY = 'y', // แม่เกย
-    KOEW = 'w', // แม่เกอว
-};
-
-bool
-IsDeadEndConst (EEndConstClass c);
+EEndConstClass
+EndConstCodeToClass (char c);
 
 enum class ETone {
     SAMAN    = '0',
@@ -97,19 +87,6 @@ enum class ETone {
     TRI      = '3',
     CHATTAWA = '4',
 };
-
-enum class EInitConstClass {
-    HIGH,
-    MID,
-    LOWP,
-    LOWS,
-};
-
-EInitConstClass
-InitConstClass (char32_t c);
-
-EEndConstClass
-EndConstClass (char32_t c);
 
 #include "sylcomp.inl"
 

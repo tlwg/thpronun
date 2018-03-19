@@ -24,6 +24,8 @@ AM_PROG_LIBTOOL
 # Checks for library functions.
 
 AC_CONFIG_FILES([Makefile
+                 thortho/Makefile
+                 thortho/tests/Makefile
                  sylstring/Makefile
                  sylstring/tests/Makefile])
 AC_OUTPUT
