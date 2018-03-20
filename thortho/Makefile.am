@@ -3,7 +3,8 @@ SUBDIRS = tests
 noinst_LTLIBRARIES = libthortho.la
 
 libthortho_la_SOURCES = \
-	thcons.cxx	\
+	thuni.h		\
 	thcons.h	\
+	thcons.cxx	\
 	$(NULL)
 

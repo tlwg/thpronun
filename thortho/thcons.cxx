@@ -3,6 +3,7 @@
 // Created: 2018-01-15
 
 #include "thcons.h"
+#include "thuni.h"
 
 #include <cassert>
 
@@ -32,8 +33,8 @@ static EInitConstClass InitConstClassTbl_[46] = {
 EInitConstClass
 InitConstClass (char16_t c)
 {
-    assert (0x0e01 <= c && c <= 0x0e2e);
-    return InitConstClassTbl_[c - 0x0e01];
+    assert (UTH_KO_KAI <= c && c <= UTH_HO_NOKHUK);
+    return InitConstClassTbl_[c - UTH_KO_KAI];
 }
 
 #define EC EEndConstClass
@@ -60,8 +61,8 @@ static EEndConstClass EndConstClassTbl_[46] = {
 EEndConstClass
 EndConstClass (char16_t c)
 {
-    assert (0x0e01 <= c && c <= 0x0e2e);
-    return EndConstClassTbl_[c - 0x0e01];
+    assert (UTH_KO_KAI <= c && c <= UTH_HO_NOKHUK);
+    return EndConstClassTbl_[c - UTH_KO_KAI];
 }
 
 /*
