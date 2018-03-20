@@ -25,10 +25,10 @@ enum class EEndConstClass {
 };
 
 EInitConstClass
-InitConstClass (char32_t c);
+InitConstClass (char16_t c);
 
 EEndConstClass
-EndConstClass (char32_t c);
+EndConstClass (char16_t c);
 
 bool
 IsDeadEndConstClass (EEndConstClass c);

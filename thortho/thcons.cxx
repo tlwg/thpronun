@@ -30,7 +30,7 @@ static EInitConstClass InitConstClassTbl_[46] = {
 #undef IC
 
 EInitConstClass
-InitConstClass (char32_t c)
+InitConstClass (char16_t c)
 {
     assert (0x0e01 <= c && c <= 0x0e2e);
     return InitConstClassTbl_[c - 0x0e01];
@@ -58,7 +58,7 @@ static EEndConstClass EndConstClassTbl_[46] = {
 #undef EC
 
 EEndConstClass
-EndConstClass (char32_t c)
+EndConstClass (char16_t c)
 {
     assert (0x0e01 <= c && c <= 0x0e2e);
     return EndConstClassTbl_[c - 0x0e01];
