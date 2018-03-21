@@ -9,6 +9,16 @@
 /////////////////
 
 inline
+Syl::Syl()
+  : iCons1 (EInitCons::INVALID),
+    iCons2 (ESecInitCons::NONE),
+    vowel (EVowel::INVALID),
+    eCons (EEndConsClass::NONE),
+    tone (ETone::INVALID)
+{
+}
+
+inline
 Syl::Syl (EInitCons iCons1, ESecInitCons iCons2, EVowel vowel,
           EEndConsClass eCons, ETone tone)
   : iCons1 (iCons1),

@@ -6,6 +6,7 @@
 #define THCONS_H
 
 enum class EInitConsClass {
+    INVALID,
     HIGH,
     MID,
     LOWP,

@@ -17,6 +17,7 @@
 //   ใกล้  -> klay2
 
 enum class EInitCons {
+    INVALID = '*',
     KA  = 'k', // ก
     KHA = 'c', // ข ฃ ค ฅ ฆ
     NGA = 'g', // ง
@@ -48,6 +49,7 @@ enum class ESecInitCons {
 };
 
 enum class EVowel {
+    INVALID = '*',
     A    = 'a',  // อะ
     AA   = 'A',  // อา
     I    = 'i',  // อิ
@@ -81,6 +83,7 @@ EEndConsClass
 EndConsCodeToClass (char c);
 
 enum class ETone {
+    INVALID  = '*',
     SAMAN    = '0',
     EK       = '1',
     THO      = '2',
