@@ -5,14 +5,14 @@
 #ifndef THCONS_H
 #define THCONS_H
 
-enum class EInitConstClass {
+enum class EInitConsClass {
     HIGH,
     MID,
     LOWP,
     LOWS,
 };
 
-enum class EEndConstClass {
+enum class EEndConsClass {
     NONE,
     KOK,
     KOT,
@@ -24,14 +24,14 @@ enum class EEndConstClass {
     KOEW,
 };
 
-EInitConstClass
-InitConstClass (char16_t c);
+EInitConsClass
+InitConsClass (char16_t c);
 
-EEndConstClass
-EndConstClass (char16_t c);
+EEndConsClass
+EndConsClass (char16_t c);
 
 bool
-IsDeadEndConstClass (EEndConstClass c);
+IsDeadEndConsClass (EEndConsClass c);
 
 #include "thcons.inl"
 

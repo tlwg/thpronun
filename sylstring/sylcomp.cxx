@@ -8,9 +8,9 @@
 
 using namespace std;
 
-#define ECC EEndConstClass
-static const unordered_map<char, EEndConstClass>
-EndConstCodeToClassTbl_ = {
+#define ECC EEndConsClass
+static const unordered_map<char, EEndConsClass>
+EndConsCodeToClassTbl_ = {
     { '_', ECC::NONE }, // แม่ ก กา
     { 'k', ECC::KOK  }, // แม่กก
     { 't', ECC::KOT  }, // แม่กด
@@ -23,9 +23,9 @@ EndConstCodeToClassTbl_ = {
 };
 #undef ECC
 
-EEndConstClass
-EndConstCodeToClass (char c)
+EEndConsClass
+EndConsCodeToClass (char c)
 {
-    return EndConstCodeToClassTbl_.at (c);
+    return EndConsCodeToClassTbl_.at (c);
 }
 

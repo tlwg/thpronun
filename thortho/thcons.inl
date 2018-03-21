@@ -3,10 +3,10 @@
 // Created: 2018-01-15
 
 inline bool
-IsDeadEndConstClass (EEndConstClass c)
+IsDeadEndConsClass (EEndConsClass c)
 {
-    return EEndConstClass::KOK == c ||
-           EEndConstClass::KOT == c ||
-           EEndConstClass::KOP == c;
+    return EEndConsClass::KOK == c ||
+           EEndConsClass::KOT == c ||
+           EEndConsClass::KOP == c;
 }
 

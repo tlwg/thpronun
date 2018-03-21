@@ -9,9 +9,9 @@
 
 using namespace std;
 
-#define IC EInitConstClass
+#define IC EInitConsClass
 
-static EInitConstClass InitConstClassTbl_[46] = {
+static EInitConsClass InitConsClassTbl_[46] = {
     // ก ข ฃ ค ฅ ฆ ง
     IC::MID,  IC::HIGH, IC::HIGH, IC::LOWP, IC::LOWP, IC::LOWP, IC::LOWS,
     // จ ฉ ช ซ ฌ ญ
@@ -30,16 +30,16 @@ static EInitConstClass InitConstClassTbl_[46] = {
 
 #undef IC
 
-EInitConstClass
-InitConstClass (char16_t c)
+EInitConsClass
+InitConsClass (char16_t c)
 {
     assert (UTH_KO_KAI <= c && c <= UTH_HO_NOKHUK);
-    return InitConstClassTbl_[c - UTH_KO_KAI];
+    return InitConsClassTbl_[c - UTH_KO_KAI];
 }
 
-#define EC EEndConstClass
+#define EC EEndConsClass
 
-static EEndConstClass EndConstClassTbl_[46] = {
+static EEndConsClass EndConsClassTbl_[46] = {
     // ก ข ฃ ค ฅ ฆ ง
     EC::KOK,  EC::KOK,  EC::KOK,  EC::KOK,  EC::KOK,  EC::KOK,  EC::KONG,
     // จ ฉ ช ซ ฌ ญ
@@ -58,11 +58,11 @@ static EEndConstClass EndConstClassTbl_[46] = {
 
 #undef EC
 
-EEndConstClass
-EndConstClass (char16_t c)
+EEndConsClass
+EndConsClass (char16_t c)
 {
     assert (UTH_KO_KAI <= c && c <= UTH_HO_NOKHUK);
-    return EndConstClassTbl_[c - UTH_KO_KAI];
+    return EndConsClassTbl_[c - UTH_KO_KAI];
 }
 
 /*

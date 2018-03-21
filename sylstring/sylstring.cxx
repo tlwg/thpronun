@@ -16,10 +16,10 @@ using namespace std;
 //  class Syl  //
 /////////////////
 static bool
-IsDeadSyl (bool isShortVowel, EEndConstClass eConst)
+IsDeadSyl (bool isShortVowel, EEndConsClass eCons)
 {
-    return IsDeadEndConstClass (eConst) || (
-               isShortVowel && EEndConstClass::NONE == eConst
+    return IsDeadEndConsClass (eCons) || (
+               isShortVowel && EEndConsClass::NONE == eCons
            );
 }
 
@@ -53,9 +53,9 @@ IsDeadSyl (bool isShortVowel, EEndConstClass eConst)
 // Initial Consonant Classification & Thai Pronunciations
 //
 
-#define IC EInitConst
-static const unordered_set<EInitConst>
-ThaiMidConstSet_ = {
+#define IC EInitCons
+static const unordered_set<EInitCons>
+ThaiMidConsSet_ = {
     IC::KA, // ก
     IC::JA, // จ
     IC::DA, // ฎ ด
@@ -65,8 +65,8 @@ ThaiMidConstSet_ = {
     IC::A,  // อ
 };
 
-static const unordered_map<EInitConst,string>
-ThaiMidConst1Tbl_ = {
+static const unordered_map<EInitCons,string>
+ThaiMidCons1Tbl_ = {
     { IC::KA,  u8"ก" },
     { IC::JA,  u8"จ" },
     { IC::DA,  u8"ด" },
@@ -76,8 +76,8 @@ ThaiMidConst1Tbl_ = {
     { IC::A,   u8"อ" },
 };
 
-static const unordered_map<EInitConst, pair<string, string>>
-ThaiHighLowInitConst1Tbl_ = {
+static const unordered_map<EInitCons, pair<string, string>>
+ThaiHighLowInitCons1Tbl_ = {
     { IC::KHA, { u8"ข",  u8"ค" } },
     { IC::NGA, { u8"หฺง", u8"ง" } },
     { IC::CHA, { u8"ฉ",  u8"ช" } },
@@ -99,9 +99,9 @@ ThaiHighLowInitConst1Tbl_ = {
 // Second Initial Consonant Thai Pronunciations
 //
 
-#define SC ESecInitConst
-static const unordered_map<ESecInitConst,string>
-ThaiSecIConstTbl_ = {
+#define SC ESecInitCons
+static const unordered_map<ESecInitCons,string>
+ThaiSecIConsTbl_ = {
     { SC::NONE, ""                },
     { SC::RA,   PHINTHU_STR u8"ร" },
     { SC::LA,   PHINTHU_STR u8"ล" },
@@ -114,9 +114,9 @@ ThaiSecIConstTbl_ = {
 // Ending Consonant Thai Pronunciations
 //
 
-#define EC EEndConstClass
-static const unordered_map<EEndConstClass, string>
-ThaiEndConstTbl_ = {
+#define EC EEndConsClass
+static const unordered_map<EEndConsClass, string>
+ThaiEndConsTbl_ = {
     { EC::NONE, "" },
     { EC::KOK,  u8"ก" },
     { EC::KOT,  u8"ด" },
@@ -149,121 +149,121 @@ ThaiToneTbl_ = {
 //
 
 static pair<string, string>
-ThaiLiveIConstTonePair (EInitConst iConst1, ESecInitConst iConst2, ETone tone)
+ThaiLiveIConsTonePair (EInitCons iCons1, ESecInitCons iCons2, ETone tone)
 {
-    string oIConst;
+    string oICons;
     string oTone;
 
-    if (ThaiMidConstSet_.find (iConst1) != ThaiMidConstSet_.end()) {
-        oIConst = ThaiMidConst1Tbl_.at (iConst1);
+    if (ThaiMidConsSet_.find (iCons1) != ThaiMidConsSet_.end()) {
+        oICons = ThaiMidCons1Tbl_.at (iCons1);
         oTone = ThaiToneTbl_.at (tone);
     } else {
-        auto hiloPair = ThaiHighLowInitConst1Tbl_.at (iConst1);
+        auto hiloPair = ThaiHighLowInitCons1Tbl_.at (iCons1);
         switch (tone) {
             case ETone::SAMAN:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 break;
             case ETone::EK:
-                oIConst = hiloPair.first;
+                oICons = hiloPair.first;
                 oTone = TONE_EK_STR;
                 break;
             case ETone::THO:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 oTone = TONE_EK_STR;
                 break;
             case ETone::TRI:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 oTone = TONE_THO_STR;
                 break;
             case ETone::CHATTAWA:
-                oIConst = hiloPair.first;
+                oICons = hiloPair.first;
                 break;
         }
     }
 
-    oIConst += ThaiSecIConstTbl_.at (iConst2);
+    oICons += ThaiSecIConsTbl_.at (iCons2);
 
-    return make_pair (oIConst, oTone);
+    return make_pair (oICons, oTone);
 }
 
 static pair<string, string>
-ThaiDeadShortIConstTonePair (EInitConst iConst1, ESecInitConst iConst2,
+ThaiDeadShortIConsTonePair (EInitCons iCons1, ESecInitCons iCons2,
                              ETone tone)
 {
-    string oIConst;
+    string oICons;
     string oTone;
 
-    if (ThaiMidConstSet_.find (iConst1) != ThaiMidConstSet_.end()) {
-        oIConst = ThaiMidConst1Tbl_.at (iConst1);
+    if (ThaiMidConsSet_.find (iCons1) != ThaiMidConsSet_.end()) {
+        oICons = ThaiMidCons1Tbl_.at (iCons1);
         if (ETone::EK != tone) {
             oTone = ThaiToneTbl_.at (tone);
         }
     } else {
-        auto hiloPair = ThaiHighLowInitConst1Tbl_.at (iConst1);
+        auto hiloPair = ThaiHighLowInitCons1Tbl_.at (iCons1);
         switch (tone) {
             case ETone::SAMAN: // not exists, just fall back
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 break;
             case ETone::EK:
-                oIConst = hiloPair.first;
+                oICons = hiloPair.first;
                 break;
             case ETone::THO:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 oTone = TONE_EK_STR;
                 break;
             case ETone::TRI:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 break;
             case ETone::CHATTAWA:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 oTone = TONE_CHATTAWA_STR;
                 break;
         }
     }
 
-    oIConst += ThaiSecIConstTbl_.at (iConst2);
+    oICons += ThaiSecIConsTbl_.at (iCons2);
 
-    return make_pair (oIConst, oTone);
+    return make_pair (oICons, oTone);
 }
 
 static pair<string, string>
-ThaiDeadLongIConstTonePair (EInitConst iConst1, ESecInitConst iConst2,
+ThaiDeadLongIConsTonePair (EInitCons iCons1, ESecInitCons iCons2,
                             ETone tone)
 {
-    string oIConst;
+    string oICons;
     string oTone;
 
-    if (ThaiMidConstSet_.find (iConst1) != ThaiMidConstSet_.end()) {
-        oIConst = ThaiMidConst1Tbl_.at (iConst1);
+    if (ThaiMidConsSet_.find (iCons1) != ThaiMidConsSet_.end()) {
+        oICons = ThaiMidCons1Tbl_.at (iCons1);
         if (ETone::EK != tone) {
             oTone = ThaiToneTbl_.at (tone);
         }
     } else {
-        auto hiloPair = ThaiHighLowInitConst1Tbl_.at (iConst1);
+        auto hiloPair = ThaiHighLowInitCons1Tbl_.at (iCons1);
         switch (tone) {
             case ETone::SAMAN: // not exists, just fall back
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 break;
             case ETone::EK:
-                oIConst = hiloPair.first;
+                oICons = hiloPair.first;
                 break;
             case ETone::THO:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 break;
             case ETone::TRI:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 oTone = TONE_THO_STR;
                 break;
             case ETone::CHATTAWA:
-                oIConst = hiloPair.second;
+                oICons = hiloPair.second;
                 oTone = TONE_CHATTAWA_STR;
                 break;
         }
     }
 
-    oIConst += ThaiSecIConstTbl_.at (iConst2);
+    oICons += ThaiSecIConsTbl_.at (iCons2);
 
-    return make_pair (oIConst, oTone);
+    return make_pair (oICons, oTone);
 }
 
 //
@@ -272,45 +272,45 @@ ThaiDeadLongIConstTonePair (EInitConst iConst1, ESecInitConst iConst2,
 
 // อ้ะ, เอ้า, อั้-
 static string
-ThaiSylA (EInitConst iConst1, ESecInitConst iConst2, EEndConstClass eConst,
+ThaiSylA (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
           ETone tone)
 {
-    if (EEndConstClass::NONE == eConst) {
-        auto iConstTonePair
-            = ThaiDeadShortIConstTonePair (iConst1, iConst2, tone);
-        return iConstTonePair.first + iConstTonePair.second + SARA_A_STR;
-    } else if (EEndConstClass::KOEW == eConst) {
-        auto iConstTonePair
-            = ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-        return SARA_E_STR + iConstTonePair.first + iConstTonePair.second
+    if (EEndConsClass::NONE == eCons) {
+        auto iConsTonePair
+            = ThaiDeadShortIConsTonePair (iCons1, iCons2, tone);
+        return iConsTonePair.first + iConsTonePair.second + SARA_A_STR;
+    } else if (EEndConsClass::KOEW == eCons) {
+        auto iConsTonePair
+            = ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+        return SARA_E_STR + iConsTonePair.first + iConsTonePair.second
                    + SARA_AA_STR;
     } else {
-        auto iConstTonePair
-            = IsDeadSyl (true, eConst)
-                  ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-                  : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-        return iConstTonePair.first + MAI_HAN_AKAT_STR + iConstTonePair.second
-                   + ThaiEndConstTbl_.at (eConst);
+        auto iConsTonePair
+            = IsDeadSyl (true, eCons)
+                  ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+                  : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+        return iConsTonePair.first + MAI_HAN_AKAT_STR + iConsTonePair.second
+                   + ThaiEndConsTbl_.at (eCons);
     }
 }
 
 // อ้า-
 static string
-ThaiSylAA (EInitConst iConst1, ESecInitConst iConst2, EEndConstClass eConst,
+ThaiSylAA (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
            ETone tone)
 {
-    auto iConstTonePair
-        = IsDeadSyl (false, eConst)
-              ? ThaiDeadLongIConstTonePair (iConst1, iConst2, tone)
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-    return iConstTonePair.first + iConstTonePair.second + SARA_AA_STR
-               + ThaiEndConstTbl_.at (eConst);
+    auto iConsTonePair
+        = IsDeadSyl (false, eCons)
+              ? ThaiDeadLongIConsTonePair (iCons1, iCons2, tone)
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+    return iConsTonePair.first + iConsTonePair.second + SARA_AA_STR
+               + ThaiEndConsTbl_.at (eCons);
 }
 
 // อิ้-, อี้-, อึ้-, อุ้-, อู้-
 static string
-ThaiSylBelowAbove (EInitConst iConst1, ESecInitConst iConst2, bool isShort,
-                   EVowel vowel, EEndConstClass eConst, ETone tone)
+ThaiSylBelowAbove (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+                   EVowel vowel, EEndConsClass eCons, ETone tone)
 {
     assert (EVowel::I == vowel || EVowel::II == vowel
             || EVowel::UE == vowel
@@ -324,34 +324,34 @@ ThaiSylBelowAbove (EInitConst iConst1, ESecInitConst iConst2, bool isShort,
         { EVowel::UU,  SARA_UU_STR },
     };
 
-    auto iConstTonePair
-        = IsDeadSyl (isShort, eConst)
+    auto iConsTonePair
+        = IsDeadSyl (isShort, eCons)
               ? (isShort
-                     ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-                     : ThaiDeadLongIConstTonePair (iConst1, iConst2, tone))
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-    return iConstTonePair.first + vowelTbl.at (vowel) + iConstTonePair.second
-               + ThaiEndConstTbl_.at (eConst);
+                     ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+                     : ThaiDeadLongIConsTonePair (iCons1, iCons2, tone))
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+    return iConsTonePair.first + vowelTbl.at (vowel) + iConsTonePair.second
+               + ThaiEndConsTbl_.at (eCons);
 }
 
 // อื้อ, อึ้-
 static string
-ThaiSylUEE (EInitConst iConst1, ESecInitConst iConst2, EEndConstClass eConst,
+ThaiSylUEE (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
             ETone tone)
 {
-    auto iConstTonePair
-        = IsDeadSyl (false, eConst)
-              ? ThaiDeadLongIConstTonePair (iConst1, iConst2, tone)
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-    return iConstTonePair.first + SARA_UEE_STR + iConstTonePair.second
-               + (EEndConstClass::NONE == eConst
-                      ? AU_STR : ThaiEndConstTbl_.at (eConst));
+    auto iConsTonePair
+        = IsDeadSyl (false, eCons)
+              ? ThaiDeadLongIConsTonePair (iCons1, iCons2, tone)
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+    return iConsTonePair.first + SARA_UEE_STR + iConsTonePair.second
+               + (EEndConsClass::NONE == eCons
+                      ? AU_STR : ThaiEndConsTbl_.at (eCons));
 }
 
 // เอ้ะ, เอ็-, แอ้ะ, แอ้-
 static string
-ThaiSylLeadShort (EInitConst iConst1, ESecInitConst iConst2,
-                  EVowel vowel, EEndConstClass eConst, ETone tone)
+ThaiSylLeadShort (EInitCons iCons1, ESecInitCons iCons2,
+                  EVowel vowel, EEndConsClass eCons, ETone tone)
 {
     assert (EVowel::E == vowel || EVowel::AE == vowel);
 
@@ -360,22 +360,22 @@ ThaiSylLeadShort (EInitConst iConst1, ESecInitConst iConst2,
         { EVowel::AE, SARA_AE_STR },
     };
 
-    auto iConstTonePair
-        = IsDeadSyl (true, eConst)
-              ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-    if (EEndConstClass::NONE != eConst && iConstTonePair.second.empty()) {
-        iConstTonePair.second = MAITAIKHU_STR;
+    auto iConsTonePair
+        = IsDeadSyl (true, eCons)
+              ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+    if (EEndConsClass::NONE != eCons && iConsTonePair.second.empty()) {
+        iConsTonePair.second = MAITAIKHU_STR;
     }
-    return vowelTbl.at (vowel) + iConstTonePair.first + iConstTonePair.second
-               + (EEndConstClass::NONE == eConst
-                   ? SARA_A_STR : ThaiEndConstTbl_.at (eConst));
+    return vowelTbl.at (vowel) + iConsTonePair.first + iConsTonePair.second
+               + (EEndConsClass::NONE == eCons
+                   ? SARA_A_STR : ThaiEndConsTbl_.at (eCons));
 }
 
 // เอ้-, แอ้-, โอ้-
 static string
-ThaiSylLeadLong (EInitConst iConst1, ESecInitConst iConst2,
-                 EVowel vowel, EEndConstClass eConst, ETone tone)
+ThaiSylLeadLong (EInitCons iCons1, ESecInitCons iCons2,
+                 EVowel vowel, EEndConsClass eCons, ETone tone)
 {
     assert (EVowel::EE == vowel || EVowel::AEE == vowel || EVowel::OO == vowel);
 
@@ -385,155 +385,155 @@ ThaiSylLeadLong (EInitConst iConst1, ESecInitConst iConst2,
         { EVowel::OO,  SARA_O_STR  },
     };
 
-    auto iConstTonePair
-        = IsDeadSyl (false, eConst)
-              ? ThaiDeadLongIConstTonePair (iConst1, iConst2, tone)
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-    return vowelTbl.at (vowel) + iConstTonePair.first + iConstTonePair.second
-               + ThaiEndConstTbl_.at (eConst);
+    auto iConsTonePair
+        = IsDeadSyl (false, eCons)
+              ? ThaiDeadLongIConsTonePair (iCons1, iCons2, tone)
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+    return vowelTbl.at (vowel) + iConsTonePair.first + iConsTonePair.second
+               + ThaiEndConsTbl_.at (eCons);
 }
 
 // โอ้ะ, อ้-
 static string
-ThaiSylO (EInitConst iConst1, ESecInitConst iConst2, EEndConstClass eConst,
+ThaiSylO (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
           ETone tone)
 {
-    auto iConstTonePair
-        = IsDeadSyl (true, eConst)
-              ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-    if (EEndConstClass::NONE == eConst) {
-        return SARA_O_STR + iConstTonePair.first + iConstTonePair.second
+    auto iConsTonePair
+        = IsDeadSyl (true, eCons)
+              ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+    if (EEndConsClass::NONE == eCons) {
+        return SARA_O_STR + iConsTonePair.first + iConsTonePair.second
                    + SARA_A_STR;
     } else {
-        return iConstTonePair.first + iConstTonePair.second
-                   + ThaiEndConstTbl_.at (eConst);
+        return iConsTonePair.first + iConsTonePair.second
+                   + ThaiEndConsTbl_.at (eCons);
     }
 }
 
 // เอี้ยะ, เอี้ย-
 static string
-ThaiSylIA (EInitConst iConst1, ESecInitConst iConst2, bool isShort,
-           EEndConstClass eConst, ETone tone)
+ThaiSylIA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+           EEndConsClass eCons, ETone tone)
 {
     // Note: There is no short IA with ending consonant.
     //       So, long IA is assumed if it exists.
-    if (EEndConstClass::NONE != eConst) {
+    if (EEndConsClass::NONE != eCons) {
         isShort = false;
     }
-    auto iConstTonePair
-        = IsDeadSyl (isShort, eConst)
+    auto iConsTonePair
+        = IsDeadSyl (isShort, eCons)
               ? (isShort
-                     ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-                     : ThaiDeadLongIConstTonePair (iConst1, iConst2, tone))
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
+                     ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+                     : ThaiDeadLongIConsTonePair (iCons1, iCons2, tone))
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
     return SARA_E_STR
-               + iConstTonePair.first + SARA_II_STR + iConstTonePair.second
+               + iConsTonePair.first + SARA_II_STR + iConsTonePair.second
                + YO_STR
-               + (isShort ? SARA_A_STR : ThaiEndConstTbl_.at (eConst));
+               + (isShort ? SARA_A_STR : ThaiEndConsTbl_.at (eCons));
 }
 
 // เอื้อะ, เอื้อ-
 static string
-ThaiSylUEA (EInitConst iConst1, ESecInitConst iConst2, bool isShort,
-            EEndConstClass eConst, ETone tone)
+ThaiSylUEA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+            EEndConsClass eCons, ETone tone)
 {
     // Note: There is no short UEA with ending consonant.
     //       So, long UEA is assumed if it exists.
-    if (EEndConstClass::NONE != eConst) {
+    if (EEndConsClass::NONE != eCons) {
         isShort = false;
     }
-    auto iConstTonePair
-        = IsDeadSyl (isShort, eConst)
+    auto iConsTonePair
+        = IsDeadSyl (isShort, eCons)
               ? (isShort
-                     ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-                     : ThaiDeadLongIConstTonePair (iConst1, iConst2, tone))
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
+                     ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+                     : ThaiDeadLongIConsTonePair (iCons1, iCons2, tone))
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
     return SARA_E_STR
-               + iConstTonePair.first + SARA_UEE_STR + iConstTonePair.second
+               + iConsTonePair.first + SARA_UEE_STR + iConsTonePair.second
                + AU_STR
-               + (isShort ? SARA_A_STR : ThaiEndConstTbl_.at (eConst));
+               + (isShort ? SARA_A_STR : ThaiEndConsTbl_.at (eCons));
 }
 
 // อั้วะ, อั้ว, อ็ว-, อ้ว-
 static string
-ThaiSylUA (EInitConst iConst1, ESecInitConst iConst2, bool isShort,
-           EEndConstClass eConst, ETone tone)
+ThaiSylUA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+           EEndConsClass eCons, ETone tone)
 {
-    auto iConstTonePair
-        = IsDeadSyl (isShort, eConst)
+    auto iConsTonePair
+        = IsDeadSyl (isShort, eCons)
               ? (isShort
-                     ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-                     : ThaiDeadLongIConstTonePair (iConst1, iConst2, tone))
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
-    if (isShort && EEndConstClass::NONE != eConst
-        && iConstTonePair.second.empty())
+                     ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+                     : ThaiDeadLongIConsTonePair (iCons1, iCons2, tone))
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
+    if (isShort && EEndConsClass::NONE != eCons
+        && iConsTonePair.second.empty())
     {
-        iConstTonePair.second = MAITAIKHU_STR;
+        iConsTonePair.second = MAITAIKHU_STR;
     }
-    if (EEndConstClass::NONE == eConst) {
-        return iConstTonePair.first + MAI_HAN_AKAT_STR + iConstTonePair.second
+    if (EEndConsClass::NONE == eCons) {
+        return iConsTonePair.first + MAI_HAN_AKAT_STR + iConsTonePair.second
                 + WO_STR
                 + (isShort ? SARA_A_STR : "");
     } else {
-        return iConstTonePair.first + iConstTonePair.second
+        return iConsTonePair.first + iConsTonePair.second
                 + WO_STR
-                + ThaiEndConstTbl_.at (eConst);
+                + ThaiEndConsTbl_.at (eCons);
     }
 }
 
 // เอ้าะ, อ้อ, อ้อ-
 static string
-ThaiSylAU (EInitConst iConst1, ESecInitConst iConst2, bool isShort,
-           EEndConstClass eConst, ETone tone)
+ThaiSylAU (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+           EEndConsClass eCons, ETone tone)
 {
-    auto iConstTonePair
-        = IsDeadSyl (isShort, eConst)
+    auto iConsTonePair
+        = IsDeadSyl (isShort, eCons)
               ? (isShort
-                     ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-                     : ThaiDeadLongIConstTonePair (iConst1, iConst2, tone))
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
+                     ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+                     : ThaiDeadLongIConsTonePair (iCons1, iCons2, tone))
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
 
     if (isShort) {
-        if (EEndConstClass::NONE == eConst) {
-            return SARA_E_STR + iConstTonePair.first + iConstTonePair.second
+        if (EEndConsClass::NONE == eCons) {
+            return SARA_E_STR + iConsTonePair.first + iConsTonePair.second
                        + SARA_AA_STR + SARA_A_STR;
         }
-        if (iConstTonePair.second.empty()) {
-            iConstTonePair.second = MAITAIKHU_STR;
+        if (iConsTonePair.second.empty()) {
+            iConsTonePair.second = MAITAIKHU_STR;
         }
     }
 
-    return iConstTonePair.first + iConstTonePair.second
+    return iConsTonePair.first + iConsTonePair.second
             + AU_STR
-            + ThaiEndConstTbl_.at (eConst);
+            + ThaiEndConsTbl_.at (eCons);
 }
 
 // เอ้อะ, เอ้อ, เอิ้-
 static string
-ThaiSylOE (EInitConst iConst1, ESecInitConst iConst2, bool isShort,
-           EEndConstClass eConst, ETone tone)
+ThaiSylOE (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+           EEndConsClass eCons, ETone tone)
 {
     // Note: There is no short OE with ending consonant.
     //       So, long OE is assumed if it exists.
-    if (EEndConstClass::NONE != eConst) {
+    if (EEndConsClass::NONE != eCons) {
         isShort = false;
     }
-    auto iConstTonePair
-        = IsDeadSyl (isShort, eConst)
+    auto iConsTonePair
+        = IsDeadSyl (isShort, eCons)
               ? (isShort
-                     ? ThaiDeadShortIConstTonePair (iConst1, iConst2, tone)
-                     : ThaiDeadLongIConstTonePair (iConst1, iConst2, tone))
-              : ThaiLiveIConstTonePair (iConst1, iConst2, tone);
+                     ? ThaiDeadShortIConsTonePair (iCons1, iCons2, tone)
+                     : ThaiDeadLongIConsTonePair (iCons1, iCons2, tone))
+              : ThaiLiveIConsTonePair (iCons1, iCons2, tone);
 
-    if (EEndConstClass::NONE == eConst) {
-        return SARA_E_STR + iConstTonePair.first + iConstTonePair.second
+    if (EEndConsClass::NONE == eCons) {
+        return SARA_E_STR + iConsTonePair.first + iConsTonePair.second
                 + AU_STR
                 + (isShort ? SARA_A_STR : "");
     } else {
         return SARA_E_STR
-                + iConstTonePair.first + SARA_I_STR + iConstTonePair.second
-                + ThaiEndConstTbl_.at (eConst);
+                + iConsTonePair.first + SARA_I_STR + iConsTonePair.second
+                + ThaiEndConsTbl_.at (eCons);
     }
 }
 
@@ -547,66 +547,66 @@ Syl::toThai() const
     // determine vowel form
     switch (vowel) {
         case EVowel::A:
-            return ThaiSylA (iConst1, iConst2, eConst, tone);
+            return ThaiSylA (iCons1, iCons2, eCons, tone);
 
         case EVowel::AA:
-            return ThaiSylAA (iConst1, iConst2, eConst, tone);
+            return ThaiSylAA (iCons1, iCons2, eCons, tone);
 
         case EVowel::I:
         case EVowel::UE:
         case EVowel::U:
-            return ThaiSylBelowAbove (iConst1, iConst2, true, vowel,
-                                      eConst, tone);
+            return ThaiSylBelowAbove (iCons1, iCons2, true, vowel,
+                                      eCons, tone);
 
         case EVowel::II:
         case EVowel::UU:
-            return ThaiSylBelowAbove (iConst1, iConst2, false, vowel,
-                                      eConst, tone);
+            return ThaiSylBelowAbove (iCons1, iCons2, false, vowel,
+                                      eCons, tone);
 
         case EVowel::UEE:
-            return ThaiSylUEE (iConst1, iConst2, eConst, tone);
+            return ThaiSylUEE (iCons1, iCons2, eCons, tone);
 
         case EVowel::E:
         case EVowel::AE:
-            return ThaiSylLeadShort (iConst1, iConst2, vowel, eConst, tone);
+            return ThaiSylLeadShort (iCons1, iCons2, vowel, eCons, tone);
 
         case EVowel::EE:
         case EVowel::AEE:
         case EVowel::OO:
-            return ThaiSylLeadLong (iConst1, iConst2, vowel, eConst, tone);
+            return ThaiSylLeadLong (iCons1, iCons2, vowel, eCons, tone);
 
         case EVowel::O:
-            return ThaiSylO (iConst1, iConst2, eConst, tone);
+            return ThaiSylO (iCons1, iCons2, eCons, tone);
 
         case EVowel::IA:
-            return ThaiSylIA (iConst1, iConst2, true, eConst, tone);
+            return ThaiSylIA (iCons1, iCons2, true, eCons, tone);
 
         case EVowel::IAA:
-            return ThaiSylIA (iConst1, iConst2, false, eConst, tone);
+            return ThaiSylIA (iCons1, iCons2, false, eCons, tone);
 
         case EVowel::UEA:
-            return ThaiSylUEA (iConst1, iConst2, true, eConst, tone);
+            return ThaiSylUEA (iCons1, iCons2, true, eCons, tone);
 
         case EVowel::UEAA:
-            return ThaiSylUEA (iConst1, iConst2, false, eConst, tone);
+            return ThaiSylUEA (iCons1, iCons2, false, eCons, tone);
 
         case EVowel::UA:
-            return ThaiSylUA (iConst1, iConst2, true, eConst, tone);
+            return ThaiSylUA (iCons1, iCons2, true, eCons, tone);
 
         case EVowel::UAA:
-            return ThaiSylUA (iConst1, iConst2, false, eConst, tone);
+            return ThaiSylUA (iCons1, iCons2, false, eCons, tone);
 
         case EVowel::AU:
-            return ThaiSylAU (iConst1, iConst2, true, eConst, tone);
+            return ThaiSylAU (iCons1, iCons2, true, eCons, tone);
 
         case EVowel::AUU:
-            return ThaiSylAU (iConst1, iConst2, false, eConst, tone);
+            return ThaiSylAU (iCons1, iCons2, false, eCons, tone);
 
         case EVowel::OE:
-            return ThaiSylOE (iConst1, iConst2, true, eConst, tone);
+            return ThaiSylOE (iCons1, iCons2, true, eCons, tone);
 
         case EVowel::OEE:
-            return ThaiSylOE (iConst1, iConst2, false, eConst, tone);
+            return ThaiSylOE (iCons1, iCons2, false, eCons, tone);
     }
 }
 
@@ -614,9 +614,9 @@ Syl::toThai() const
 // Romanized Syllable Pronunciation Generation
 //
 
-#define IC EInitConst
-static const unordered_map<EInitConst, string>
-RomanInitConstTbl_ = {
+#define IC EInitCons
+static const unordered_map<EInitCons, string>
+RomanInitConsTbl_ = {
     { IC::KA,   "k"  },  // ก
     { IC::KHA,  "kh" },  // ข ฃ ค ฅ ฆ
     { IC::NGA,  "ng" },  // ง
@@ -641,9 +641,9 @@ RomanInitConstTbl_ = {
 };
 #undef IC
 
-#define SC ESecInitConst
-static const unordered_map<ESecInitConst, string>
-RomanSecInitConstTbl_ = {
+#define SC ESecInitCons
+static const unordered_map<ESecInitCons, string>
+RomanSecInitConsTbl_ = {
     { SC::NONE,  ""  },
     { SC::RA,    "r" },  // ร ควบ
     { SC::LA,    "l" },  // ล ควบ
@@ -681,9 +681,9 @@ RomanVowelTbl_ = {
 };
 #undef VW
 
-#define EC EEndConstClass
-static const unordered_map<EEndConstClass, string>
-RomanEndConstTbl_ = {
+#define EC EEndConsClass
+static const unordered_map<EEndConsClass, string>
+RomanEndConsTbl_ = {
     { EC::NONE,  ""   },  // แม่ ก กา
     { EC::KOK,   "k"  },  // แม่กก
     { EC::KOT,   "t"  },  // แม่กด
@@ -699,10 +699,10 @@ RomanEndConstTbl_ = {
 string
 Syl::toRoman() const
 {
-    return RomanInitConstTbl_.at (iConst1)
-           + RomanSecInitConstTbl_.at (iConst2)
+    return RomanInitConsTbl_.at (iCons1)
+           + RomanSecInitConsTbl_.at (iCons2)
            + RomanVowelTbl_.at (vowel)
-           + RomanEndConstTbl_.at (eConst);
+           + RomanEndConsTbl_.at (eCons);
 }
 
 ///////////////////////
@@ -735,12 +735,12 @@ SylString::toRoman (bool isCapitalize) const
     }
     for (auto prev = i++; i != mSyls.end(); prev = i++) {
         // According to Royal Institute, insert hyphen for 3 cases:
-        //   1. prev->eConst == NONE and i->iConst1 == NGA
-        //   2. prev->eConst == KONG and i->iConst1 == A
-        //   3. i->iConst1 == A
-        if (EInitConst::A == i->iConst1
-            || (EEndConstClass::NONE == prev->eConst
-                && EInitConst::NGA == i->iConst1))
+        //   1. prev->eCons == NONE and i->iCons1 == NGA
+        //   2. prev->eCons == KONG and i->iCons1 == A
+        //   3. i->iCons1 == A
+        if (EInitCons::A == i->iCons1
+            || (EEndConsClass::NONE == prev->eCons
+                && EInitCons::NGA == i->iCons1))
         {
             output += '-';
         }

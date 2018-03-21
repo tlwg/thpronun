@@ -7,9 +7,9 @@
 using namespace std;
 
 bool
-testInitConstClass()
+testInitConsClass()
 {
-    static const vector<char32_t> midConst = {
+    static const vector<char32_t> midCons = {
         U'\u0e01', // ก
         U'\u0e08', // จ
         U'\u0e0e', // ฎ
@@ -21,7 +21,7 @@ testInitConstClass()
         U'\u0e2d', // อ
     };
 
-    static const vector<char32_t> highConst = {
+    static const vector<char32_t> highCons = {
         U'\u0e02', // ข
         U'\u0e03', // ฃ
         U'\u0e09', // ฉ
@@ -35,7 +35,7 @@ testInitConstClass()
         U'\u0e2b', // ห
     };
 
-    static const vector<char32_t> singleLowConst = {
+    static const vector<char32_t> singleLowCons = {
         U'\u0e07', // ง
         U'\u0e0d', // ญ
         U'\u0e13', // ณ
@@ -47,7 +47,7 @@ testInitConstClass()
         U'\u0e27', // ว
     };
 
-    static const vector<char32_t> pairedLowConst = {
+    static const vector<char32_t> pairedLowCons = {
         U'\u0e04', // ค
         U'\u0e05', // ฅ
         U'\u0e06', // ฆ
@@ -66,8 +66,8 @@ testInitConstClass()
 
     bool isSuccess = true;
 
-    for (auto c : midConst) {
-        if (EInitConstClass::MID != InitConstClass (c)) {
+    for (auto c : midCons) {
+        if (EInitConsClass::MID != InitConsClass (c)) {
             cerr << "Wrong class for init const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -75,8 +75,8 @@ testInitConstClass()
         }
     }
 
-    for (auto c : highConst) {
-        if (EInitConstClass::HIGH != InitConstClass (c)) {
+    for (auto c : highCons) {
+        if (EInitConsClass::HIGH != InitConsClass (c)) {
             cerr << "Wrong class for init const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -84,8 +84,8 @@ testInitConstClass()
         }
     }
 
-    for (auto c : singleLowConst) {
-        if (EInitConstClass::LOWS != InitConstClass (c)) {
+    for (auto c : singleLowCons) {
+        if (EInitConsClass::LOWS != InitConsClass (c)) {
             cerr << "Wrong class for init const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -93,8 +93,8 @@ testInitConstClass()
         }
     }
 
-    for (auto c : pairedLowConst) {
-        if (EInitConstClass::LOWP != InitConstClass (c)) {
+    for (auto c : pairedLowCons) {
+        if (EInitConsClass::LOWP != InitConsClass (c)) {
             cerr << "Wrong class for init const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -106,14 +106,14 @@ testInitConstClass()
 }
 
 bool
-testEndConstClass()
+testEndConsClass()
 {
-    static const vector<char32_t> kokaConst = {
+    static const vector<char32_t> kokaCons = {
         U'\u0e2b', // ห
         U'\u0e2d', // อ
         U'\u0e2e', // ฮ
     };
-    static const vector<char32_t> kokConst = {
+    static const vector<char32_t> kokCons = {
         U'\u0e01', // ก
         U'\u0e02', // ข
         U'\u0e03', // ฃ
@@ -122,11 +122,11 @@ testEndConstClass()
         U'\u0e06', // ฆ
     };
 
-    static const vector<char32_t> kongConst = {
+    static const vector<char32_t> kongCons = {
         U'\u0e07', // ง
     };
 
-    static const vector<char32_t> kotConst = {
+    static const vector<char32_t> kotCons = {
         U'\u0e08', // จ
         U'\u0e09', // ฉ
         U'\u0e0a', // ช
@@ -147,7 +147,7 @@ testEndConstClass()
         U'\u0e2a', // ส
     };
 
-    static const vector<char32_t> konConst = {
+    static const vector<char32_t> konCons = {
         U'\u0e0d', // ญ
         U'\u0e13', // ณ
         U'\u0e19', // น
@@ -156,7 +156,7 @@ testEndConstClass()
         U'\u0e2c', // ฬ
     };
 
-    static const vector<char32_t> kopConst = {
+    static const vector<char32_t> kopCons = {
         U'\u0e1a', // บ
         U'\u0e1b', // ป
         U'\u0e1c', // ผ
@@ -166,22 +166,22 @@ testEndConstClass()
         U'\u0e20', // ภ
     };
 
-    static const vector<char32_t> komConst = {
+    static const vector<char32_t> komCons = {
         U'\u0e21', // ม
     };
 
-    static const vector<char32_t> koeyConst = {
+    static const vector<char32_t> koeyCons = {
         U'\u0e22', // ย
     };
 
-    static const vector<char32_t> koewConst = {
+    static const vector<char32_t> koewCons = {
         U'\u0e27', // ว
     };
 
     bool isSuccess = true;
 
-    for (auto c : kokaConst) {
-        if (EEndConstClass::NONE != EndConstClass (c)) {
+    for (auto c : kokaCons) {
+        if (EEndConsClass::NONE != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -189,8 +189,8 @@ testEndConstClass()
         }
     }
 
-    for (auto c : kokConst) {
-        if (EEndConstClass::KOK != EndConstClass (c)) {
+    for (auto c : kokCons) {
+        if (EEndConsClass::KOK != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -198,8 +198,8 @@ testEndConstClass()
         }
     }
 
-    for (auto c : kongConst) {
-        if (EEndConstClass::KONG != EndConstClass (c)) {
+    for (auto c : kongCons) {
+        if (EEndConsClass::KONG != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -207,8 +207,8 @@ testEndConstClass()
         }
     }
 
-    for (auto c : kotConst) {
-        if (EEndConstClass::KOT != EndConstClass (c)) {
+    for (auto c : kotCons) {
+        if (EEndConsClass::KOT != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -216,8 +216,8 @@ testEndConstClass()
         }
     }
 
-    for (auto c : konConst) {
-        if (EEndConstClass::KON != EndConstClass (c)) {
+    for (auto c : konCons) {
+        if (EEndConsClass::KON != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -225,8 +225,8 @@ testEndConstClass()
         }
     }
 
-    for (auto c : kopConst) {
-        if (EEndConstClass::KOP != EndConstClass (c)) {
+    for (auto c : kopCons) {
+        if (EEndConsClass::KOP != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -234,8 +234,8 @@ testEndConstClass()
         }
     }
 
-    for (auto c : komConst) {
-        if (EEndConstClass::KOM != EndConstClass (c)) {
+    for (auto c : komCons) {
+        if (EEndConsClass::KOM != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -243,8 +243,8 @@ testEndConstClass()
         }
     }
 
-    for (auto c : koeyConst) {
-        if (EEndConstClass::KOEY != EndConstClass (c)) {
+    for (auto c : koeyCons) {
+        if (EEndConsClass::KOEY != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -252,8 +252,8 @@ testEndConstClass()
         }
     }
 
-    for (auto c : koewConst) {
-        if (EEndConstClass::KOEW != EndConstClass (c)) {
+    for (auto c : koewCons) {
+        if (EEndConsClass::KOEW != EndConsClass (c)) {
             cerr << "Wrong class for end const '"
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
@@ -267,15 +267,15 @@ testEndConstClass()
 int
 main()
 {
-    cout << "Testing InitConstClass() ... ";
-    if (testInitConstClass()) {
+    cout << "Testing InitConsClass() ... ";
+    if (testInitConsClass()) {
         cout << "[OK]" << endl;
     } else {
         cout << "[FAIL]" << endl;
     }
 
-    cout << "Testing EndConstClass() ... ";
-    if (testEndConstClass()) {
+    cout << "Testing EndConsClass() ... ";
+    if (testEndConsClass()) {
         cout << "[OK]" << endl;
     } else {
         cout << "[FAIL]" << endl;

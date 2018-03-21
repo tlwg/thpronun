@@ -16,7 +16,7 @@
 //   ไกล  -> klay0
 //   ใกล้  -> klay2
 
-enum class EInitConst {
+enum class EInitCons {
     KA  = 'k', // ก
     KHA = 'c', // ข ฃ ค ฅ ฆ
     NGA = 'g', // ง
@@ -40,7 +40,7 @@ enum class EInitConst {
     A   = '?', // อ
 };
 
-enum class ESecInitConst {
+enum class ESecInitCons {
     NONE = '_',
     RA   = 'r', // ร ควบ
     LA   = 'l', // ล ควบ
@@ -77,8 +77,8 @@ enum class EVowel {
 bool
 IsShortVowel (EVowel v);
 
-EEndConstClass
-EndConstCodeToClass (char c);
+EEndConsClass
+EndConsCodeToClass (char c);
 
 enum class ETone {
     SAMAN    = '0',
