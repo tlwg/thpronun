@@ -15,6 +15,7 @@ class Syl {
 
 public:
     Syl();
+    Syl (const Syl& other);
     Syl (EInitCons iCons1, ESecInitCons iCons2, EVowel vowel,
          EEndConsClass eCons, ETone tone);
     Syl (char iCons1, char iCons2, char vowel, char eCons, char tone);

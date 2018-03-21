@@ -19,6 +19,16 @@ Syl::Syl()
 }
 
 inline
+Syl::Syl (const Syl& other)
+  : iCons1 (other.iCons1),
+    iCons2 (other.iCons2),
+    vowel (other.vowel),
+    eCons (other.eCons),
+    tone (other.tone)
+{
+}
+
+inline
 Syl::Syl (EInitCons iCons1, ESecInitCons iCons2, EVowel vowel,
           EEndConsClass eCons, ETone tone)
   : iCons1 (iCons1),
