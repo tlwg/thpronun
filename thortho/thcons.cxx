@@ -11,7 +11,7 @@ using namespace std;
 
 #define IC EInitConsClass
 
-static EInitConsClass InitConsClassTbl_[46] = {
+static const EInitConsClass InitConsClassTbl_[46] = {
     // ก ข ฃ ค ฅ ฆ ง
     IC::MID,  IC::HIGH, IC::HIGH, IC::LOWP, IC::LOWP, IC::LOWP, IC::LOWS,
     // จ ฉ ช ซ ฌ ญ
@@ -39,7 +39,7 @@ InitConsClass (char16_t c)
 
 #define EC EEndConsClass
 
-static EEndConsClass EndConsClassTbl_[46] = {
+static const EEndConsClass EndConsClassTbl_[46] = {
     // ก ข ฃ ค ฅ ฆ ง
     EC::KOK,  EC::KOK,  EC::KOK,  EC::KOK,  EC::KOK,  EC::KOK,  EC::KONG,
     // จ ฉ ช ซ ฌ ญ
