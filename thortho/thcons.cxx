@@ -37,6 +37,34 @@ InitConsClass (char16_t c)
     return InitConsClassTbl_[c - UTH_KO_KAI];
 }
 
+#define IC EInitConsSound
+
+static const EInitConsSound InitConsSoundTbl_[46] = {
+    // ก ข ฃ ค ฅ ฆ ง
+    IC::KA,  IC::KHA, IC::KHA, IC::KHA, IC::KHA, IC::KHA, IC::NGA,
+    // จ ฉ ช ซ ฌ ญ
+    IC::JA,  IC::CHA, IC::CHA, IC::SA, IC::CHA, IC::YA,
+    // ฎ ฏ ฐ ฑ ฒ ณ
+    IC::DA,  IC::TA,  IC::THA, IC::THA, IC::THA, IC::NA,
+    // ด ต ถ ท ธ น
+    IC::DA,  IC::TA,  IC::THA, IC::THA, IC::THA, IC::NA,
+    // บ ป ผ ฝ พ ฟ ภ ม
+    IC::BA,  IC::PA,  IC::PHA, IC::FA, IC::PHA, IC::FA, IC::PHA, IC::MA,
+    // ย ร ฤ ล ฦ ว
+    IC::YA, IC::RA, IC::INVALID, IC::LA, IC::INVALID, IC::WA,
+    // ศ ษ ส ห ฬ อ ฮ
+    IC::SA, IC::SA, IC::SA, IC::HA, IC::LA, IC::A,  IC::HA
+};
+
+#undef IC
+
+EInitConsSound
+InitConsSound (char16_t c)
+{
+    assert (UTH_KO_KAI <= c && c <= UTH_HO_NOKHUK);
+    return InitConsSoundTbl_[c - UTH_KO_KAI];
+}
+
 #define EC EEndConsClass
 
 static const EEndConsClass EndConsClassTbl_[46] = {

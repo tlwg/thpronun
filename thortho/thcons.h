@@ -13,6 +13,30 @@ enum class EInitConsClass {
     LOWS,
 };
 
+enum class EInitConsSound {
+    INVALID,
+    KA,     // ก
+    KHA,    // ข ฃ ค ฅ ฆ
+    NGA,    // ง
+    JA,     // จ
+    CHA,    // ฉ ช ฌ
+    YA,     // ญ ย
+    DA,     // ฎ ด
+    TA,     // ฏ ต
+    THA,    // ฐ ฑ ฒ ถ ท ธ
+    NA,     // ณ น
+    BA,     // บ
+    PA,     // ป
+    PHA,    // ผ พ ภ
+    FA,     // ฝ ฟ
+    MA,     // ม
+    RA,     // ร
+    LA,     // ล ฬ
+    WA,     // ว
+    SA,     // ซ ศ ษ ส
+    HA,     // ห ฮ
+    A,      // อ
+};
 enum class EEndConsClass {
     NONE,
     KOK,
@@ -27,6 +51,9 @@ enum class EEndConsClass {
 
 EInitConsClass
 InitConsClass (char16_t c);
+
+EInitConsSound
+InitConsSound (char16_t c);
 
 EEndConsClass
 EndConsClass (char16_t c);

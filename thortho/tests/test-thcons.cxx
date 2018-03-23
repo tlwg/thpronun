@@ -1,4 +1,5 @@
 #include "thortho/thcons.h"
+#include "thortho/thuni.h"
 
 #include <iostream>
 #include <iomanip>
@@ -99,6 +100,158 @@ testInitConsClass()
                  << setw (4) << hex << static_cast<char16_t> (c)
                  << "'" << endl;
             isSuccess = false;
+        }
+    }
+
+    return isSuccess;
+}
+
+bool
+testInitConsSound()
+{
+    static const vector<pair<EInitConsSound, vector<int>>> soundICons = {
+        {
+            EInitConsSound::KA, {
+                UTH_KO_KAI,
+            }
+        },
+        {
+            EInitConsSound::KHA, {
+                UTH_KHO_KHAI,
+                UTH_KHO_KHUAT,
+                UTH_KHO_KHWAI,
+                UTH_KHO_KHON,
+                UTH_KHO_RAKHANG,
+            }
+        },
+        {
+            EInitConsSound::NGA, {
+                UTH_NGO_NGU,
+            }
+        },
+        {
+            EInitConsSound::JA, {
+                UTH_CHO_CHAN,
+            }
+        },
+        {
+            EInitConsSound::CHA, {
+                UTH_CHO_CHING,
+                UTH_CHO_CHANG,
+                UTH_CHO_CHOE,
+            }
+        },
+        {
+            EInitConsSound::YA, {
+                UTH_YO_YING,
+                UTH_YO_YAK,
+            }
+        },
+        {
+            EInitConsSound::DA, {
+                UTH_DO_CHADA,
+                UTH_DO_DEK,
+            }
+        },
+        {
+            EInitConsSound::TA, {
+                UTH_TO_PATAK,
+                UTH_TO_TAO,
+            }
+        },
+        {
+            EInitConsSound::THA, {
+                UTH_THO_THAN,
+                UTH_THO_NANGMONTHO,
+                UTH_THO_PHUTHAO,
+                UTH_THO_THUNG,
+                UTH_THO_THAHAN,
+                UTH_THO_THONG,
+            }
+        },
+        {
+            EInitConsSound::NA, {
+                UTH_NO_NEN,
+                UTH_NO_NU,
+            }
+        },
+        {
+            EInitConsSound::BA, {
+                UTH_BO_BAIMAI,
+            }
+        },
+        {
+            EInitConsSound::PA, {
+                UTH_PO_PLA,
+            }
+        },
+        {
+            EInitConsSound::PHA, {
+                UTH_PHO_PHUNG,
+                UTH_PHO_PHAN,
+                UTH_PHO_SAMPHAO,
+            }
+        },
+        {
+            EInitConsSound::FA, {
+                UTH_FO_FA,
+                UTH_FO_FAN,
+            }
+        },
+        {
+            EInitConsSound::MA, {
+                UTH_MO_MA,
+            }
+        },
+        {
+            EInitConsSound::RA, {
+                UTH_RO_RUA,
+            }
+        },
+        {
+            EInitConsSound::LA, {
+                UTH_LO_LING,
+                UTH_LO_CHULA,
+            }
+        },
+        {
+            EInitConsSound::WA, {
+                UTH_WO_WAEN,
+            }
+        },
+        {
+            EInitConsSound::SA, {
+                UTH_SO_SO,
+                UTH_SO_SALA,
+                UTH_SO_RUSI,
+                UTH_SO_SUA,
+            }
+        },
+        {
+            EInitConsSound::HA, {
+                UTH_HO_HIP,
+                UTH_HO_NOKHUK,
+            }
+        },
+        {
+            EInitConsSound::A, {
+                UTH_O_ANG,
+            }
+        },
+    };
+
+    bool isSuccess = true;
+
+    for (auto v : soundICons) {
+        for (auto c : v.second) {
+            auto s = InitConsSound (c);
+            if (s != v.first) {
+                cerr << "Wrong init consonant sound for '" << c << "'. "
+                     << "Expected " << static_cast<int> (v.first)
+                     << " but got " << static_cast<int> (s)
+                     << endl;
+                isSuccess = false;
+            }
         }
     }
 
@@ -269,6 +422,13 @@ main()
 {
     cout << "Testing InitConsClass() ... ";
     if (testInitConsClass()) {
+        cout << "[OK]" << endl;
+    } else {
+        cout << "[FAIL]" << endl;
+    }
+
+    cout << "Testing InitConsSound() ... ";
+    if (testInitConsSound()) {
         cout << "[OK]" << endl;
     } else {
         cout << "[FAIL]" << endl;
