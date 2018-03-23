@@ -420,11 +420,14 @@ testEndConsClass()
 int
 main()
 {
+    bool isSuccess = true;
+
     cout << "Testing InitConsClass() ... ";
     if (testInitConsClass()) {
         cout << "[OK]" << endl;
     } else {
         cout << "[FAIL]" << endl;
+        isSuccess = false;
     }
 
     cout << "Testing InitConsSound() ... ";
@@ -432,6 +435,7 @@ main()
         cout << "[OK]" << endl;
     } else {
         cout << "[FAIL]" << endl;
+        isSuccess = false;
     }
 
     cout << "Testing EndConsClass() ... ";
@@ -439,9 +443,10 @@ main()
         cout << "[OK]" << endl;
     } else {
         cout << "[FAIL]" << endl;
+        isSuccess = false;
     }
 
-    return 0;
+    return isSuccess ? 0 : 1;
 }
 
 /*
