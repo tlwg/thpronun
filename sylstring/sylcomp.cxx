@@ -8,6 +8,40 @@
 
 using namespace std;
 
+#define ICS EInitConsSound
+static const unordered_map<char, EInitConsSound>
+InitConsCodeToSoundTbl_ = {
+    { '*', ICS::INVALID },
+    { 'k', ICS::KA  }, // ก
+    { 'c', ICS::KHA }, // ข ฃ ค ฅ ฆ
+    { 'g', ICS::NGA }, // ง
+    { 'j', ICS::JA  }, // จ
+    { 'J', ICS::CHA }, // ฉ ช ฌ
+    { 'y', ICS::YA  }, // ญ ย
+    { 'd', ICS::DA  }, // ฎ ด
+    { 't', ICS::TA  }, // ฏ ต
+    { 'T', ICS::THA }, // ฐ ฑ ฒ ถ ท ธ
+    { 'n', ICS::NA  }, // ณ น
+    { 'b', ICS::BA  }, // บ
+    { 'p', ICS::PA  }, // ป
+    { 'P', ICS::PHA }, // ผ พ ภ
+    { 'f', ICS::FA  }, // ฝ ฟ
+    { 'm', ICS::MA  }, // ม
+    { 'r', ICS::RA  }, // ร
+    { 'l', ICS::LA  }, // ล ฬ
+    { 'w', ICS::WA  }, // ว
+    { 's', ICS::SA  }, // ซ ศ ษ ส
+    { 'h', ICS::HA  }, // ห ฮ
+    { '?', ICS::A   }, // อ
+};
+#undef ICS
+
+EInitConsSound
+InitConsCodeToSound (char c)
+{
+    return InitConsCodeToSoundTbl_.at (c);
+}
+
 #define ECC EEndConsClass
 static const unordered_map<char, EEndConsClass>
 EndConsCodeToClassTbl_ = {

@@ -53,47 +53,47 @@ IsDeadSyl (bool isShortVowel, EEndConsClass eCons)
 // Initial Consonant Classification & Thai Pronunciations
 //
 
-#define IC EInitCons
-static const unordered_set<EInitCons>
+#define ICS EInitConsSound
+static const unordered_set<EInitConsSound>
 ThaiMidConsSet_ = {
-    IC::KA, // ก
-    IC::JA, // จ
-    IC::DA, // ฎ ด
-    IC::TA, // ฏ ต
-    IC::BA, // บ
-    IC::PA, // ป
-    IC::A,  // อ
+    ICS::KA, // ก
+    ICS::JA, // จ
+    ICS::DA, // ฎ ด
+    ICS::TA, // ฏ ต
+    ICS::BA, // บ
+    ICS::PA, // ป
+    ICS::A,  // อ
 };
 
-static const unordered_map<EInitCons,string>
+static const unordered_map<EInitConsSound, string>
 ThaiMidCons1Tbl_ = {
-    { IC::KA,  u8"ก" },
-    { IC::JA,  u8"จ" },
-    { IC::DA,  u8"ด" },
-    { IC::TA,  u8"ต" },
-    { IC::BA,  u8"บ" },
-    { IC::PA,  u8"ป" },
-    { IC::A,   u8"อ" },
+    { ICS::KA,  u8"ก" },
+    { ICS::JA,  u8"จ" },
+    { ICS::DA,  u8"ด" },
+    { ICS::TA,  u8"ต" },
+    { ICS::BA,  u8"บ" },
+    { ICS::PA,  u8"ป" },
+    { ICS::A,   u8"อ" },
 };
 
-static const unordered_map<EInitCons, pair<string, string>>
+static const unordered_map<EInitConsSound, pair<string, string>>
 ThaiHighLowInitCons1Tbl_ = {
-    { IC::KHA, { u8"ข",  u8"ค" } },
-    { IC::NGA, { u8"หฺง", u8"ง" } },
-    { IC::CHA, { u8"ฉ",  u8"ช" } },
-    { IC::YA,  { u8"หฺย", u8"ย" } },
-    { IC::THA, { u8"ถ",  u8"ท" } },
-    { IC::NA,  { u8"หฺน", u8"น" } },
-    { IC::PHA, { u8"ผ",  u8"พ" } },
-    { IC::FA,  { u8"ฝ",  u8"ฟ" } },
-    { IC::MA,  { u8"หฺม", u8"ม" } },
-    { IC::RA,  { u8"หฺร", u8"ร" } },
-    { IC::LA,  { u8"หฺล", u8"ล" } },
-    { IC::WA,  { u8"หฺว", u8"ว" } },
-    { IC::SA,  { u8"ส",  u8"ซ" } },
-    { IC::HA,  { u8"ห",  u8"ฮ" } },
+    { ICS::KHA, { u8"ข",  u8"ค" } },
+    { ICS::NGA, { u8"หฺง", u8"ง" } },
+    { ICS::CHA, { u8"ฉ",  u8"ช" } },
+    { ICS::YA,  { u8"หฺย", u8"ย" } },
+    { ICS::THA, { u8"ถ",  u8"ท" } },
+    { ICS::NA,  { u8"หฺน", u8"น" } },
+    { ICS::PHA, { u8"ผ",  u8"พ" } },
+    { ICS::FA,  { u8"ฝ",  u8"ฟ" } },
+    { ICS::MA,  { u8"หฺม", u8"ม" } },
+    { ICS::RA,  { u8"หฺร", u8"ร" } },
+    { ICS::LA,  { u8"หฺล", u8"ล" } },
+    { ICS::WA,  { u8"หฺว", u8"ว" } },
+    { ICS::SA,  { u8"ส",  u8"ซ" } },
+    { ICS::HA,  { u8"ห",  u8"ฮ" } },
 };
-#undef IC
+#undef ICS
 
 //
 // Second Initial Consonant Thai Pronunciations
@@ -149,7 +149,7 @@ ThaiToneTbl_ = {
 //
 
 static pair<string, string>
-ThaiLiveIConsTonePair (EInitCons iCons1, ESecInitCons iCons2, ETone tone)
+ThaiLiveIConsTonePair (EInitConsSound iCons1, ESecInitCons iCons2, ETone tone)
 {
     string oICons;
     string oTone;
@@ -187,8 +187,8 @@ ThaiLiveIConsTonePair (EInitCons iCons1, ESecInitCons iCons2, ETone tone)
 }
 
 static pair<string, string>
-ThaiDeadShortIConsTonePair (EInitCons iCons1, ESecInitCons iCons2,
-                             ETone tone)
+ThaiDeadShortIConsTonePair (EInitConsSound iCons1, ESecInitCons iCons2,
+                            ETone tone)
 {
     string oICons;
     string oTone;
@@ -227,8 +227,8 @@ ThaiDeadShortIConsTonePair (EInitCons iCons1, ESecInitCons iCons2,
 }
 
 static pair<string, string>
-ThaiDeadLongIConsTonePair (EInitCons iCons1, ESecInitCons iCons2,
-                            ETone tone)
+ThaiDeadLongIConsTonePair (EInitConsSound iCons1, ESecInitCons iCons2,
+                           ETone tone)
 {
     string oICons;
     string oTone;
@@ -272,7 +272,7 @@ ThaiDeadLongIConsTonePair (EInitCons iCons1, ESecInitCons iCons2,
 
 // อ้ะ, เอ้า, อั้-
 static string
-ThaiSylA (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
+ThaiSylA (EInitConsSound iCons1, ESecInitCons iCons2, EEndConsClass eCons,
           ETone tone)
 {
     if (EEndConsClass::NONE == eCons) {
@@ -296,7 +296,7 @@ ThaiSylA (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
 
 // อ้า-
 static string
-ThaiSylAA (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
+ThaiSylAA (EInitConsSound iCons1, ESecInitCons iCons2, EEndConsClass eCons,
            ETone tone)
 {
     auto iConsTonePair
@@ -309,7 +309,7 @@ ThaiSylAA (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
 
 // อิ้-, อี้-, อึ้-, อุ้-, อู้-
 static string
-ThaiSylBelowAbove (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+ThaiSylBelowAbove (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
                    EVowel vowel, EEndConsClass eCons, ETone tone)
 {
     assert (EVowel::I == vowel || EVowel::II == vowel
@@ -336,7 +336,7 @@ ThaiSylBelowAbove (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
 
 // อื้อ, อึ้-
 static string
-ThaiSylUEE (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
+ThaiSylUEE (EInitConsSound iCons1, ESecInitCons iCons2, EEndConsClass eCons,
             ETone tone)
 {
     auto iConsTonePair
@@ -350,7 +350,7 @@ ThaiSylUEE (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
 
 // เอ้ะ, เอ็-, แอ้ะ, แอ้-
 static string
-ThaiSylLeadShort (EInitCons iCons1, ESecInitCons iCons2,
+ThaiSylLeadShort (EInitConsSound iCons1, ESecInitCons iCons2,
                   EVowel vowel, EEndConsClass eCons, ETone tone)
 {
     assert (EVowel::E == vowel || EVowel::AE == vowel);
@@ -374,7 +374,7 @@ ThaiSylLeadShort (EInitCons iCons1, ESecInitCons iCons2,
 
 // เอ้-, แอ้-, โอ้-
 static string
-ThaiSylLeadLong (EInitCons iCons1, ESecInitCons iCons2,
+ThaiSylLeadLong (EInitConsSound iCons1, ESecInitCons iCons2,
                  EVowel vowel, EEndConsClass eCons, ETone tone)
 {
     assert (EVowel::EE == vowel || EVowel::AEE == vowel || EVowel::OO == vowel);
@@ -395,7 +395,7 @@ ThaiSylLeadLong (EInitCons iCons1, ESecInitCons iCons2,
 
 // โอ้ะ, อ้-
 static string
-ThaiSylO (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
+ThaiSylO (EInitConsSound iCons1, ESecInitCons iCons2, EEndConsClass eCons,
           ETone tone)
 {
     auto iConsTonePair
@@ -413,7 +413,7 @@ ThaiSylO (EInitCons iCons1, ESecInitCons iCons2, EEndConsClass eCons,
 
 // เอี้ยะ, เอี้ย-
 static string
-ThaiSylIA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+ThaiSylIA (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
            EEndConsClass eCons, ETone tone)
 {
     // Note: There is no short IA with ending consonant.
@@ -435,7 +435,7 @@ ThaiSylIA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
 
 // เอื้อะ, เอื้อ-
 static string
-ThaiSylUEA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+ThaiSylUEA (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
             EEndConsClass eCons, ETone tone)
 {
     // Note: There is no short UEA with ending consonant.
@@ -457,7 +457,7 @@ ThaiSylUEA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
 
 // อั้วะ, อั้ว, อ็ว-, อ้ว-
 static string
-ThaiSylUA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+ThaiSylUA (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
            EEndConsClass eCons, ETone tone)
 {
     auto iConsTonePair
@@ -484,7 +484,7 @@ ThaiSylUA (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
 
 // เอ้าะ, อ้อ, อ้อ-
 static string
-ThaiSylAU (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+ThaiSylAU (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
            EEndConsClass eCons, ETone tone)
 {
     auto iConsTonePair
@@ -511,7 +511,7 @@ ThaiSylAU (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
 
 // เอ้อะ, เอ้อ, เอิ้-
 static string
-ThaiSylOE (EInitCons iCons1, ESecInitCons iCons2, bool isShort,
+ThaiSylOE (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
            EEndConsClass eCons, ETone tone)
 {
     // Note: There is no short OE with ending consonant.
@@ -614,32 +614,32 @@ Syl::toThai() const
 // Romanized Syllable Pronunciation Generation
 //
 
-#define IC EInitCons
-static const unordered_map<EInitCons, string>
+#define ICS EInitConsSound
+static const unordered_map<EInitConsSound, string>
 RomanInitConsTbl_ = {
-    { IC::KA,   "k"  },  // ก
-    { IC::KHA,  "kh" },  // ข ฃ ค ฅ ฆ
-    { IC::NGA,  "ng" },  // ง
-    { IC::JA,   "ch" },  // จ
-    { IC::CHA,  "ch" },  // ฉ ช ฌ
-    { IC::YA,   "y"  },  // ญ ย
-    { IC::DA,   "d"  },  // ฎ ด
-    { IC::TA,   "t"  },  // ฏ ต
-    { IC::THA,  "th" },  // ฐ ฑ ฒ ถ ท ธ
-    { IC::NA,   "n"  },  // ณ น
-    { IC::BA,   "b"  },  // บ
-    { IC::PA,   "p"  },  // ป
-    { IC::PHA,  "ph" },  // ผ พ ภ
-    { IC::FA,   "f"  },  // ฝ ฟ
-    { IC::MA,   "m"  },  // ม
-    { IC::RA,   "r"  },  // ร
-    { IC::LA,   "l"  },  // ล ฬ
-    { IC::WA,   "w"  },  // ว
-    { IC::SA,   "s"  },  // ซ ศ ษ ส
-    { IC::HA,   "h"  },  // ห ฮ
-    { IC::A,    ""   },  // อ
+    { ICS::KA,   "k"  },  // ก
+    { ICS::KHA,  "kh" },  // ข ฃ ค ฅ ฆ
+    { ICS::NGA,  "ng" },  // ง
+    { ICS::JA,   "ch" },  // จ
+    { ICS::CHA,  "ch" },  // ฉ ช ฌ
+    { ICS::YA,   "y"  },  // ญ ย
+    { ICS::DA,   "d"  },  // ฎ ด
+    { ICS::TA,   "t"  },  // ฏ ต
+    { ICS::THA,  "th" },  // ฐ ฑ ฒ ถ ท ธ
+    { ICS::NA,   "n"  },  // ณ น
+    { ICS::BA,   "b"  },  // บ
+    { ICS::PA,   "p"  },  // ป
+    { ICS::PHA,  "ph" },  // ผ พ ภ
+    { ICS::FA,   "f"  },  // ฝ ฟ
+    { ICS::MA,   "m"  },  // ม
+    { ICS::RA,   "r"  },  // ร
+    { ICS::LA,   "l"  },  // ล ฬ
+    { ICS::WA,   "w"  },  // ว
+    { ICS::SA,   "s"  },  // ซ ศ ษ ส
+    { ICS::HA,   "h"  },  // ห ฮ
+    { ICS::A,    ""   },  // อ
 };
-#undef IC
+#undef ICS
 
 #define SC ESecInitCons
 static const unordered_map<ESecInitCons, string>
@@ -738,9 +738,9 @@ SylString::toRoman (bool isCapitalize) const
         //   1. prev->eCons == NONE and i->iCons1 == NGA
         //   2. prev->eCons == KONG and i->iCons1 == A
         //   3. i->iCons1 == A
-        if (EInitCons::A == i->iCons1
+        if (EInitConsSound::A == i->iCons1
             || (EEndConsClass::NONE == prev->eCons
-                && EInitCons::NGA == i->iCons1))
+                && EInitConsSound::NGA == i->iCons1))
         {
             output += '-';
         }

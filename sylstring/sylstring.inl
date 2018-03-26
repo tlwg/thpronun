@@ -10,7 +10,7 @@
 
 inline
 Syl::Syl()
-  : iCons1 (EInitCons::INVALID),
+  : iCons1 (EInitConsSound::INVALID),
     iCons2 (ESecInitCons::NONE),
     vowel (EVowel::INVALID),
     eCons (EEndConsClass::NONE),
@@ -29,7 +29,7 @@ Syl::Syl (const Syl& other)
 }
 
 inline
-Syl::Syl (EInitCons iCons1, ESecInitCons iCons2, EVowel vowel,
+Syl::Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
           EEndConsClass eCons, ETone tone)
   : iCons1 (iCons1),
     iCons2 (iCons2),
@@ -41,7 +41,7 @@ Syl::Syl (EInitCons iCons1, ESecInitCons iCons2, EVowel vowel,
 
 inline
 Syl::Syl (char iCons1, char iCons2, char vowel, char eCons, char tone)
-  : iCons1 (static_cast<EInitCons> (iCons1)),
+  : iCons1 (InitConsCodeToSound (iCons1)),
     iCons2 (static_cast<ESecInitCons> (iCons2)),
     vowel (static_cast<EVowel> (vowel)),
     eCons (EndConsCodeToClass (eCons)),
@@ -51,7 +51,7 @@ Syl::Syl (char iCons1, char iCons2, char vowel, char eCons, char tone)
 
 inline
 Syl::Syl (const std::string& aSylStr)
-  : iCons1 (static_cast<EInitCons> (aSylStr.at (0))),
+  : iCons1 (InitConsCodeToSound (aSylStr.at (0))),
     iCons2 (static_cast<ESecInitCons> (aSylStr.at (1))),
     vowel (static_cast<EVowel> (aSylStr.at (2))),
     eCons (EndConsCodeToClass (aSylStr.at (3))),

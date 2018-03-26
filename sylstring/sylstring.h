@@ -16,7 +16,7 @@ class Syl {
 public:
     Syl();
     Syl (const Syl& other);
-    Syl (EInitCons iCons1, ESecInitCons iCons2, EVowel vowel,
+    Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
          EEndConsClass eCons, ETone tone);
     Syl (char iCons1, char iCons2, char vowel, char eCons, char tone);
     // c-tor with string of length 5
@@ -26,7 +26,7 @@ public:
     std::string toRoman() const;
 
 private:
-    EInitCons       iCons1;
+    EInitConsSound  iCons1;
     ESecInitCons    iCons2;
     EVowel          vowel;
     EEndConsClass   eCons;

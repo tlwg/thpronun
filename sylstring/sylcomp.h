@@ -16,30 +16,8 @@
 //   ไกล  -> klay0
 //   ใกล้  -> klay2
 
-enum class EInitCons {
-    INVALID = '*',
-    KA  = 'k', // ก
-    KHA = 'c', // ข ฃ ค ฅ ฆ
-    NGA = 'g', // ง
-    JA  = 'j', // จ
-    CHA = 'J', // ฉ ช ฌ
-    YA  = 'y', // ญ ย
-    DA  = 'd', // ฎ ด
-    TA  = 't', // ฏ ต
-    THA = 'T', // ฐ ฑ ฒ ถ ท ธ
-    NA  = 'n', // ณ น
-    BA  = 'b', // บ
-    PA  = 'p', // ป
-    PHA = 'P', // ผ พ ภ
-    FA  = 'f', // ฝ ฟ
-    MA  = 'm', // ม
-    RA  = 'r', // ร
-    LA  = 'l', // ล ฬ
-    WA  = 'w', // ว
-    SA  = 's', // ซ ศ ษ ส
-    HA  = 'h', // ห ฮ
-    A   = '?', // อ
-};
+EInitConsSound
+InitConsCodeToSound (char c);
 
 enum class ESecInitCons {
     NONE = '_',
