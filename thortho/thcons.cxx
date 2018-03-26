@@ -93,6 +93,44 @@ EndConsClass (char16_t c)
     return EndConsClassTbl_[c - UTH_KO_KAI];
 }
 
+ETone
+ToneFromWritten (EInitConsClass iConsClass,
+                 ETone          writtenTone,
+                 bool           isDeadEnd,
+                 bool           isShortVowel)
+{
+    switch (iConsClass) {
+        case EInitConsClass::MID:
+            if (ETone::SAMAN == writtenTone && isDeadEnd) {
+                return ETone::EK;
+            }
+            break;
+
+        case EInitConsClass::HIGH:
+            if (ETone::SAMAN == writtenTone) {
+                return isDeadEnd ? ETone::EK : ETone::CHATTAWA;
+            }
+            break;
+
+        case EInitConsClass::LOWP:
+        case EInitConsClass::LOWS:
+            switch (writtenTone) {
+                case ETone::SAMAN:
+                    if (isDeadEnd) {
+                        return isShortVowel ? ETone::TRI : ETone::THO;
+                    }
+                    break;
+                case ETone::EK:
+                    return ETone::THO;
+                case ETone::THO:
+                    return ETone::TRI;
+            }
+            break;
+    }
+
+    return writtenTone;
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

@@ -37,6 +37,7 @@ enum class EInitConsSound {
     HA,     // ห ฮ
     A,      // อ
 };
+
 enum class EEndConsClass {
     NONE,
     KOK,
@@ -47,6 +48,15 @@ enum class EEndConsClass {
     KOM,
     KOEY,
     KOEW,
+};
+
+enum class ETone {
+    INVALID,
+    SAMAN,
+    EK,
+    THO,
+    TRI,
+    CHATTAWA,
 };
 
 EInitConsClass
@@ -60,6 +70,12 @@ EndConsClass (char16_t c);
 
 bool
 IsDeadEndConsClass (EEndConsClass c);
+
+ETone
+ToneFromWritten (EInitConsClass iConsClass,
+                 ETone          writtenTone,
+                 bool           isDeadEnd,
+                 bool           isShortVowel);
 
 #include "thcons.inl"
 

@@ -417,6 +417,129 @@ testEndConsClass()
     return isSuccess;
 }
 
+bool
+testToneFromWritten()
+{
+    struct ToneTblEntry {
+        EInitConsClass  iConsClass;
+        ETone           writtenTone;
+        bool            isDeadEnd;
+        bool            isShortVowel;
+        ETone           pronTone;
+    };
+#define ICC EInitConsClass
+    static const vector<ToneTblEntry> ToneTbl_ = {
+        // iCons,    writtenTone,     isDead, isShort, pronTone
+        { ICC::MID,  ETone::SAMAN,    false,  false, ETone::SAMAN    }, // กาน
+        { ICC::MID,  ETone::SAMAN,    false,  true,  ETone::SAMAN    }, // กัน
+        { ICC::MID,  ETone::SAMAN,    true,   false, ETone::EK       }, // กาด
+        { ICC::MID,  ETone::SAMAN,    true,   true,  ETone::EK       }, // กัด
+        { ICC::MID,  ETone::EK,       false,  false, ETone::EK       }, // ก่าน
+        { ICC::MID,  ETone::EK,       false,  true,  ETone::EK       }, // กั่น
+        { ICC::MID,  ETone::EK,       true,   false, ETone::EK       }, // ก่าด*
+        { ICC::MID,  ETone::EK,       true,   true,  ETone::EK       }, // กั่ด*
+        { ICC::MID,  ETone::THO,      false,  false, ETone::THO      }, // ก้าน
+        { ICC::MID,  ETone::THO,      false,  true,  ETone::THO      }, // กั้น
+        { ICC::MID,  ETone::THO,      true,   false, ETone::THO      }, // ก้าด
+        { ICC::MID,  ETone::THO,      true,   true,  ETone::THO      }, // กั้ด
+        { ICC::MID,  ETone::TRI,      false,  false, ETone::TRI      }, // ก๊าน
+        { ICC::MID,  ETone::TRI,      false,  true,  ETone::TRI      }, // กั๊น
+        { ICC::MID,  ETone::TRI,      true,   false, ETone::TRI      }, // ก๊าด
+        { ICC::MID,  ETone::TRI,      true,   true,  ETone::TRI      }, // กั๊ด
+        { ICC::MID,  ETone::CHATTAWA, false,  false, ETone::CHATTAWA }, // ก๋าน
+        { ICC::MID,  ETone::CHATTAWA, false,  true,  ETone::CHATTAWA }, // กั๋น
+        { ICC::MID,  ETone::CHATTAWA, true,   false, ETone::CHATTAWA }, // ก๋าด
+        { ICC::MID,  ETone::CHATTAWA, true,   true,  ETone::CHATTAWA }, // กั๋ด
+
+        { ICC::HIGH, ETone::SAMAN,    false,  false, ETone::CHATTAWA }, // ขาน
+        { ICC::HIGH, ETone::SAMAN,    false,  true,  ETone::CHATTAWA }, // ขัน
+        { ICC::HIGH, ETone::SAMAN,    true,   false, ETone::EK       }, // ขาด
+        { ICC::HIGH, ETone::SAMAN,    true,   true,  ETone::EK       }, // ขัด
+        { ICC::HIGH, ETone::EK,       false,  false, ETone::EK       }, // ข่าน
+        { ICC::HIGH, ETone::EK,       false,  true,  ETone::EK       }, // ขั่น
+        { ICC::HIGH, ETone::EK,       true,   false, ETone::EK       }, // ข่าด*
+        { ICC::HIGH, ETone::EK,       true,   true,  ETone::EK       }, // ขั่ด*
+        { ICC::HIGH, ETone::THO,      false,  false, ETone::THO      }, // ข้าน
+        { ICC::HIGH, ETone::THO,      false,  true,  ETone::THO      }, // ขั้น
+        { ICC::HIGH, ETone::THO,      true,   false, ETone::THO      }, // ข้าด
+        { ICC::HIGH, ETone::THO,      true,   true,  ETone::THO      }, // ขั้ด
+        { ICC::HIGH, ETone::TRI,      false,  false, ETone::TRI      }, // ข๊าน*
+        { ICC::HIGH, ETone::TRI,      false,  true,  ETone::TRI      }, // ขั๊น*
+        { ICC::HIGH, ETone::TRI,      true,   false, ETone::TRI      }, // ข๊าด*
+        { ICC::HIGH, ETone::TRI,      true,   true,  ETone::TRI      }, // ขั๊ด*
+        { ICC::HIGH, ETone::CHATTAWA, false,  false, ETone::CHATTAWA }, // ข๋าน*
+        { ICC::HIGH, ETone::CHATTAWA, false,  true,  ETone::CHATTAWA }, // ขั๋น*
+        { ICC::HIGH, ETone::CHATTAWA, true,   false, ETone::CHATTAWA }, // ข๋าด*
+        { ICC::HIGH, ETone::CHATTAWA, true,   true,  ETone::CHATTAWA }, // ชั๊ด*
+
+        { ICC::LOWP, ETone::SAMAN,    false,  false, ETone::SAMAN    }, // คาน
+        { ICC::LOWP, ETone::SAMAN,    false,  true,  ETone::SAMAN    }, // คัน
+        { ICC::LOWP, ETone::SAMAN,    true,   false, ETone::THO      }, // คาด
+        { ICC::LOWP, ETone::SAMAN,    true,   true,  ETone::TRI      }, // คัด
+        { ICC::LOWP, ETone::EK,       false,  false, ETone::THO      }, // ค่าน
+        { ICC::LOWP, ETone::EK,       false,  true,  ETone::THO      }, // คั่น
+        { ICC::LOWP, ETone::EK,       true,   false, ETone::THO      }, // ค่าด*
+        { ICC::LOWP, ETone::EK,       true,   true,  ETone::THO      }, // คั่ด
+        { ICC::LOWP, ETone::THO,      false,  false, ETone::TRI      }, // ค้าน
+        { ICC::LOWP, ETone::THO,      false,  true,  ETone::TRI      }, // คั้น
+        { ICC::LOWP, ETone::THO,      true,   false, ETone::TRI      }, // ค้าด
+        { ICC::LOWP, ETone::THO,      true,   true,  ETone::TRI      }, // คั้ด*
+        { ICC::LOWP, ETone::TRI,      false,  false, ETone::TRI      }, // ค๊าน*
+        { ICC::LOWP, ETone::TRI,      false,  true,  ETone::TRI      }, // คั๊น*
+        { ICC::LOWP, ETone::TRI,      true,   false, ETone::TRI      }, // ค๊าด*
+        { ICC::LOWP, ETone::TRI,      true,   true,  ETone::TRI      }, // คั๊ด*
+        { ICC::LOWP, ETone::CHATTAWA, false,  false, ETone::CHATTAWA }, // ค๋าน*
+        { ICC::LOWP, ETone::CHATTAWA, false,  true,  ETone::CHATTAWA }, // คั๋น*
+        { ICC::LOWP, ETone::CHATTAWA, true,   false, ETone::CHATTAWA }, // ค๋าด
+        { ICC::LOWP, ETone::CHATTAWA, true,   true,  ETone::CHATTAWA }, // คั๋ด
+
+        { ICC::LOWS, ETone::SAMAN,    false,  false, ETone::SAMAN    }, // งาน
+        { ICC::LOWS, ETone::SAMAN,    false,  false, ETone::SAMAN    }, // งาน
+        { ICC::LOWS, ETone::SAMAN,    false,  true,  ETone::SAMAN    }, // งัน
+        { ICC::LOWS, ETone::SAMAN,    true,   false, ETone::THO      }, // งาด
+        { ICC::LOWS, ETone::SAMAN,    true,   true,  ETone::TRI      }, // งัด
+        { ICC::LOWS, ETone::EK,       false,  false, ETone::THO      }, // ง่าน
+        { ICC::LOWS, ETone::EK,       false,  true,  ETone::THO      }, // งั่น
+        { ICC::LOWS, ETone::EK,       true,   false, ETone::THO      }, // ง่าด*
+        { ICC::LOWS, ETone::EK,       true,   true,  ETone::THO      }, // งั่ด
+        { ICC::LOWS, ETone::THO,      false,  false, ETone::TRI      }, // ง้าน
+        { ICC::LOWS, ETone::THO,      false,  true,  ETone::TRI      }, // งั้น
+        { ICC::LOWS, ETone::THO,      true,   false, ETone::TRI      }, // ง้าด
+        { ICC::LOWS, ETone::THO,      true,   true,  ETone::TRI      }, // งั้ด*
+        { ICC::LOWS, ETone::TRI,      false,  false, ETone::TRI      }, // ง๊าน*
+        { ICC::LOWS, ETone::TRI,      false,  true,  ETone::TRI      }, // งั๊น*
+        { ICC::LOWS, ETone::TRI,      true,   false, ETone::TRI      }, // ง๊าด*
+        { ICC::LOWS, ETone::TRI,      true,   true,  ETone::TRI      }, // งั๊ด*
+        { ICC::LOWS, ETone::CHATTAWA, false,  false, ETone::CHATTAWA }, // ง๋าน*
+        { ICC::LOWS, ETone::CHATTAWA, false,  true,  ETone::CHATTAWA }, // งั๋น*
+        { ICC::LOWS, ETone::CHATTAWA, true,   false, ETone::CHATTAWA }, // ง๋าด
+        { ICC::LOWS, ETone::CHATTAWA, true,   true,  ETone::CHATTAWA }, // งั๋ด
+
+    };
+#undef ICC
+
+    bool isSuccess = true;
+
+    for (auto e : ToneTbl_) {
+        auto pronTone = ToneFromWritten (e.iConsClass,
+                                         e.writtenTone,
+                                         e.isDeadEnd,
+                                         e.isShortVowel);
+        if (pronTone != e.pronTone) {
+            cerr << "Wrong pronounced tone for tuple ("
+                 << static_cast<int> (e.iConsClass) << ", "
+                 << static_cast<int> (e.writtenTone) << ", "
+                 << e.isDeadEnd << ", "
+                 << e.isShortVowel << "): "
+                 << static_cast<int> (pronTone) << " != "
+                 << static_cast<int> (e.pronTone) << endl;
+            isSuccess = false;
+        }
+    }
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -440,6 +563,14 @@ main()
 
     cout << "Testing EndConsClass() ... ";
     if (testEndConsClass()) {
+        cout << "[OK]" << endl;
+    } else {
+        cout << "[FAIL]" << endl;
+        isSuccess = false;
+    }
+
+    cout << "Testing ToneFromWritten() ... ";
+    if (testToneFromWritten()) {
         cout << "[OK]" << endl;
     } else {
         cout << "[FAIL]" << endl;

@@ -45,7 +45,7 @@ Syl::Syl (char iCons1, char iCons2, char vowel, char eCons, char tone)
     iCons2 (static_cast<ESecInitCons> (iCons2)),
     vowel (static_cast<EVowel> (vowel)),
     eCons (EndConsCodeToClass (eCons)),
-    tone (static_cast<ETone> (tone))
+    tone (ToneCodeToTone (tone))
 {
 }
 
@@ -55,7 +55,7 @@ Syl::Syl (const std::string& aSylStr)
     iCons2 (static_cast<ESecInitCons> (aSylStr.at (1))),
     vowel (static_cast<EVowel> (aSylStr.at (2))),
     eCons (EndConsCodeToClass (aSylStr.at (3))),
-    tone (static_cast<ETone> (aSylStr.at (4)))
+    tone (ToneCodeToTone (aSylStr.at (4)))
 {
 }
 

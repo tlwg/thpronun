@@ -82,14 +82,8 @@ IsShortVowel (EVowel v);
 EEndConsClass
 EndConsCodeToClass (char c);
 
-enum class ETone {
-    INVALID  = '*',
-    SAMAN    = '0',
-    EK       = '1',
-    THO      = '2',
-    TRI      = '3',
-    CHATTAWA = '4',
-};
+ETone
+ToneCodeToTone (char c);
 
 #include "sylcomp.inl"
 

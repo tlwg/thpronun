@@ -29,3 +29,22 @@ EndConsCodeToClass (char c)
     return EndConsCodeToClassTbl_.at (c);
 }
 
+static const unordered_map<char, ETone>
+ToneCodeToToneTbl_ = {
+    { '*', ETone::INVALID  },
+    { '0', ETone::SAMAN    },
+    { '1', ETone::EK       },
+    { '2', ETone::THO      },
+    { '3', ETone::TRI      },
+    { '4', ETone::CHATTAWA },
+};
+
+ETone
+ToneCodeToTone (char c)
+{
+    return ToneCodeToToneTbl_.at (c);
+}
+
+/*
+vi:ts=4:ai:expandtab
+*/
