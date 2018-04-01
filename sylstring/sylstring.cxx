@@ -160,24 +160,24 @@ ThaiLiveIConsTonePair (EInitConsSound iCons1, ESecInitCons iCons2, ETone tone)
     } else {
         auto hiloPair = ThaiHighLowInitCons1Tbl_.at (iCons1);
         switch (tone) {
-            case ETone::SAMAN:
-                oICons = hiloPair.second;
-                break;
-            case ETone::EK:
-                oICons = hiloPair.first;
-                oTone = TONE_EK_STR;
-                break;
-            case ETone::THO:
-                oICons = hiloPair.second;
-                oTone = TONE_EK_STR;
-                break;
-            case ETone::TRI:
-                oICons = hiloPair.second;
-                oTone = TONE_THO_STR;
-                break;
-            case ETone::CHATTAWA:
-                oICons = hiloPair.first;
-                break;
+        case ETone::SAMAN:
+            oICons = hiloPair.second;
+            break;
+        case ETone::EK:
+            oICons = hiloPair.first;
+            oTone = TONE_EK_STR;
+            break;
+        case ETone::THO:
+            oICons = hiloPair.second;
+            oTone = TONE_EK_STR;
+            break;
+        case ETone::TRI:
+            oICons = hiloPair.second;
+            oTone = TONE_THO_STR;
+            break;
+        case ETone::CHATTAWA:
+            oICons = hiloPair.first;
+            break;
         }
     }
 
@@ -201,23 +201,23 @@ ThaiDeadShortIConsTonePair (EInitConsSound iCons1, ESecInitCons iCons2,
     } else {
         auto hiloPair = ThaiHighLowInitCons1Tbl_.at (iCons1);
         switch (tone) {
-            case ETone::SAMAN: // not exists, just fall back
-                oICons = hiloPair.second;
-                break;
-            case ETone::EK:
-                oICons = hiloPair.first;
-                break;
-            case ETone::THO:
-                oICons = hiloPair.second;
-                oTone = TONE_EK_STR;
-                break;
-            case ETone::TRI:
-                oICons = hiloPair.second;
-                break;
-            case ETone::CHATTAWA:
-                oICons = hiloPair.second;
-                oTone = TONE_CHATTAWA_STR;
-                break;
+        case ETone::SAMAN: // not exists, just fall back
+            oICons = hiloPair.second;
+            break;
+        case ETone::EK:
+            oICons = hiloPair.first;
+            break;
+        case ETone::THO:
+            oICons = hiloPair.second;
+            oTone = TONE_EK_STR;
+            break;
+        case ETone::TRI:
+            oICons = hiloPair.second;
+            break;
+        case ETone::CHATTAWA:
+            oICons = hiloPair.second;
+            oTone = TONE_CHATTAWA_STR;
+            break;
         }
     }
 
@@ -241,23 +241,23 @@ ThaiDeadLongIConsTonePair (EInitConsSound iCons1, ESecInitCons iCons2,
     } else {
         auto hiloPair = ThaiHighLowInitCons1Tbl_.at (iCons1);
         switch (tone) {
-            case ETone::SAMAN: // not exists, just fall back
-                oICons = hiloPair.second;
-                break;
-            case ETone::EK:
-                oICons = hiloPair.first;
-                break;
-            case ETone::THO:
-                oICons = hiloPair.second;
-                break;
-            case ETone::TRI:
-                oICons = hiloPair.second;
-                oTone = TONE_THO_STR;
-                break;
-            case ETone::CHATTAWA:
-                oICons = hiloPair.second;
-                oTone = TONE_CHATTAWA_STR;
-                break;
+        case ETone::SAMAN: // not exists, just fall back
+            oICons = hiloPair.second;
+            break;
+        case ETone::EK:
+            oICons = hiloPair.first;
+            break;
+        case ETone::THO:
+            oICons = hiloPair.second;
+            break;
+        case ETone::TRI:
+            oICons = hiloPair.second;
+            oTone = TONE_THO_STR;
+            break;
+        case ETone::CHATTAWA:
+            oICons = hiloPair.second;
+            oTone = TONE_CHATTAWA_STR;
+            break;
         }
     }
 
@@ -546,67 +546,67 @@ Syl::toThai() const
 {
     // determine vowel form
     switch (vowel) {
-        case EVowel::A:
-            return ThaiSylA (iCons1, iCons2, eCons, tone);
+    case EVowel::A:
+        return ThaiSylA (iCons1, iCons2, eCons, tone);
 
-        case EVowel::AA:
-            return ThaiSylAA (iCons1, iCons2, eCons, tone);
+    case EVowel::AA:
+        return ThaiSylAA (iCons1, iCons2, eCons, tone);
 
-        case EVowel::I:
-        case EVowel::UE:
-        case EVowel::U:
-            return ThaiSylBelowAbove (iCons1, iCons2, true, vowel,
-                                      eCons, tone);
+    case EVowel::I:
+    case EVowel::UE:
+    case EVowel::U:
+        return ThaiSylBelowAbove (iCons1, iCons2, true, vowel,
+                                  eCons, tone);
 
-        case EVowel::II:
-        case EVowel::UU:
-            return ThaiSylBelowAbove (iCons1, iCons2, false, vowel,
-                                      eCons, tone);
+    case EVowel::II:
+    case EVowel::UU:
+        return ThaiSylBelowAbove (iCons1, iCons2, false, vowel,
+                                  eCons, tone);
 
-        case EVowel::UEE:
-            return ThaiSylUEE (iCons1, iCons2, eCons, tone);
+    case EVowel::UEE:
+        return ThaiSylUEE (iCons1, iCons2, eCons, tone);
 
-        case EVowel::E:
-        case EVowel::AE:
-            return ThaiSylLeadShort (iCons1, iCons2, vowel, eCons, tone);
+    case EVowel::E:
+    case EVowel::AE:
+        return ThaiSylLeadShort (iCons1, iCons2, vowel, eCons, tone);
 
-        case EVowel::EE:
-        case EVowel::AEE:
-        case EVowel::OO:
-            return ThaiSylLeadLong (iCons1, iCons2, vowel, eCons, tone);
+    case EVowel::EE:
+    case EVowel::AEE:
+    case EVowel::OO:
+        return ThaiSylLeadLong (iCons1, iCons2, vowel, eCons, tone);
 
-        case EVowel::O:
-            return ThaiSylO (iCons1, iCons2, eCons, tone);
+    case EVowel::O:
+        return ThaiSylO (iCons1, iCons2, eCons, tone);
 
-        case EVowel::IA:
-            return ThaiSylIA (iCons1, iCons2, true, eCons, tone);
+    case EVowel::IA:
+        return ThaiSylIA (iCons1, iCons2, true, eCons, tone);
 
-        case EVowel::IAA:
-            return ThaiSylIA (iCons1, iCons2, false, eCons, tone);
+    case EVowel::IAA:
+        return ThaiSylIA (iCons1, iCons2, false, eCons, tone);
 
-        case EVowel::UEA:
-            return ThaiSylUEA (iCons1, iCons2, true, eCons, tone);
+    case EVowel::UEA:
+        return ThaiSylUEA (iCons1, iCons2, true, eCons, tone);
 
-        case EVowel::UEAA:
-            return ThaiSylUEA (iCons1, iCons2, false, eCons, tone);
+    case EVowel::UEAA:
+        return ThaiSylUEA (iCons1, iCons2, false, eCons, tone);
 
-        case EVowel::UA:
-            return ThaiSylUA (iCons1, iCons2, true, eCons, tone);
+    case EVowel::UA:
+        return ThaiSylUA (iCons1, iCons2, true, eCons, tone);
 
-        case EVowel::UAA:
-            return ThaiSylUA (iCons1, iCons2, false, eCons, tone);
+    case EVowel::UAA:
+        return ThaiSylUA (iCons1, iCons2, false, eCons, tone);
 
-        case EVowel::AU:
-            return ThaiSylAU (iCons1, iCons2, true, eCons, tone);
+    case EVowel::AU:
+        return ThaiSylAU (iCons1, iCons2, true, eCons, tone);
 
-        case EVowel::AUU:
-            return ThaiSylAU (iCons1, iCons2, false, eCons, tone);
+    case EVowel::AUU:
+        return ThaiSylAU (iCons1, iCons2, false, eCons, tone);
 
-        case EVowel::OE:
-            return ThaiSylOE (iCons1, iCons2, true, eCons, tone);
+    case EVowel::OE:
+        return ThaiSylOE (iCons1, iCons2, true, eCons, tone);
 
-        case EVowel::OEE:
-            return ThaiSylOE (iCons1, iCons2, false, eCons, tone);
+    case EVowel::OEE:
+        return ThaiSylOE (iCons1, iCons2, false, eCons, tone);
     }
 }
 
