@@ -78,12 +78,122 @@ TestThCons()
     return isSuccess;
 }
 
+bool
+TestSaraE()
+{
+    list<string> saraE = {
+        u8"เก",
+        u8"เท่",
+        u8"เพล",
+        u8"เก่ง",
+        u8"เตะ",
+        u8"เป๊ะ",
+        u8"เสเพล",
+        u8"เหล่",
+        u8"เกว๋",
+        u8"เชวง",
+        u8"เป็น",
+    };
+
+    list<string> saraOE = {
+        u8"เธอ",
+        u8"เสนอ",
+        u8"เลอะ",
+        u8"เปรอะ",
+        u8"เกิด",
+        u8"เปิ่น",
+        u8"เพลิน",
+        u8"เคลิ้ม",
+        u8"เสริม",
+    };
+
+    list<string> saraIA = {
+        u8"เซียะ",
+        u8"เปี๊ยะ",
+        u8"เปรี๊ยะ",
+        u8"เสีย",
+        u8"เพลีย",
+        u8"เสียด",
+        u8"เพี้ยน",
+        u8"เสนียด",
+    };
+
+    list<string> saraUEA = {
+        u8"ละเวือะ",
+        u8"เกื๊อะ",
+        u8"เกือบ",
+        u8"เลื่อน",
+        u8"เกลือ",
+        u8"เกลือก",
+        u8"เสมือน",
+        u8"เหมือน",
+    };
+
+    list<string> saraAW = {
+        u8"เกา",
+        u8"เกลา",
+        u8"เสลา",
+        u8"เหมา",
+    };
+
+    list<string> saraAU = {
+        u8"เกาะ",
+        u8"เพลาะ",
+        u8"เสนาะ",
+        u8"เหมาะ",
+    };
+
+    bool isSuccess = true;
+
+    cout << "TestSareE: Sara E..." << endl;
+    if (!ParseAll (saraE)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: Sara OE..." << endl;
+    if (!ParseAll (saraOE)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: Sara IA..." << endl;
+    if (!ParseAll (saraIA)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: Sara UEA..." << endl;
+    if (!ParseAll (saraUEA)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: Sara AW..." << endl;
+    if (!ParseAll (saraAW)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: Sara AU..." << endl;
+    if (!ParseAll (saraAU)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    return isSuccess;
+}
+
 int
 main()
 {
     bool isSuccess = true;
 
     if (!TestThCons()) {
+        isSuccess = false;
+    }
+
+    if (!TestSaraE()) {
         isSuccess = false;
     }
 
