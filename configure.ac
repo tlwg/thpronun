@@ -16,6 +16,7 @@ AC_PROG_CXX
 AM_PROG_LIBTOOL
 
 # Checks for libraries.
+PKG_CHECK_MODULES(LIBTHAI, libthai)
 
 # Checks for header files.
 
@@ -27,5 +28,7 @@ AC_CONFIG_FILES([Makefile
                  thortho/Makefile
                  thortho/tests/Makefile
                  sylstring/Makefile
-                 sylstring/tests/Makefile])
+                 sylstring/tests/Makefile
+                 parser/Makefile
+                 parser/tests/Makefile])
 AC_OUTPUT
