@@ -820,12 +820,88 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
 static void
 ParseOtherLV (const u16string& u16word, ParseState& state, StatePool& pool)
 {
-    switch (u16word.at (state.pos)) {
-    case UTH_SARA_AE:
-    case UTH_SARA_O:
-    case UTH_SARA_AI_MAIMALAI:
-    case UTH_SARA_AI_MAIMUAN:
-        break;
+    assert (state.pos < u16word.size());
+    assert (th_wcisldvowel (u16word.at (state.pos)));
+    assert (UTH_SARA_E != u16word.at (state.pos));
+
+    auto ldv = u16word.at (state.pos);
+    ++state.pos; // skip the leading vowel kept in ldv
+
+    list<PartialSyl> partialSyls = MatchInitCons (u16word, state);
+
+    for (auto& p : partialSyls) {
+        p.tone = ETone::SAMAN;
+        if (p.pos < u16word.size()) {
+            auto c = u16word.at (p.pos);
+            if (th_wcisthtone (c)) {
+                // read tone
+                p.tone = ThCharToTone (c);
+                ++p.pos; // skip tone mark
+            }
+        }
+
+        bool needsEndCons = false;
+
+        switch (ldv) {
+        case UTH_SARA_AE:
+            // แกะ, แป๊ะ, แก, แก่, แกน, แก่น, แข็ง
+            if (p.pos < u16word.size()) {
+                auto c = u16word.at (p.pos);
+                switch (c) {
+                case UTH_SARA_A:
+                    // แกะ, แป๊ะ
+                    ++p.pos;  // skip SARA A
+                    p.vowel = EVowel::AE;
+                    break;
+                case UTH_MAITAIKHU:
+                    // แข็ง
+                    ++p.pos;  // skip MAITAIKHU
+                    p.vowel = EVowel::AE;
+                    needsEndCons = true;
+                    break;
+                default:
+                    // แก, แก่, แกน, แก่น
+                    p.vowel = EVowel::AEE;
+                }
+            } else {
+                // แก, แก่
+                p.vowel = EVowel::AEE;
+            }
+            if (!needsEndCons) {
+                p.eConsClass = EEndConsClass::NONE;
+                pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+            }
+            // check optional end cons for SARA AEE,
+            // mandatory end cons for SARA AE with MAITAIKHU
+            if (p.pos < u16word.size() && (
+                    EVowel::AEE == p.vowel || needsEndCons
+                ))
+            {
+                EatEndConsSimple (u16word, state, p, pool);
+            }
+            break;
+        case UTH_SARA_O:
+            // โละ, โป๊ะ, โต, โอ่, โกน, โล้น
+            if (p.pos < u16word.size() && UTH_SARA_A == u16word.at (p.pos)) {
+                ++p.pos;  // skip SARA A
+                p.vowel = EVowel::O;
+            } else {
+                p.vowel = EVowel::OO;
+            }
+            p.eConsClass = EEndConsClass::NONE;
+            pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+            // check optional end cons for SARA OO
+            if (EVowel::OO == p.vowel && p.pos < u16word.size()) {
+                EatEndConsSimple (u16word, state, p, pool);
+            }
+            break;
+        case UTH_SARA_AI_MAIMALAI:
+        case UTH_SARA_AI_MAIMUAN:
+            p.vowel = EVowel::A;
+            p.eConsClass = EEndConsClass::KOEY;
+            pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+            break;
+        }
     }
 }
 

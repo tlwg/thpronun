@@ -184,6 +184,69 @@ TestSaraE()
     return isSuccess;
 }
 
+bool
+TestOtherLV()
+{
+    list<string> saraAE = {
+        u8"แก",
+        u8"แก่",
+        u8"แกล",
+        u8"แก้ม",
+        u8"แตะ",
+        u8"แป๊ะ",
+        u8"แหล่",
+        u8"แกว่ง",
+        u8"แพลง",
+        u8"แสลง",
+        u8"แข็ง",
+    };
+
+    list<string> saraO = {
+        u8"โต",
+        u8"โอ่",
+        u8"โละ",
+        u8"โป๊ะ",
+        u8"โพละ",
+        u8"โกน",
+        u8"โล้น",
+        u8"โกลน",
+        u8"โขดง",
+    };
+
+    list<string> saraAI = {
+        u8"ใจ",
+        u8"ใช้",
+        u8"ใคร",
+        u8"ใคร่",
+        u8"ไก",
+        u8"ไล่",
+        u8"ไพล่",
+        u8"ไฉน",
+    };
+
+    bool isSuccess = true;
+
+    cout << "TestSareE: Sara AE..." << endl;
+    if (!ParseAll (saraAE)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: Sara O..." << endl;
+    if (!ParseAll (saraO)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: Sara AI..." << endl;
+    if (!ParseAll (saraAI)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -194,6 +257,10 @@ main()
     }
 
     if (!TestSaraE()) {
+        isSuccess = false;
+    }
+
+    if (!TestOtherLV()) {
         isSuccess = false;
     }
 
