@@ -39,6 +39,8 @@ public:
     SylString (const SylString& other);
     SylString (SylString&& other);
 
+    SylString& operator= (const SylString& other);
+
     SylString& operator= (const Syl& syl);
     SylString& operator+= (const Syl& syl);
 

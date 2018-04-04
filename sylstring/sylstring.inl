@@ -76,6 +76,13 @@ SylString::SylString (SylString&& other)
     : mSyls (std::move (other.mSyls)) {}
 
 inline SylString&
+SylString::operator= (const SylString& other)
+{
+    mSyls = other.mSyls;
+    return *this;
+}
+
+inline SylString&
 SylString::operator= (const Syl& syl)
 {
     mSyls.clear();
