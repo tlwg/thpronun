@@ -657,7 +657,8 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
                     p.vowel = EVowel::O;
 
                     // read final consonant
-                    EatEndConsSimple (u16word, state, p, pool);
+                    EatEndConsSimple (u16word, state, p, pool,
+                                      { UTH_YO_YAK, UTH_WO_WAEN });
                 }
             }
         }
