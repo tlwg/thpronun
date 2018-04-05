@@ -786,7 +786,7 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
             p.pos = MatchKaranSimple (u16word, p.pos);
             pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
             // check optional end cons
-            if (p.pos < u16word.size()) {
+            if (EVowel::IAA == p.vowel && p.pos < u16word.size()) {
                 EatEndConsComplex (u16word, state, p, pool);
             }
             break;
@@ -816,7 +816,7 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
             p.pos = MatchKaranSimple (u16word, p.pos);
             pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
             // check optional end cons
-            if (p.pos < u16word.size()) {
+            if (EVowel::UEAA == p.vowel && p.pos < u16word.size()) {
                 EatEndConsSimple (u16word, state, p, pool);
             }
             break;
