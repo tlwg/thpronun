@@ -823,6 +823,13 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
                 }
                 pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
                 break;
+            case UTH_YO_YAK:
+                // เลย, เม้ย
+                ++p.pos; // skip YO YAK
+                p.vowel = EVowel::OEE;
+                p.eConsClass = EEndConsClass::KOEY;
+                pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+                break;
             default:
                 // เก, เก๋, เบน, เก่ง
                 p.vowel = EVowel::EE;
