@@ -382,14 +382,26 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
     return partialSyls;
 }
 
+static bool
+EatEndConsSimple (const u16string& u16word, const ParseState& state,
+                  PartialSyl& p, StatePool& pool,
+                  const unordered_set<char16_t>& excludedECons = {});
+static bool
+EatEndConsComplex (const u16string& u16word, const ParseState& state,
+                   PartialSyl& p, StatePool& pool,
+                   const unordered_set<char16_t>& excludedECons = {});
+
 // Match ending consonant part of the syllable form, simple version
 // Returns whether the match is successful
 static bool
 EatEndConsSimple (const u16string& u16word, const ParseState& state,
-                  PartialSyl& p, StatePool& pool)
+                  PartialSyl& p, StatePool& pool,
+                  const unordered_set<char16_t>& excludedECons)
 {
     auto c = u16word.at (p.pos);
-    if (th_wcisthcons (c) && EEndConsClass::NONE != EndConsClass (c)) {
+    if (th_wcisthcons (c) && EEndConsClass::NONE != EndConsClass (c)
+        && excludedECons.find (c) == excludedECons.end())
+    {
         p.eConsClass = EndConsClass (c);
         ++p.pos; // skip the end cons class
 
@@ -406,7 +418,8 @@ EatEndConsSimple (const u16string& u16word, const ParseState& state,
 // Returns whether the match is successful
 static bool
 EatEndConsComplex (const u16string& u16word, const ParseState& state,
-                   PartialSyl& p, StatePool& pool)
+                   PartialSyl& p, StatePool& pool,
+                   const unordered_set<char16_t>& excludedECons)
 {
     static const unordered_set<char16_t> afterClusterVowels = {
         UTH_SARA_A,
@@ -419,7 +432,9 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
     };
 
     auto c = u16word.at (p.pos);
-    if (th_wcisthcons (c) && EEndConsClass::NONE != EndConsClass (c)) {
+    if (th_wcisthcons (c) && EEndConsClass::NONE != EndConsClass (c)
+        && excludedECons.find (c) == excludedECons.end())
+    {
         p.eConsClass = EndConsClass (c);
 
         // add single non-linking ending consonant
@@ -538,12 +553,20 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
                         // มืด, ปื๊ด
                         EatEndConsSimple (u16word, state, p, pool);
                     }
-                } else if (EVowel::UE == p.vowel || ETone::SAMAN != p.tone) {
-                    // ซิ่น, ซี้ด, ปึ๊ด, กุ๊น, ปู๊น
-                    EatEndConsSimple (u16word, state, p, pool);
                 } else {
-                    // มิด, จิตรา, มีด, อุด, อุตรา, รูด, คูตร
-                    EatEndConsComplex (u16word, state, p, pool);
+                    unordered_set<char16_t> excludedECons;
+                    if (EVowel::I == p.vowel || EVowel::II == p.vowel) {
+                          excludedECons.emplace (UTH_YO_YAK);
+                    }
+                    if (EVowel::UE == p.vowel || ETone::SAMAN != p.tone) {
+                        // ซิ่น, ซี้ด, ปึ๊ด, กุ๊น, ปู๊น
+                        EatEndConsSimple (u16word, state, p, pool,
+                                          excludedECons);
+                    } else {
+                        // มิด, จิตรา, มีด, อุด, อุตรา, รูด, คูตร
+                        EatEndConsComplex (u16word, state, p, pool,
+                                           excludedECons);
+                    }
                 }
             }
         } else {
