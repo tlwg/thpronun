@@ -530,6 +530,10 @@ ThaiSylOE (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
         return SARA_E_STR + iConsTonePair.first + iConsTonePair.second
                 + AU_STR
                 + (isShort ? SARA_A_STR : "");
+    } else if (EEndConsClass::KOEY == eCons) {
+        return SARA_E_STR
+                + iConsTonePair.first + iConsTonePair.second
+                + YO_STR;
     } else {
         return SARA_E_STR
                 + iConsTonePair.first + SARA_I_STR + iConsTonePair.second

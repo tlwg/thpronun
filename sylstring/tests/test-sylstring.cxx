@@ -155,6 +155,18 @@ TestThaiPronun()
         isSuccess = false;
     }
 
+    // เกินเลยเม้ย
+    syls = Syl ("k_Wn0");
+    syls += Syl ("l_Wy0");
+    syls += Syl ("m_Wy3");
+    thaiPronun = syls.toThai();
+    if (thaiPronun !=
+        u8"เกิน-เลย-เม้ย")
+    {
+        cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 
@@ -303,6 +315,17 @@ TestRomanPronun()
     syls += Syl ("r_v_3");
     romanized = syls.toRoman (false);
     if (romanized != u8"muemuetkritkungphunnuengsingmimi-ngulurue")
+    {
+        cerr << "Wrong romanization '" << romanized << "'" << endl;
+        isSuccess = false;
+    }
+
+    // เกินเลยเม้ย
+    syls = Syl ("k_Wn0");
+    syls += Syl ("l_Wy0");
+    syls += Syl ("m_Wy3");
+    romanized = syls.toRoman();
+    if (romanized != u8"koenloeimoei")
     {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
         isSuccess = false;
