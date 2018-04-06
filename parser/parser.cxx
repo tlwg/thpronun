@@ -688,14 +688,29 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
 
             case UTH_RO_RUA:
                 // พร, นคร
-                if (p.pos + 1 == u16word.size() ||
-                    IsSylStart (u16word.at (p.pos + 1)))
+                if (p.pos + 1 == u16word.size() || (
+                        UTH_RO_RUA != u16word.at (p.pos + 1) &&
+                        IsSylStart (u16word.at (p.pos + 1))
+                    ))
                 {
                     ++p.pos; // skip RO RUA
                     p.vowel = EVowel::AUU;
                     p.eConsClass = EEndConsClass::KON;
                     p.pos = MatchKaranSimple (u16word, p.pos);
                     pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+                } else if (UTH_RO_RUA == u16word.at (p.pos + 1)) {
+                    // สรร, ธรรม
+                    p.pos += 2; // skip two RO RUA's
+                    p.vowel = EVowel::A;
+                    p.eConsClass = EEndConsClass::KON;
+                    auto karanEnd = MatchKaranSimple (u16word, p.pos);
+                    pool.add (ParseState (karanEnd,
+                                          AddSyl (state.sylString, p)));
+
+                    // check optional end cons
+                    if (karanEnd == p.pos && p.pos < u16word.size()) {
+                        EatEndConsSimple (u16word, state, p, pool);
+                    }
                 }
                 // No else here. The cases like ฟรี, (นา)ครี, etc. should be
                 // parsed by other means
