@@ -332,9 +332,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
         }
 
         // check อักษรนำเสียงสนิท
-        if (UTH_HO_HIP == firstCons &&
-            EInitConsClass::LOWS == InitConsClass (secCons))
-        {
+        if (UTH_HO_HIP == firstCons && EInitConsClass::LOWS == secConsClass) {
             // add อักษรนำเสียงสนิท
             partialSyls.push_back (
                 PartialSyl (state.pos + 2,
@@ -348,10 +346,10 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
         //   e.g. กมุท, ขมา, สมา, สรีระ, สราญ, หริภุญชัย, อรุโณทัย
         partialSyls.push_back (
             PartialSyl (state.pos + 2,
-                        Syl (InitConsSound (firstCons), ESecInitCons::NONE,
+                        Syl (firstConsSound, ESecInitCons::NONE,
                              EVowel::A, EEndConsClass::NONE,
-                             ToneFromWritten (InitConsClass (firstCons),
-                                              ETone::SAMAN, true, true)),
+                             ToneFromWritten (firstConsClass, ETone::SAMAN,
+                                              true, true)),
                         secConsSound,
                         secConsClass)
         );
@@ -364,10 +362,10 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
         {
             partialSyls.push_back (
                 PartialSyl (state.pos + 2,
-                            Syl (InitConsSound (firstCons), ESecInitCons::NONE,
+                            Syl (firstConsSound, ESecInitCons::NONE,
                                 EVowel::A, EEndConsClass::NONE,
-                                ToneFromWritten (InitConsClass (firstCons),
-                                                ETone::SAMAN, true, true)),
+                                ToneFromWritten (firstConsClass, ETone::SAMAN,
+                                                 true, true)),
                             secConsSound,
                             firstConsClass)
             );
