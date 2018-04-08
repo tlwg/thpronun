@@ -301,6 +301,39 @@ TestOtherLV()
     return isSuccess;
 }
 
+bool
+TestRu()
+{
+    list<string> ru = {
+        u8"อังกฤษ",
+        u8"ตฤณ",
+        u8"ทฤษฎี",
+        u8"ปฤจฉา",
+        u8"สฤษดิ์",
+        u8"ศฤงคาร",
+        u8"คฤนถ์",
+        u8"คฤหัสถ์",
+        u8"นฤพาน",
+        u8"นฤมิต",
+        u8"พฤกษ์",
+        u8"พฤฒาจารย์",
+        u8"พฤหัส",
+        u8"มฤค",
+        u8"หฤทัย",
+        u8"หฤหรรษ์",
+    };
+
+    bool isSuccess = true;
+
+    cout << "TestRu: Words containg RU..." << endl;
+    if (!ParseAll (ru)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -315,6 +348,10 @@ main()
     }
 
     if (!TestOtherLV()) {
+        isSuccess = false;
+    }
+
+    if (!TestRu()) {
         isSuccess = false;
     }
 

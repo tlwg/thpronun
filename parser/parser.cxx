@@ -240,135 +240,337 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
     auto firstConsSound = InitConsSound (firstCons);
     auto firstConsClass = InitConsClass (firstCons);
 
-    if (state.pos + 1 < u16word.size() &&
-        th_wcisthcons (u16word.at (state.pos + 1)))
-    {
-        auto secCons = u16word.at (state.pos + 1);
-        auto secConsSound = InitConsSound (secCons);
-        auto secConsClass = InitConsClass (secCons);
+    if (state.pos + 1 < u16word.size()) {
+        auto secChar = u16word.at (state.pos + 1);
 
-        // check อักษรควบแท้
-        // (อักษรควบไม่แท้ "ทร" are supposed to be in exception dict)
-        switch (secCons) {
-        case UTH_RO_RUA:
-            switch (firstCons) {
-            case UTH_CHO_CHAN:
-            case UTH_SO_SO:
-            case UTH_SO_SALA:
-            case UTH_SO_SUA: {
-                // add อักษรควบไม่แท้
-                if (state.isLinked)
+        if (th_wcisthcons (secChar)) {
+            auto secConsSound = InitConsSound (secChar);
+            auto secConsClass = InitConsClass (secChar);
+
+            // check อักษรควบแท้
+            // (อักษรควบไม่แท้ "ทร" are supposed to be in exception dict)
+            switch (secChar) {
+            case UTH_RO_RUA:
+                switch (firstCons) {
+                case UTH_CHO_CHAN:
+                case UTH_SO_SO:
+                case UTH_SO_SALA:
+                case UTH_SO_SUA:
+                    // add อักษรควบไม่แท้
+                    if (state.isLinked)
+                        break;
+                    partialSyls.push_back (
+                        PartialSyl (state.pos + 2, firstConsSound,
+                                    firstConsClass)
+                    );
                     break;
-                partialSyls.push_back (
-                    PartialSyl (state.pos + 2, firstConsSound, firstConsClass)
-                );
+
+                case UTH_KHO_KHAI:
+                case UTH_KHO_KHWAI:
+                case UTH_DO_DEK:
+                case UTH_THO_THAHAN:
+                case UTH_BO_BAIMAI:
+                case UTH_PHO_PHAN:
+                case UTH_FO_FAN:
+                    if (state.isLinked)
+                        break;
+                    // fall through for non-linked syllable
+                    // examples of linked syllable with อักษรควบแท้:
+                    // จักรี, มาตรา, ศัตรู, อัปรีย์
+                case UTH_KO_KAI:
+                case UTH_TO_TAO:
+                case UTH_PO_PLA:
+                    // add อักษรควบแท้
+                    partialSyls.push_back (
+                        PartialSyl (state.pos + 2,
+                                    firstConsSound,
+                                    firstConsClass,
+                                    ESecInitCons::RA)
+                    );
+                    break;
+                }
+                break;
+            case UTH_LO_LING:
+                switch (firstCons) {
+                case UTH_KO_KAI:
+                case UTH_KHO_KHAI:
+                case UTH_KHO_KHWAI:
+                case UTH_BO_BAIMAI:
+                case UTH_PO_PLA:
+                case UTH_PHO_PHUNG:
+                case UTH_PHO_PHAN:
+                case UTH_FO_FAN:
+                    if (state.isLinked)
+                        break;
+                    // add อักษรควบแท้
+                    partialSyls.push_back (
+                        PartialSyl (state.pos + 2,
+                                    firstConsSound,
+                                    firstConsClass,
+                                    ESecInitCons::LA)
+                    );
+                    break;
+                }
+                break;
+            case UTH_WO_WAEN:
+                switch (firstCons) {
+                case UTH_KO_KAI:
+                case UTH_KHO_KHAI:
+                case UTH_KHO_KHWAI:
+                    if (state.isLinked)
+                        break;
+                    // add อักษรควบแท้
+                    partialSyls.push_back (
+                        PartialSyl (state.pos + 2,
+                                    firstConsSound,
+                                    firstConsClass,
+                                    ESecInitCons::WA)
+                    );
+                    break;
+                }
                 break;
             }
 
-            case UTH_KHO_KHAI:
-            case UTH_KHO_KHWAI:
-            case UTH_DO_DEK:
-            case UTH_THO_THAHAN:
-            case UTH_BO_BAIMAI:
-            case UTH_PHO_PHAN:
-            case UTH_FO_FAN:
-                if (state.isLinked)
-                    break;
-                // fall through for non-linked syllable
-                // examples of linked syllable with อักษรควบแท้:
-                // จักรี, มาตรา, ศัตรู, อัปรีย์
-            case UTH_KO_KAI:
-            case UTH_TO_TAO:
-            case UTH_PO_PLA:
-                // add อักษรควบแท้
+            // check อักษรนำเสียงสนิท
+            if (UTH_HO_HIP == firstCons &&
+                    EInitConsClass::LOWS == secConsClass)
+            {
+                // add อักษรนำเสียงสนิท
                 partialSyls.push_back (
                     PartialSyl (state.pos + 2,
-                                firstConsSound,
-                                firstConsClass,
-                                ESecInitCons::RA)
+                                secConsSound,
+                                EInitConsClass::HIGH)
                 );
-                break;
             }
-            break;
-        case UTH_LO_LING:
-            switch (firstCons) {
-            case UTH_KO_KAI:
-            case UTH_KHO_KHAI:
-            case UTH_KHO_KHWAI:
-            case UTH_BO_BAIMAI:
-            case UTH_PO_PLA:
-            case UTH_PHO_PHUNG:
-            case UTH_PHO_PHAN:
-            case UTH_FO_FAN:
-                if (state.isLinked)
-                    break;
-                // add อักษรควบแท้
-                partialSyls.push_back (
-                    PartialSyl (state.pos + 2,
-                                firstConsSound,
-                                firstConsClass,
-                                ESecInitCons::LA)
-                );
-                break;
-            }
-            break;
-        case UTH_WO_WAEN:
-            switch (firstCons) {
-            case UTH_KO_KAI:
-            case UTH_KHO_KHAI:
-            case UTH_KHO_KHWAI:
-                if (state.isLinked)
-                    break;
-                // add อักษรควบแท้
-                partialSyls.push_back (
-                    PartialSyl (state.pos + 2,
-                                firstConsSound,
-                                firstConsClass,
-                                ESecInitCons::WA)
-                );
-                break;
-            }
-            break;
-        }
 
-        // check อักษรนำเสียงสนิท
-        if (UTH_HO_HIP == firstCons && EInitConsClass::LOWS == secConsClass) {
-            // add อักษรนำเสียงสนิท
-            partialSyls.push_back (
-                PartialSyl (state.pos + 2,
-                            secConsSound,
-                            EInitConsClass::HIGH)
-            );
-        }
-
-        // always add อักษรนำอะกึ่งเสียง
-        // - with second consonant's own class,
-        //   e.g. กมุท, ขมา, สมา, สรีระ, สราญ, หริภุญชัย, อรุโณทัย
-        partialSyls.push_back (
-            PartialSyl (state.pos + 2,
-                        Syl (firstConsSound, ESecInitCons::NONE,
-                             EVowel::A, EEndConsClass::NONE,
-                             ToneFromWritten (firstConsClass, ETone::SAMAN,
-                                              true, true)),
-                        secConsSound,
-                        secConsClass)
-        );
-        // - using first consonant's class,
-        //   e.g. ขนม, ขมิบ, จรวด, จมูก, เฉลิม, โตนด, ตลาด, ผลิต, สนิม, สยบ, สรุป,
-        //   สลาย, สวรรค์, สวัสดี, อร่อย, อร่าม
-        if (EInitConsClass::LOWS == secConsClass &&
-            (EInitConsClass::HIGH == firstConsClass ||
-             EInitConsClass::MID == firstConsClass))
-        {
+            // always add อักษรนำอะกึ่งเสียง
+            // - with second consonant's own class,
+            //   e.g. กมุท, ขมา, สมา, สรีระ, สราญ, หริภุญชัย, อรุโณทัย
             partialSyls.push_back (
                 PartialSyl (state.pos + 2,
                             Syl (firstConsSound, ESecInitCons::NONE,
-                                EVowel::A, EEndConsClass::NONE,
-                                ToneFromWritten (firstConsClass, ETone::SAMAN,
-                                                 true, true)),
+                                 EVowel::A, EEndConsClass::NONE,
+                                 ToneFromWritten (firstConsClass, ETone::SAMAN,
+                                                  true, true)),
                             secConsSound,
-                            firstConsClass)
+                            secConsClass)
             );
+            // - using first consonant's class,
+            //   e.g. ขนม, ขมิบ, จรวด, จมูก, เฉลิม, โตนด, ตลาด, ผลิต, สนิม, สยบ, สรุป,
+            //   สลาย, สวรรค์, สวัสดี, อร่อย, อร่าม
+            if (EInitConsClass::LOWS == secConsClass &&
+                (EInitConsClass::HIGH == firstConsClass ||
+                 EInitConsClass::MID == firstConsClass))
+            {
+                partialSyls.push_back (
+                    PartialSyl (state.pos + 2,
+                                Syl (firstConsSound, ESecInitCons::NONE,
+                                     EVowel::A, EEndConsClass::NONE,
+                                     ToneFromWritten (firstConsClass,
+                                                      ETone::SAMAN,
+                                                      true, true)),
+                                secConsSound,
+                                firstConsClass)
+                );
+            }
+        } else if (UTH_RU == secChar) {
+            // make sure it's not ฤๅ
+            // note: "ตฤๅ" is supposed to be in exception dict here
+            if (state.pos + 2 >= u16word.size() || (
+                    UTH_LAKKHANGYAO != u16word.at (state.pos + 2) &&
+                    UTH_SARA_AA != u16word.at (state.pos + 2)
+                ))
+            {
+                // RU after these cons are always pronounced "RI" clustered
+                static const unordered_set<char16_t> riClusterCons = {
+                    UTH_KO_KAI,
+                    UTH_TO_TAO,
+                    UTH_THO_THAHAN,
+                    UTH_PO_PLA,
+                };
+                // RU after these cons are always pronounced "RI",
+                // either clustered or as separate syllable
+                static const unordered_set<char16_t> riCons = {
+                    UTH_SO_SUA,
+                    UTH_SO_SALA,
+                };
+                // RU after these cons are always pronounced short "RUE",
+                // clustered
+                static const unordered_set<char16_t> ruClusterCons = {
+                    UTH_WO_WAEN,
+                };
+                // RU after these cons are always pronounced short "RUE"
+                // as separate syllable
+                static const unordered_set<char16_t> ruSepCons = {
+                    UTH_NO_NU,
+                };
+                // RU after these cons are always pronounced short "RUE",
+                // either clustered or as separate syllable
+                static const unordered_set<char16_t> ruCons = {
+                    UTH_KHO_KHWAI,
+                    UTH_PHO_PHAN,
+                };
+
+                if (riClusterCons.find (firstCons) != riClusterCons.end()) {
+                    // อังกฤษ, ตฤณ, ปฤจฉา
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 2,
+                            firstConsSound,
+                            firstConsClass,
+                            ESecInitCons::RA,
+                            EVowel::I
+                        )
+                    );
+                } else if (riCons.find (firstCons) != riCons.end()) {
+                    // ศฤงคาร
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 2,
+                            firstConsSound,
+                            firstConsClass,
+                            ESecInitCons::NONE,
+                            EVowel::I
+                        )
+                    );
+                    // สฤษฎ์
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 2,
+                            Syl (
+                                firstConsSound, ESecInitCons::NONE,
+                                EVowel::A, EEndConsClass::NONE,
+                                ToneFromWritten (firstConsClass,
+                                                 ETone::SAMAN, true, true)
+                            ),
+                            EInitConsSound::RA,
+                            firstConsClass,
+                            ESecInitCons::NONE,
+                            EVowel::I
+                        )
+                    );
+                } else if (ruClusterCons.find (firstCons)
+                               != ruClusterCons.end())
+                {
+                    // วฤก, วฤษภ, วฤษละ
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 2,
+                            firstConsSound,
+                            firstConsClass,
+                            ESecInitCons::RA,
+                            EVowel::UE
+                        )
+                    );
+                } else if (ruSepCons.find (firstCons) != ruSepCons.end()) {
+                    // นฤบาล
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 2,
+                            Syl (
+                                firstConsSound, ESecInitCons::NONE,
+                                EVowel::A, EEndConsClass::NONE,
+                                ToneFromWritten (firstConsClass,
+                                                 ETone::SAMAN, true, true)
+                            ),
+                            EInitConsSound::RA,
+                            EInitConsClass::LOWS,
+                            ESecInitCons::NONE,
+                            EVowel::UE
+                        )
+                    );
+                } else if (ruCons.find (firstCons) != ruCons.end()) {
+                    // peek next possible end cons
+                    if (state.pos + 2 < u16word.size() &&
+                        EEndConsClass::NONE != EndConsClass (u16word.at (state.pos + 2)))
+                    {
+                        // คฤนถ์, คฤธระ, พฤกษ์, พฤศจิก
+                        partialSyls.push_back (
+                            PartialSyl (
+                                state.pos + 2,
+                                firstConsSound,
+                                firstConsClass,
+                                ESecInitCons::RA,
+                                EVowel::UE
+                            )
+                        );
+                    } else {
+                        // คฤหัสถ์, คฤโฆษ, พฤหัส
+                        partialSyls.push_back (
+                            PartialSyl (
+                                state.pos + 2,
+                                Syl (
+                                    firstConsSound, ESecInitCons::NONE,
+                                    EVowel::A, EEndConsClass::NONE,
+                                    ToneFromWritten (firstConsClass,
+                                                     ETone::SAMAN, true, true)
+                                ),
+                                EInitConsSound::RA,
+                                EInitConsClass::LOWS,
+                                ESecInitCons::NONE,
+                                EVowel::UE
+                            )
+                        );
+                    }
+                } else {
+                    // ภฤงคาร
+                    if (UTH_HO_HIP != firstCons) {
+                        partialSyls.push_back (
+                            PartialSyl (
+                                state.pos + 2,
+                                firstConsSound,
+                                firstConsClass,
+                                ESecInitCons::RA,
+                                EVowel::I
+                            )
+                        );
+                    }
+                    // หฤษฎ์
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 2,
+                            Syl (
+                                firstConsSound, ESecInitCons::NONE,
+                                EVowel::A, EEndConsClass::NONE,
+                                ToneFromWritten (firstConsClass,
+                                                 ETone::SAMAN, true, true)
+                            ),
+                            EInitConsSound::RA,
+                            EInitConsClass::LOWS,
+                            ESecInitCons::NONE,
+                            EVowel::I
+                        )
+                    );
+                    // ภฤดก, ภฤตย์
+                    if (UTH_HO_HIP != firstCons) {
+                        partialSyls.push_back (
+                            PartialSyl (
+                                state.pos + 2,
+                                firstConsSound,
+                                firstConsClass,
+                                ESecInitCons::RA,
+                                EVowel::UE
+                            )
+                        );
+                    }
+                    // หฤทัย
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 2,
+                            Syl (
+                                firstConsSound, ESecInitCons::NONE,
+                                EVowel::A, EEndConsClass::NONE,
+                                ToneFromWritten (firstConsClass,
+                                                 ETone::SAMAN, true, true)
+                            ),
+                            EInitConsSound::RA,
+                            EInitConsClass::LOWS,
+                            ESecInitCons::NONE,
+                            EVowel::UE
+                        )
+                    );
+                }
+            }
         }
     }
 
@@ -715,16 +917,28 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
                 break;
 
             default:
-                if (th_wcisthcons (c) &&
-                    EEndConsClass::NONE != EndConsClass (c) &&
-                    ESecInitCons::WA != p.iCons2) // prevent e.g. กฺวง
-                {
-                    // ข้น
-                    p.vowel = EVowel::O;
+                if (th_wcisthcons (c)) {
+                    if (EVowel::INVALID == p.vowel) {
+                        if (EEndConsClass::NONE != EndConsClass (c) &&
+                            ESecInitCons::WA != p.iCons2) // prevent e.g. กฺวง
+                        {
+                            // ข้น
+                            p.vowel = EVowel::O;
 
-                    // read final consonant
-                    EatEndConsSimple (u16word, state, p, pool,
-                                      { UTH_YO_YAK, UTH_WO_WAEN });
+                            // check mandatory end cons
+                            EatEndConsSimple (u16word, state, p, pool,
+                                              { UTH_YO_YAK, UTH_WO_WAEN });
+                        }
+                    } else {
+                        // cons + RU
+                        p.eConsClass = EEndConsClass::NONE;
+                        pool.add (ParseState (p.pos,
+                                              AddSyl (state.sylString, p)));
+
+                        // check optional end cons
+                        EatEndConsComplex (u16word, state, p, pool,
+                                           { UTH_WO_WAEN });
+                    }
                 }
             }
         }
