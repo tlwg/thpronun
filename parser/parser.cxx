@@ -1227,6 +1227,70 @@ ParseOtherLV (const u16string& u16word, ParseState& state, StatePool& pool)
     }
 }
 
+// Progress the parsing from given state, where RU or LU was found.
+static void
+ParseRuLu (const u16string& u16word, ParseState& state, StatePool& pool)
+{
+    assert (state.pos < u16word.size());
+    assert (UTH_RU == u16word.at (state.pos) ||
+            UTH_LU == u16word.at (state.pos));
+
+    auto firstChar = u16word.at (state.pos);
+    ++state.pos; // skip RU/LU
+
+    PartialSyl p (
+        state.pos,
+        ((UTH_LU == firstChar) ? EInitConsSound::LA : EInitConsSound::RA),
+        EInitConsClass::LOWS,
+        ESecInitCons::NONE
+    );
+    p.tone = ETone::SAMAN;
+
+    // end cons that cause "RI" sound when following RU
+    static const unordered_set<char16_t> riECons = {
+        UTH_NO_NEN,
+        UTH_THO_THAHAN,
+        UTH_SO_RUSI,
+    };
+
+    if (state.pos >= u16word.size()) {
+        // ฤ/ฦ at string end
+        p.vowel = EVowel::UE;
+        p.eConsClass = EEndConsClass::NONE;
+        pool.add (ParseState (state.pos, AddSyl (state.sylString, p)));
+    } else {
+        auto secChar = u16word.at (state.pos);
+        if (UTH_LAKKHANGYAO == secChar || UTH_SARA_AA == secChar) {
+            // ฤๅ, ฦๅ, also allowing ฤา ฦา
+            p.vowel = EVowel::UEE;
+            p.eConsClass = EEndConsClass::NONE;
+            pool.add (ParseState (state.pos + 1, AddSyl (state.sylString, p)));
+        } else if (th_wcisthcons (secChar)) {
+            auto secConsClass = EndConsClass (secChar);
+            if (EEndConsClass::NONE == secConsClass || (
+                    state.pos + 1 < u16word.size() &&
+                    !IsSylStart (u16word.at (state.pos + 1))
+                ))
+            {
+                // ฤ/ฦ + { ห, อ, ฮ }
+                // ฤทัย, ฤดู, ฤษี, ฤชา
+                p.vowel = EVowel::UE;
+                p.eConsClass = EEndConsClass::NONE;
+                pool.add (ParseState (state.pos, AddSyl (state.sylString, p)));
+            } else if (riECons.find (secChar) != riECons.end()) {
+                // ฤทธิ์, ฤณ, ฤษยา
+                p.vowel = EVowel::I;
+                EatEndConsComplex (u16word, state, p, pool);
+            } else {
+                // ฤกษณะ, ฤคเวท, ฤต
+                p.vowel = EVowel::UE;
+                EatEndConsComplex (u16word, state, p, pool);
+            }
+            // Note: ฤกษ์ is supposed to be in exception dict
+        }
+    }
+}
+
 static list<SylString>
 ParseU16 (const u16string& u16word, StatePool& pool)
 {
@@ -1236,12 +1300,15 @@ ParseU16 (const u16string& u16word, StatePool& pool)
         if (s.pos >= u16word.size()) {
             sylStrings.push_back (s.sylString);
         } else {
-            if (th_wcisthcons (u16word.at (s.pos))) {
+            auto c = u16word.at (s.pos);
+            if (th_wcisthcons (c)) {
                 ParseThCons (u16word, s, pool);
-            } else if (UTH_SARA_E == u16word.at (s.pos)) {
+            } else if (UTH_SARA_E == c) {
                 ParseSaraE (u16word, s, pool);
-            } else if (th_wcisldvowel (u16word.at (s.pos))) {
+            } else if (th_wcisldvowel (c)) {
                 ParseOtherLV (u16word, s, pool);
+            } else if (UTH_RU == c || UTH_LU == c) {
+                ParseRuLu (u16word, s, pool);
             }
         }
     }
