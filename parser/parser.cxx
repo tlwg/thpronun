@@ -256,13 +256,17 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 case UTH_SO_SO:
                 case UTH_SO_SALA:
                 case UTH_SO_SUA:
-                    // add อักษรควบไม่แท้
                     if (state.isLinked)
                         break;
-                    partialSyls.push_back (
-                        PartialSyl (state.pos + 2, firstConsSound,
-                                    firstConsClass)
-                    );
+                    // add อักษรควบไม่แท้, but not for cรร, which is ร หัน
+                    if (state.pos + 2 >= u16word.size() ||
+                        UTH_RO_RUA != u16word.at (state.pos + 2))
+                    {
+                        partialSyls.push_back (
+                            PartialSyl (state.pos + 2, firstConsSound,
+                                        firstConsClass)
+                        );
+                    }
                     break;
 
                 case UTH_KHO_KHAI:
@@ -280,13 +284,17 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 case UTH_KO_KAI:
                 case UTH_TO_TAO:
                 case UTH_PO_PLA:
-                    // add อักษรควบแท้
-                    partialSyls.push_back (
-                        PartialSyl (state.pos + 2,
-                                    firstConsSound,
-                                    firstConsClass,
-                                    ESecInitCons::RA)
-                    );
+                    // add อักษรควบแท้, but not for cรร, which is ร หัน
+                    if (state.pos + 2 >= u16word.size() ||
+                        UTH_RO_RUA != u16word.at (state.pos + 2))
+                    {
+                        partialSyls.push_back (
+                            PartialSyl (state.pos + 2,
+                                        firstConsSound,
+                                        firstConsClass,
+                                        ESecInitCons::RA)
+                        );
+                    }
                     break;
                 }
                 break;
@@ -333,34 +341,28 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
 
             // check อักษรนำเสียงสนิท
             if (UTH_HO_HIP == firstCons &&
-                    EInitConsClass::LOWS == secConsClass)
+                EInitConsClass::LOWS == secConsClass)
             {
-                // add อักษรนำเสียงสนิท
-                partialSyls.push_back (
-                    PartialSyl (state.pos + 2,
-                                secConsSound,
-                                EInitConsClass::HIGH)
-                );
+                // add อักษรนำเสียงสนิท, but not for หรร, which is ร หัน
+                if (state.pos + 2 >= u16word.size() ||
+                    UTH_RO_RUA != secChar ||
+                    UTH_RO_RUA != u16word.at (state.pos + 2))
+                {
+                    partialSyls.push_back (
+                        PartialSyl (state.pos + 2,
+                                    secConsSound,
+                                    EInitConsClass::HIGH)
+                    );
+                }
             }
 
             // always add อักษรนำอะกึ่งเสียง
             // - with second consonant's own class,
             //   e.g. กมุท, ขมา, สมา, สรีระ, สราญ, หริภุญชัย, อรุโณทัย
-            partialSyls.push_back (
-                PartialSyl (state.pos + 2,
-                            Syl (firstConsSound, ESecInitCons::NONE,
-                                 EVowel::A, EEndConsClass::NONE,
-                                 ToneFromWritten (firstConsClass, ETone::SAMAN,
-                                                  true, true)),
-                            secConsSound,
-                            secConsClass)
-            );
-            // - using first consonant's class,
-            //   e.g. ขนม, ขมิบ, จรวด, จมูก, เฉลิม, โตนด, ตลาด, ผลิต, สนิม, สยบ, สรุป,
-            //   สลาย, สวรรค์, สวัสดี, อร่อย, อร่าม
-            if (EInitConsClass::LOWS == secConsClass &&
-                (EInitConsClass::HIGH == firstConsClass ||
-                 EInitConsClass::MID == firstConsClass))
+            // - but not for cรร, which is ร หัน
+            if (state.pos + 2 >= u16word.size() ||
+                UTH_RO_RUA != secChar ||
+                UTH_RO_RUA != u16word.at (state.pos + 2))
             {
                 partialSyls.push_back (
                     PartialSyl (state.pos + 2,
@@ -370,8 +372,32 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                                                       ETone::SAMAN,
                                                       true, true)),
                                 secConsSound,
-                                firstConsClass)
+                                secConsClass)
                 );
+            }
+            // - using first consonant's class,
+            //   e.g. ขนม, ขมิบ, จรวด, จมูก, เฉลิม, โตนด, ตลาด, ผลิต, สนิม, สยบ,
+            //   สรุป, สลาย, สวรรค์, สวัสดี, อร่อย, อร่าม
+            // - but not for cรร, which is ร หัน
+            if (EInitConsClass::LOWS == secConsClass &&
+                (EInitConsClass::HIGH == firstConsClass ||
+                 EInitConsClass::MID == firstConsClass))
+            {
+                if (state.pos + 2 >= u16word.size() ||
+                    UTH_RO_RUA != secChar ||
+                    UTH_RO_RUA != u16word.at (state.pos + 2))
+                {
+                    partialSyls.push_back (
+                        PartialSyl (state.pos + 2,
+                                    Syl (firstConsSound, ESecInitCons::NONE,
+                                         EVowel::A, EEndConsClass::NONE,
+                                         ToneFromWritten (firstConsClass,
+                                                          ETone::SAMAN,
+                                                          true, true)),
+                                    secConsSound,
+                                    firstConsClass)
+                    );
+                }
             }
         } else if (UTH_RU == secChar) {
             // make sure it's not ฤๅ
