@@ -850,10 +850,6 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
                 ++p.pos; // skip tone mark
             }
             if (p.pos >= u16word.size()) {
-                // บ่, also allowing ก่, ก้, etc., at word end
-                p.vowel = EVowel::AUU;
-                p.eConsClass = EEndConsClass::NONE;
-                pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
                 continue;
             }
             switch (u16word.at (p.pos)) {
