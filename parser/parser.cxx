@@ -983,9 +983,12 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
     for (auto& p : partialSyls) {
         p.tone = ETone::SAMAN;
         if (p.pos >= u16word.size()) {
-            p.vowel = EVowel::EE;
-            p.eConsClass = EEndConsClass::NONE;
-            pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+            // add EE-syllable except เธอ -> ทะ-เอ
+            if (!p.hasPreSyl || EInitConsSound::A != p.iConsSound) {
+                p.vowel = EVowel::EE;
+                p.eConsClass = EEndConsClass::NONE;
+                pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+            }
             continue;
         }
         auto c = u16word.at (p.pos);
@@ -1083,13 +1086,13 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
                 // read tone
                 p.tone = ThCharToTone (c);
                 ++p.pos; // skip tone mark
-            }
-            if (p.pos >= u16word.size()) {
-                // เก๋, เท่, เบ้
-                p.vowel = EVowel::EE;
-                p.eConsClass = EEndConsClass::NONE;
-                pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
-                continue;
+                if (p.pos >= u16word.size()) {
+                    // เก๋, เท่, เบ้
+                    p.vowel = EVowel::EE;
+                    p.eConsClass = EEndConsClass::NONE;
+                    pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+                    continue;
+                }
             }
             switch (u16word.at (p.pos)) {
             case UTH_O_ANG:
@@ -1109,12 +1112,15 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
                 pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
                 break;
             case UTH_SARA_A:
-                // เตะ, เป๊ะ
-                ++p.pos; // skip SARA A
-                p.vowel = EVowel::E;
-                p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
-                pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+                // add E-syllable except เลอะ -> ละ-เอะ
+                if (!p.hasPreSyl || EInitConsSound::A != p.iConsSound) {
+                    // เตะ, เป๊ะ
+                    ++p.pos; // skip SARA A
+                    p.vowel = EVowel::E;
+                    p.eConsClass = EEndConsClass::NONE;
+                    p.pos = MatchKaranSimple (u16word, p.pos);
+                    pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+                }
                 break;
             case UTH_SARA_AA:
                 // เบา, เก่า, เกาะ, เอ๊าะ
@@ -1141,14 +1147,17 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
                 pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
                 break;
             default:
-                // เก, เก๋, เบน, เก่ง
-                p.vowel = EVowel::EE;
-                p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
-                pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
-                // check optional end cons
-                if (p.pos < u16word.size()) {
-                    EatEndConsComplex (u16word, state, p, pool);
+                // add EE-syllable except เธอ -> ทะ-เอ
+                if (!p.hasPreSyl || EInitConsSound::A != p.iConsSound) {
+                    // เก, เก๋, เบน, เก่ง
+                    p.vowel = EVowel::EE;
+                    p.eConsClass = EEndConsClass::NONE;
+                    p.pos = MatchKaranSimple (u16word, p.pos);
+                    pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+                    // check optional end cons
+                    if (p.pos < u16word.size()) {
+                        EatEndConsComplex (u16word, state, p, pool);
+                    }
                 }
                 break;
             }
