@@ -699,11 +699,29 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
         UTH_SARA_UU,
     };
 
-    auto c = u16word.at (p.pos);
-    if (th_wcisthcons (c) && EEndConsClass::NONE != EndConsClass (c)
-        && excludedECons.find (c) == excludedECons.end())
+    // end cons which can be clustered with RO RUA after them
+    static const unordered_set<char16_t> eConsWithRo = {
+        UTH_KO_KAI,     // จักร, ศักร
+        UTH_KHO_KHWAI,  // สมัคร
+        UTH_CHO_CHANG,  // เพชร, พัชร
+        UTH_TO_TAO,     // วัตร, เมตร, มาตร, บพิตร, มูตร, มิตร, จิตร, ปริตร, โคตร
+        UTH_THO_THAHAN, // สมุทร
+    };
+
+    // end cons which can be coupled with SARA I/U after them
+    static const unordered_set<char16_t> eConsWithIU = {
+        UTH_THO_PHUTHAO,    // คุณวุฒิ
+        UTH_TO_TAO,         // สมบัติ, ชาติ, ประวัติ
+        UTH_THO_THONG,      // พยาธิ, ขัดสมาธิ
+        UTH_RO_RUA,         // เมรุ
+    };
+
+    auto firstECons = u16word.at (p.pos);
+    if (th_wcisthcons (firstECons) &&
+        EEndConsClass::NONE != EndConsClass (firstECons) &&
+        excludedECons.find (firstECons) == excludedECons.end())
     {
-        p.eConsClass = EndConsClass (c);
+        p.eConsClass = EndConsClass (firstECons);
 
         auto karanEnd = MatchKaranComplex (u16word, p.pos + 1);
         // add single non-linking ending consonant
@@ -715,14 +733,39 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
         // มัสยา, มัสมั่น, ศัตรู
         if (p.pos + 1 < u16word.size()) {
             auto clusterEnd = p.pos + 1;
-            c = u16word.at (clusterEnd);
-            if (th_wcisthcons (c)) {
+            auto secEChar = u16word.at (clusterEnd);
+            auto nextChar = secEChar;
+            if (th_wcisthcons (secEChar)) {
                 ++clusterEnd; // skip second ending consonant
+                if (UTH_RO_RUA == secEChar &&
+                    eConsWithRo.find (firstECons) != eConsWithRo.end() && (
+                        clusterEnd >= u16word.size() ||
+                        IsSylStart (u16word.at (clusterEnd))
+                    ))
+                {
+                    // จักร, สมัคร, วัตร, มาตร, โคตร
+                    pool.add (ParseState (clusterEnd,
+                                          AddSyl (state.sylString, p)));
+                }
                 if (clusterEnd == u16word.size())
                     goto word_done;
-                c = u16word.at (clusterEnd);
+                nextChar = u16word.at (clusterEnd);
+            } else if (UTH_SARA_I == secEChar || UTH_SARA_U == secEChar) {
+                ++clusterEnd; // skip SARA I/U
+                if (eConsWithIU.find (firstECons) != eConsWithIU.end() && (
+                        clusterEnd >= u16word.size() ||
+                        IsSylStart (u16word.at (clusterEnd))
+                    ))
+                {
+                    // ชาติ, ธาตุ, เกตุ, เหตุ, พยาธิ, ขัดสมาธิ, เมรุ
+                    pool.add (ParseState (clusterEnd,
+                                          AddSyl (state.sylString, p)));
+                }
+                if (clusterEnd == u16word.size())
+                    goto word_done;
             }
-            if (afterClusterVowels.find (c) != afterClusterVowels.end()) {
+            if (afterClusterVowels.find (nextChar) != afterClusterVowels.end())
+            {
                 // Linking syllable: add this syllable without consuming
                 // the ending cons, and pass the ending cons over to
                 // next syllable

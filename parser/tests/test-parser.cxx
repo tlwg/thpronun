@@ -354,6 +354,48 @@ TestRu()
     return isSuccess;
 }
 
+bool
+TestMuteECons()
+{
+    list<string> muteECons = {
+        u8"จักร",
+        u8"สมัคร",
+        u8"เพชร",
+        u8"วัตร",
+        u8"เมตร",
+        u8"มาตร",
+        u8"บพิตร",
+        u8"มิตร",
+        u8"จิตร",
+        u8"ปริตร",
+        u8"มูตร",
+        u8"โคตร",
+        u8"สมุทร",
+        u8"กอปร",
+        u8"สมบัติ",
+        u8"ชาติ",
+        u8"ชาติพันธุ์",
+        u8"ประวัติ",
+        u8"ประวัติศาสตร์",
+        u8"ธาตุ",
+        u8"เกตุ",
+        u8"เหตุ",
+        u8"เมรุ",
+        u8"พยาธิ",
+        u8"ขัดสมาธิ",
+    };
+
+    bool isSuccess = true;
+
+    cout << "TestRu: Words containg muted end cons..." << endl;
+    if (!ParseAll (muteECons)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -372,6 +414,10 @@ main()
     }
 
     if (!TestRu()) {
+        isSuccess = false;
+    }
+
+    if (!TestMuteECons()) {
         isSuccess = false;
     }
 
