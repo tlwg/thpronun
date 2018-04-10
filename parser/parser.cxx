@@ -1283,11 +1283,11 @@ ParseOtherLV (const u16string& u16word, ParseState& state, StatePool& pool)
                 p.vowel = EVowel::OO;
             }
             p.eConsClass = EEndConsClass::NONE;
-            p.pos = MatchKaranSimple (u16word, p.pos);
+            p.pos = MatchKaranComplex (u16word, p.pos);
             pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
             // check optional end cons for SARA OO
             if (EVowel::OO == p.vowel && p.pos < u16word.size()) {
-                EatEndConsSimple (u16word, state, p, pool);
+                EatEndConsComplex (u16word, state, p, pool);
             }
             break;
         case UTH_SARA_AI_MAIMALAI:
