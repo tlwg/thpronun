@@ -30,5 +30,6 @@ AC_CONFIG_FILES([Makefile
                  sylstring/Makefile
                  sylstring/tests/Makefile
                  parser/Makefile
-                 parser/tests/Makefile])
+                 parser/tests/Makefile
+                 thpronun/Makefile])
 AC_OUTPUT

@@ -1,4 +1,4 @@
-SUBDIRS = thortho sylstring parser
+SUBDIRS = thortho sylstring parser thpronun
 
 dist-hook:
 	echo $(VERSION) > $(distdir)/VERSION
