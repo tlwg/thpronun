@@ -2,7 +2,7 @@ SUBDIRS = tests
 
 AM_CPPFLAGS = -I. -I$(top_srcdir) $(LIBTHAI_CFLAGS)
 
-lib_LTLIBRARIES = libparser.la
+noinst_LTLIBRARIES = libparser.la
 
 libparser_la_SOURCES = \
 	parser.h	\
