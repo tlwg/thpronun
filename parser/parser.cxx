@@ -697,6 +697,7 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
         UTH_SARA_II,
         UTH_SARA_U,
         UTH_SARA_UU,
+        UTH_RO_RUA,         // -ON, RO HAN
     };
 
     // end cons which can be clustered with RO RUA after them

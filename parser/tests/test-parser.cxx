@@ -88,6 +88,11 @@ TestThCons()
         u8"จัตุรัส",
     };
 
+    list<string> thConsComplicated = {
+        u8"อุปสรรค",
+        u8"อัปสร",
+    };
+
     bool isSuccess = true;
 
     cout << "TestThCons: Simple forms..." << endl;
@@ -104,6 +109,12 @@ TestThCons()
 
     cout << "TestThCons: With linked syllables..." << endl;
     if (!ParseAll (thConsLinked)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: Complicated forms..." << endl;
+    if (!ParseAll (thConsComplicated)) {
         isSuccess = false;
     }
     cout << endl;
