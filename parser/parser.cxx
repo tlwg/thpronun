@@ -952,12 +952,12 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
                 break;
 
             case UTH_RO_RUA:
-                // พร, นคร
                 if (p.pos + 1 == u16word.size() || (
                         UTH_RO_RUA != u16word.at (p.pos + 1) &&
                         IsSylStart (u16word.at (p.pos + 1))
                     ))
                 {
+                    // พร, นคร
                     ++p.pos; // skip RO RUA
                     p.vowel = EVowel::AUU;
                     p.eConsClass = EEndConsClass::KON;
