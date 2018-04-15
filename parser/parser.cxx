@@ -699,7 +699,6 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
         UTH_SARA_II,
         UTH_SARA_U,
         UTH_SARA_UU,
-        UTH_RO_RUA,         // -ON, RO HAN
     };
 
     // end cons which can be clustered with RO RUA after them
@@ -767,7 +766,8 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
                 if (clusterEnd == u16word.size())
                     goto word_done;
             }
-            if (afterClusterVowels.find (nextChar) != afterClusterVowels.end())
+            if (afterClusterVowels.find (nextChar) != afterClusterVowels.end()
+                || th_wcisthcons (nextChar))
             {
                 // Linking syllable: add this syllable without consuming
                 // the ending cons, and pass the ending cons over to
@@ -992,7 +992,8 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
                 if (th_wcisthcons (c)) {
                     if (EVowel::INVALID == p.vowel) {
                         if (EEndConsClass::NONE != EndConsClass (c) &&
-                            ESecInitCons::WA != p.iCons2) // prevent e.g. กฺวง
+                            ESecInitCons::WA != p.iCons2 && // prevent e.g. กฺวง
+                            !state.isLinked) // prevent e.g. ขัดสมาธิ = ชัด-ดด-...
                         {
                             // ข้น
                             p.vowel = EVowel::O;

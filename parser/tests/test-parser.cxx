@@ -91,6 +91,7 @@ TestThCons()
     list<string> thConsComplicated = {
         u8"อุปสรรค",
         u8"อัปสร",
+        u8"วิศวกร",
     };
 
     bool isSuccess = true;
