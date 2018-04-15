@@ -143,6 +143,8 @@ struct PartialSyl {
     EEndConsClass   eConsClass;     // ending consonant class
     ETone           tone;           // written tone
 
+    bool            isComplete;     // whether it is a complete syllable
+
 public:
     // c-tor with pre-syllable
     PartialSyl (int             pos,
@@ -161,7 +163,8 @@ public:
                 ESecInitCons    iCons2 = ESecInitCons::NONE,
                 EVowel          vowel = EVowel::INVALID,
                 EEndConsClass   eConsClass = EEndConsClass::NONE,
-                ETone           tone = ETone::INVALID);
+                ETone           tone = ETone::INVALID,
+                bool            isComplete = false);
 };
 
 inline
@@ -181,7 +184,8 @@ PartialSyl::PartialSyl (int             pos,
       iCons2 (iCons2),
       vowel (vowel),
       eConsClass (eConsClass),
-      tone (tone)
+      tone (tone),
+      isComplete (false)
 {
 }
 
@@ -192,7 +196,8 @@ PartialSyl::PartialSyl (int             pos,
                         ESecInitCons    iCons2,
                         EVowel          vowel,
                         EEndConsClass   eConsClass,
-                        ETone           tone)
+                        ETone           tone,
+                        bool            isComplete)
     : pos (pos),
       hasPreSyl (false),
       preSyl(),
@@ -201,7 +206,8 @@ PartialSyl::PartialSyl (int             pos,
       iCons2 (iCons2),
       vowel (vowel),
       eConsClass (eConsClass),
-      tone (tone)
+      tone (tone),
+      isComplete (isComplete)
 {
 }
 
@@ -357,8 +363,9 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
             }
 
             // always add อักษรนำอะกึ่งเสียง
-            // - with second consonant's own class,
-            //   e.g. กมุท, ขมา, สมา, สรีระ, สราญ, หริภุญชัย, อรุโณทัย
+            // - using first consonant's class,
+            //   e.g. ขนม, ขมิบ, จรวด, จมูก, เฉลิม, โตนด, ตลาด, ผลิต, สนิม, สยบ,
+            //   สรุป, สลาย, สวรรค์, สวัสดี, อร่อย, อร่าม
             // - but not for cรร, which is ร หัน
             if (state.pos + 2 >= u16word.size() ||
                 UTH_RO_RUA != secChar ||
@@ -372,32 +379,9 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                                                       ETone::SAMAN,
                                                       true, true)),
                                 secConsSound,
-                                secConsClass)
+                                (EInitConsClass::LOWS == secConsClass) ?
+                                    firstConsClass : secConsClass)
                 );
-            }
-            // - using first consonant's class,
-            //   e.g. ขนม, ขมิบ, จรวด, จมูก, เฉลิม, โตนด, ตลาด, ผลิต, สนิม, สยบ,
-            //   สรุป, สลาย, สวรรค์, สวัสดี, อร่อย, อร่าม
-            // - but not for cรร, which is ร หัน
-            if (EInitConsClass::LOWS == secConsClass &&
-                (EInitConsClass::HIGH == firstConsClass ||
-                 EInitConsClass::MID == firstConsClass))
-            {
-                if (state.pos + 2 >= u16word.size() ||
-                    UTH_RO_RUA != secChar ||
-                    UTH_RO_RUA != u16word.at (state.pos + 2))
-                {
-                    partialSyls.push_back (
-                        PartialSyl (state.pos + 2,
-                                    Syl (firstConsSound, ESecInitCons::NONE,
-                                         EVowel::A, EEndConsClass::NONE,
-                                         ToneFromWritten (firstConsClass,
-                                                          ETone::SAMAN,
-                                                          true, true)),
-                                    secConsSound,
-                                    firstConsClass)
-                    );
-                }
             }
         } else if (UTH_RU == secChar) {
             // make sure it's not ฤๅ
@@ -605,6 +589,24 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
         PartialSyl (state.pos + 1, firstConsSound, firstConsClass)
     );
 
+    // add Pali-Sanskrit -a consonant sound
+    if (state.pos + 1 < u16word.size()
+        && IsSylStart (u16word.at (state.pos + 1)))
+    {
+        partialSyls.push_back (
+            PartialSyl (
+                state.pos + 1,
+                firstConsSound,
+                firstConsClass,
+                ESecInitCons::NONE,
+                EVowel::A,
+                EEndConsClass::NONE,
+                ETone::SAMAN,
+                true
+            )
+        );
+    }
+
     return partialSyls;
 }
 
@@ -790,6 +792,10 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
 
     for (auto& p : partialSyls) {
         if (p.pos >= u16word.size()) {
+            continue;
+        }
+        if (p.isComplete) {
+            pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
             continue;
         }
         auto c = u16word.at (p.pos);
