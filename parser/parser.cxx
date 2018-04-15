@@ -964,12 +964,15 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
                         IsSylStart (u16word.at (p.pos + 1))
                     ))
                 {
-                    // พร, นคร
+                    // พร, นคร, except รร != รอน
                     ++p.pos; // skip RO RUA
-                    p.vowel = EVowel::AUU;
-                    p.eConsClass = EEndConsClass::KON;
-                    p.pos = MatchKaranSimple (u16word, p.pos);
-                    pool.add (ParseState (p.pos, AddSyl (state.sylString, p)));
+                    if (EInitConsSound::RA != p.iConsSound) {
+                        p.vowel = EVowel::AUU;
+                        p.eConsClass = EEndConsClass::KON;
+                        p.pos = MatchKaranSimple (u16word, p.pos);
+                        pool.add (ParseState (p.pos,
+                                              AddSyl (state.sylString, p)));
+                    }
                 } else if (UTH_RO_RUA == u16word.at (p.pos + 1)) {
                     // สรร, ธรรม
                     p.pos += 2; // skip two RO RUA's
