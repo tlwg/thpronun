@@ -324,28 +324,78 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 };
 
                 if (state.pos + 2 < u16word.size()
-                    && UTH_RO_RUA != u16word.at (state.pos + 2) // prevent cรร
-                    && IsSylStart (u16word.at (state.pos + 2))
-                    && auraCons.find (firstCons) != auraCons.end())
+                    && UTH_RO_RUA != u16word.at (state.pos + 2)) // prevent cรร
                 {
-                    partialSyls.push_back (
-                        PartialSyl (
-                            state.pos + 2,
-                            Syl (
-                                firstConsSound, ESecInitCons::NONE,
-                                EVowel::AUU, EEndConsClass::NONE,
-                                ToneFromWritten (firstConsClass,
-                                                 ETone::SAMAN, false, false)
-                            ),
-                            EInitConsSound::RA,
-                            EInitConsClass::LOWS,
-                            ESecInitCons::NONE,
-                            EVowel::A,
-                            EEndConsClass::NONE,
-                            ETone::SAMAN,
-                            true
-                        )
-                    );
+                    auto nextChar = u16word.at (state.pos + 2);
+                    if (IsSylStart (u16word.at (state.pos + 2))) {
+                        if (auraCons.find (firstCons) != auraCons.end()) {
+                            partialSyls.push_back (
+                                PartialSyl (
+                                    state.pos + 2,
+                                    Syl (
+                                        firstConsSound, ESecInitCons::NONE,
+                                        EVowel::AUU, EEndConsClass::NONE,
+                                        ToneFromWritten (firstConsClass,
+                                                         ETone::SAMAN,
+                                                         false, false)
+                                    ),
+                                    EInitConsSound::RA,
+                                    EInitConsClass::LOWS,
+                                    ESecInitCons::NONE,
+                                    EVowel::A,
+                                    EEndConsClass::NONE,
+                                    ETone::SAMAN,
+                                    true
+                                )
+                            );
+                        }
+                    } else if (UTH_SARA_I == nextChar
+                               && UTH_BO_BAIMAI == firstCons)
+                    {
+                        // บริษัท, บริเวณ, บริบูรณ์
+                        partialSyls.push_back (
+                            PartialSyl (
+                                state.pos + 3,
+                                Syl (
+                                    firstConsSound, ESecInitCons::NONE,
+                                    EVowel::AUU, EEndConsClass::NONE,
+                                    ToneFromWritten (firstConsClass,
+                                                     ETone::SAMAN,
+                                                     false, false)
+                                ),
+                                EInitConsSound::RA,
+                                EInitConsClass::LOWS,
+                                ESecInitCons::NONE,
+                                EVowel::I,
+                                EEndConsClass::NONE,
+                                ETone::SAMAN,
+                                true
+                            )
+                        );
+                    } else if (UTH_SARA_A == nextChar
+                               && UTH_CHO_CHAN == firstCons)
+                    {
+                        // จระเข้
+                        partialSyls.push_back (
+                            PartialSyl (
+                                state.pos + 3,
+                                Syl (
+                                    firstConsSound, ESecInitCons::NONE,
+                                    EVowel::AUU, EEndConsClass::NONE,
+                                    ToneFromWritten (firstConsClass,
+                                                     ETone::SAMAN,
+                                                     false, false)
+                                ),
+                                EInitConsSound::RA,
+                                EInitConsClass::LOWS,
+                                ESecInitCons::NONE,
+                                EVowel::A,
+                                EEndConsClass::NONE,
+                                ETone::SAMAN,
+                                true
+                            )
+                        );
+                    }
                 }
                 break;
             case UTH_LO_LING:
