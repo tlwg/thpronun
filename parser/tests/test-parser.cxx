@@ -94,6 +94,29 @@ TestThCons()
         u8"วิศวกร",
     };
 
+    list<string> thConsAu = {
+        u8"กรกฎ",
+        u8"ครหา",
+        u8"จรลี",
+        u8"ทรชน",
+        u8"ทรมาน",
+        u8"ธรณี",
+        u8"นรชาติ",
+        u8"นรสีห์",
+        u8"บรบือ",
+        u8"ปรโลก",
+        u8"ภรณี",
+        u8"มรณะ",
+        u8"มรดก",
+        u8"สรพงษ์",
+        u8"สรยุทธ์",
+        u8"สรศักดิ์",
+        u8"หรคุณ",
+        u8"หรดี",
+        u8"อรสา",
+        u8"อรดี",
+    };
+
     bool isSuccess = true;
 
     cout << "TestThCons: Simple forms..." << endl;
@@ -116,6 +139,12 @@ TestThCons()
 
     cout << "TestThCons: Complicated forms..." << endl;
     if (!ParseAll (thConsComplicated)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "TestThCons: AU consonant sound..." << endl;
+    if (!ParseAll (thConsAu)) {
         isSuccess = false;
     }
     cout << endl;

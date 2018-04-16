@@ -154,7 +154,8 @@ public:
                 ESecInitCons    iCons2 = ESecInitCons::NONE,
                 EVowel          vowel = EVowel::INVALID,
                 EEndConsClass   eConsClass = EEndConsClass::NONE,
-                ETone           tone = ETone::INVALID);
+                ETone           tone = ETone::INVALID,
+                bool            isComplete = false);
 
     // c-tor without pre-syllable
     PartialSyl (int             pos,
@@ -175,7 +176,8 @@ PartialSyl::PartialSyl (int             pos,
                         ESecInitCons    iCons2,
                         EVowel          vowel,
                         EEndConsClass   eConsClass,
-                        ETone           tone)
+                        ETone           tone,
+                        bool            isComplete)
     : pos (pos),
       hasPreSyl (true),
       preSyl (preSyl),
@@ -185,7 +187,7 @@ PartialSyl::PartialSyl (int             pos,
       vowel (vowel),
       eConsClass (eConsClass),
       tone (tone),
-      isComplete (false)
+      isComplete (isComplete)
 {
 }
 
@@ -302,6 +304,48 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                         );
                     }
                     break;
+                }
+
+                // add -au + ra consonant sound
+                static const unordered_set<char16_t> auraCons = {
+                    UTH_KO_KAI,         // กรกฎ
+                    UTH_KHO_KHWAI,      // ครหา
+                    UTH_CHO_CHAN,       // จรลี
+                    UTH_THO_THAHAN,     // ทรมาน, ทรชน
+                    UTH_THO_THONG,      // ธรณี
+                    UTH_NO_NU,          // นรชาติ, นรสีห์
+                    UTH_BO_BAIMAI,      // บรบือ
+                    UTH_PO_PLA,         // ปรโลก
+                    UTH_PHO_SAMPHAO,    // ภรณี
+                    UTH_MO_MA,          // มรณะ, มรดก
+                    UTH_SO_SUA,         // สรพงษ์, สรยุทธ์, สรศักดิ์
+                    UTH_HO_HIP,         // หรคุณ, หรดี
+                    UTH_O_ANG,          // อรดี, อรสา
+                };
+
+                if (state.pos + 2 < u16word.size()
+                    && UTH_RO_RUA != u16word.at (state.pos + 2) // prevent cรร
+                    && IsSylStart (u16word.at (state.pos + 2))
+                    && auraCons.find (firstCons) != auraCons.end())
+                {
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 2,
+                            Syl (
+                                firstConsSound, ESecInitCons::NONE,
+                                EVowel::AUU, EEndConsClass::NONE,
+                                ToneFromWritten (firstConsClass,
+                                                 ETone::SAMAN, false, false)
+                            ),
+                            EInitConsSound::RA,
+                            EInitConsClass::LOWS,
+                            ESecInitCons::NONE,
+                            EVowel::A,
+                            EEndConsClass::NONE,
+                            ETone::SAMAN,
+                            true
+                        )
+                    );
                 }
                 break;
             case UTH_LO_LING:
@@ -1035,6 +1079,10 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
     list<PartialSyl> partialSyls = MatchInitCons (u16word, state);
 
     for (auto& p : partialSyls) {
+        if (p.isComplete) {
+            // init cons cluster with complete syllable is not allowed here
+            continue;
+        }
         p.tone = ETone::SAMAN;
         if (p.pos >= u16word.size()) {
             // add EE-syllable except เธอ -> ทะ-เอ
@@ -1234,6 +1282,10 @@ ParseOtherLV (const u16string& u16word, ParseState& state, StatePool& pool)
     list<PartialSyl> partialSyls = MatchInitCons (u16word, state);
 
     for (auto& p : partialSyls) {
+        if (p.isComplete) {
+            // init cons cluster with complete syllable is not allowed here
+            continue;
+        }
         p.tone = ETone::SAMAN;
         if (p.pos < u16word.size()) {
             auto c = u16word.at (p.pos);
