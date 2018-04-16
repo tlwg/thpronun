@@ -477,6 +477,27 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                                     firstConsClass : secConsClass)
                 );
             }
+
+            // special case: บดี, บดินทร์
+            if (UTH_BO_BAIMAI == firstCons && UTH_DO_DEK == secChar
+                && state.pos + 2 < u16word.size())
+            {
+                auto nextChar = u16word.at (state.pos + 2);
+                if (UTH_SARA_I == nextChar || UTH_SARA_II == nextChar) {
+                    partialSyls.push_back (
+                        PartialSyl (
+                            state.pos + 1,
+                            firstConsSound,
+                            firstConsClass,
+                            ESecInitCons::NONE,
+                            EVowel::AUU,
+                            EEndConsClass::NONE,
+                            ETone::SAMAN,
+                            true
+                        )
+                    );
+                }
+            }
         } else if (UTH_RU == secChar) {
             // make sure it's not ฤๅ
             // note: "ตฤๅ" is supposed to be in exception dict here
