@@ -372,6 +372,170 @@ TestRomanPronun()
     return isSuccess;
 }
 
+bool
+TestPhonetic()
+{
+    bool isSuccess = true;
+    SylString syls;
+
+    // กกต้นหูกฺวางเหฺลียวเลาะร้องเป็นตาแซ่บ
+    syls = Syl ("k_ok1");
+
+    auto phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("t_on2");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("h_U_4");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2 HU:4") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("kwAg0");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2 HU:4 KWA:NG0") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("l_Yw4");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2 HU:4 KWA:NG0 LIA:O4") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("l_c_3");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2 HU:4 KWA:NG0 LIA:O4 LAUH3") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("r_Cg3");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2 HU:4 KWA:NG0 LIA:O4 LAUH3 RAU:NG3") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("p_en0");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2 HU:4 KWA:NG0 LIA:O4 LAUH3 RAU:NG3 PEN0") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("t_A_0");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2 HU:4 KWA:NG0 LIA:O4 LAUH3 RAU:NG3 PEN0 TA:0") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("s_xp2");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOK1 TON2 HU:4 KWA:NG0 LIA:O4 LAUH3 RAU:NG3 PEN0 TA:0 SAEP2") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    // ละลันหลั่นล้า
+    syls = Syl ("l_a_3");
+    syls += Syl ("l_an0");
+    syls += Syl ("l_an1");
+    syls += Syl ("l_A_3");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "LAH3 LAN0 LAN1 LA:3") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    // ใครใคร่ขายไข่ไก่คราคร่ำไม้ไหมเล่า
+    syls = Syl ("cray0");
+    syls += Syl ("cray2");
+    syls += Syl ("c_Ay4");
+    syls += Syl ("c_ay1");
+    syls += Syl ("k_ay1");
+    syls += Syl ("crA_0");
+    syls += Syl ("cram2");
+    syls += Syl ("m_Ay3");
+    syls += Syl ("m_ay4");
+    syls += Syl ("l_aw2");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KHRAI0 KHRAI2 KHA:I4 KHAI1 KAI1 KHRA:0 KHRAM2 MA:I3 MAI4 LAO2") {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    // แมวและเด็กเหล่เล่นเจอะเจอเกลือเดินเกลือกคั่วกลิ้งร่วมโรงเรียน
+    syls = Syl ("m_Xw0");
+    syls += Syl ("l_x_3");
+    syls += Syl ("d_ek1");
+    syls += Syl ("l_E_1");
+    syls += Syl ("l_en2");
+    syls += Syl ("j_w_1");
+    syls += Syl ("j_W_0");
+    syls += Syl ("klZ_0");
+    syls += Syl ("d_Wn0");
+    syls += Syl ("klZk1");
+    syls += Syl ("c_T_2");
+    syls += Syl ("klig2");
+    syls += Syl ("r_Tm2");
+    syls += Syl ("r_Og0");
+    syls += Syl ("r_Yn0");
+    phonetic = syls.toPhonetic();
+    if (phonetic !=
+        "MAE:O0 LAEH3 DEK1 LE:1 LEN2 JOEH1 JOE:0 KLUEA:0 DOE:N0 KLUEA:K1 KHUA:2 KLING2 RUA:M2 RO:NG0 RIA:N0")
+    {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
+    syls = Syl ("m_V_0");
+    syls += Syl ("m_Vt2");
+    syls += Syl ("krIt1");
+    syls += Syl ("k_ug2");
+    syls += Syl ("P_Un3");
+    syls += Syl ("n_vg1");
+    syls += Syl ("s_ig1");
+    syls += Syl ("m_i_3");
+    syls += Syl ("m_I_0");
+    syls += Syl ("g_U_0");
+    syls += Syl ("l_u_3");
+    syls += Syl ("r_v_3");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "MUE:0 MUE:T2 KRI:T1 KUNG2 PHU:N3 NUENG1 SING1 MIH3 MI:0 NGU:0 LUH3 RUEH3")
+    {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    // เกินเลยเม้ย
+    syls = Syl ("k_Wn0");
+    syls += Syl ("l_Wy0");
+    syls += Syl ("m_Wy3");
+    phonetic = syls.toPhonetic();
+    if (phonetic != "KOE:N0 LOE:I0 MOE:I3")
+    {
+        cerr << "Wrong phonetic '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -382,6 +546,10 @@ main()
     }
 
     if (!TestRomanPronun()) {
+        isSuccess = false;
+    }
+
+    if (!TestPhonetic()) {
         isSuccess = false;
     }
 

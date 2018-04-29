@@ -5,7 +5,7 @@
 using namespace std;
 
 void
-DoParse (string word, bool outThai, bool outRoman)
+DoParse (string word, bool outThai, bool outRoman, bool outPhonetic)
 {
     cout << word << ":" << endl;
     auto sylList = ParseWord (word);
@@ -15,9 +15,19 @@ DoParse (string word, bool outThai, bool outRoman)
             if (outRoman) {
                 cout << '\t' << s.toRoman();
             }
+            if (outPhonetic) {
+                cout << '\t' << s.toPhonetic();
+            }
             cout << endl;
         } else if (outRoman) {
-            cout << s.toRoman() << endl;
+            cout << s.toRoman();
+            if (outPhonetic) {
+                cout << '\t' << s.toPhonetic();
+            }
+            cout << endl;
+        } else if (outPhonetic) {
+            cout << s.toPhonetic();
+            cout << endl;
         }
     }
 }
@@ -29,6 +39,7 @@ Usage (const char* progName)
          << "Options:" << endl
          << "    -r    Outputs Romanization" << endl
          << "    -t    Outputs Thai pronunciation" << endl
+         << "    -p    Outputs Phonetic form" << endl
          << "    -h    Displays help" << endl
          << endl
          << "If no word is given, standard input will be read." << endl;
@@ -40,6 +51,7 @@ main (int argc, const char* argv[])
     int optCnt = 0;
     bool outThai = false;
     bool outRoman = false;
+    bool outPhonetic = false;
 
     for (int i = 1; i < argc; ++i) {
         if ('-' == argv[i][0]) {
@@ -49,6 +61,9 @@ main (int argc, const char* argv[])
                 break;
             case 't':
                 outThai = true;
+                break;
+            case 'p':
+                outPhonetic = true;
                 break;
             case 'h':
                 Usage (argv[0]);
@@ -61,21 +76,21 @@ main (int argc, const char* argv[])
             ++optCnt;
         }
     }
-    if (!outThai && !outRoman) {
-        outThai = outRoman = true;
+    if (!outThai && !outRoman && !outPhonetic) {
+        outThai = outRoman = outPhonetic = true;
     }
 
     if (1 == argc - optCnt) {
         // read word list from stdin
         string word;
         while (getline (cin, word)) {
-            DoParse (word, outThai, outRoman);
+            DoParse (word, outThai, outRoman, outPhonetic);
         }
     } else {
         // read word list from command line args
         for (int i = 1; i < argc; ++i) {
             if ('-' != argv[i][0]) {
-                DoParse (argv[i], outThai, outRoman);
+                DoParse (argv[i], outThai, outRoman, outPhonetic);
             }
         }
     }

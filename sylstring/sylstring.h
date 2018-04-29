@@ -24,6 +24,7 @@ public:
 
     std::string toThai() const;
     std::string toRoman() const;
+    std::string toPhonetic() const;
 
 private:
     EInitConsSound  iCons1;
@@ -46,6 +47,7 @@ public:
 
     std::string toThai() const;
     std::string toRoman (bool isCapitalize = false) const;
+    std::string toPhonetic() const;
 
 private:
     std::list<Syl> mSyls;

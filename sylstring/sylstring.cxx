@@ -709,6 +709,118 @@ Syl::toRoman() const
            + RomanEndConsTbl_.at (eCons);
 }
 
+//
+// Phonetic Syllable Pronunciation Generation
+//
+
+#define ICS EInitConsSound
+static const unordered_map<EInitConsSound, string>
+PhoneticInitConsTbl_ = {
+    { ICS::KA,   "K"  },  // ก
+    { ICS::KHA,  "KH" },  // ข ฃ ค ฅ ฆ
+    { ICS::NGA,  "NG" },  // ง
+    { ICS::JA,   "J"  },  // จ
+    { ICS::CHA,  "CH" },  // ฉ ช ฌ
+    { ICS::YA,   "Y"  },  // ญ ย
+    { ICS::DA,   "D"  },  // ฎ ด
+    { ICS::TA,   "T"  },  // ฏ ต
+    { ICS::THA,  "TH" },  // ฐ ฑ ฒ ถ ท ธ
+    { ICS::NA,   "N"  },  // ณ น
+    { ICS::BA,   "B"  },  // บ
+    { ICS::PA,   "P"  },  // ป
+    { ICS::PHA,  "PH" },  // ผ พ ภ
+    { ICS::FA,   "F"  },  // ฝ ฟ
+    { ICS::MA,   "M"  },  // ม
+    { ICS::RA,   "R"  },  // ร
+    { ICS::LA,   "L"  },  // ล ฬ
+    { ICS::WA,   "W"  },  // ว
+    { ICS::SA,   "S"  },  // ซ ศ ษ ส
+    { ICS::HA,   "H"  },  // ห ฮ
+    { ICS::A,    ""   },  // อ
+};
+#undef ICS
+
+#define SC ESecInitCons
+static const unordered_map<ESecInitCons, string>
+PhoneticSecInitConsTbl_ = {
+    { SC::NONE,  ""  },
+    { SC::RA,    "R" },  // ร ควบ
+    { SC::LA,    "L" },  // ล ควบ
+    { SC::WA,    "W" },  // ว ควบ
+};
+#undef SC
+
+#define VW EVowel
+static const unordered_map<EVowel, string>
+PhoneticVowelTbl_ = {
+    { VW::A,     "A"    },  // อะ
+    { VW::AA,    "A:"   },  // อา
+    { VW::I,     "I"    },  // อิ
+    { VW::II,    "I:"   },  // อี
+    { VW::UE,    "UE"   },  // อึ
+    { VW::UEE,   "UE:"  },  // อือ
+    { VW::U,     "U"    },  // อุ
+    { VW::UU,    "U:"   },  // อู
+    { VW::E,     "E"    },  // เอะ
+    { VW::EE,    "E:"   },  // เอ
+    { VW::AE,    "AE"   },  // แอะ
+    { VW::AEE,   "AE:"  },  // แอ
+    { VW::IA,    "IA"   },  // เอียะ
+    { VW::IAA,   "IA:"  },  // เอีย
+    { VW::UEA,   "UEA"  },  // เอือะ
+    { VW::UEAA,  "UEA:" },  // เอือ
+    { VW::UA,    "UA"   },  // อัวะ
+    { VW::UAA,   "UA:"  },  // อัว
+    { VW::O,     "O"    },  // โอะ
+    { VW::OO,    "O:"   },  // โอ
+    { VW::AU,    "AU"   },  // เอาะ
+    { VW::AUU,   "AU:"  },  // ออ
+    { VW::OE,    "OE"   },  // เออะ
+    { VW::OEE,   "OE:"  },  // เออ
+};
+#undef VW
+
+#define EC EEndConsClass
+static const unordered_map<EEndConsClass, string>
+PhoneticEndConsTbl_ = {
+    { EC::NONE,  ""   },  // แม่ ก กา
+    { EC::KOK,   "K"  },  // แม่กก
+    { EC::KOT,   "T"  },  // แม่กด
+    { EC::KOP,   "P"  },  // แม่กบ
+    { EC::KONG,  "NG" },  // แม่กง
+    { EC::KON,   "N"  },  // แม่กน
+    { EC::KOM,   "M"  },  // แม่กม
+    { EC::KOEY,  "I"  },  // แม่เกย
+    { EC::KOEW,  "O"  },  // แม่เกอว
+};
+#undef EC
+
+//
+// Tone Phonetic Pronunciations
+//
+
+#define TN ETone
+static const unordered_map<ETone, string>
+PhoneticToneTbl_ = {
+    { TN::SAMAN,     "0"    },
+    { TN::EK,        "1"    },
+    { TN::THO,       "2"    },
+    { TN::TRI,       "3"    },
+    { TN::CHATTAWA,  "4"    },
+};
+#undef TN
+
+string
+Syl::toPhonetic() const
+{
+    return PhoneticInitConsTbl_.at (iCons1)
+           + PhoneticSecInitConsTbl_.at (iCons2)
+           + PhoneticVowelTbl_.at (vowel)
+           + ((IsShortVowel (vowel) && EEndConsClass::NONE == eCons) ?
+              "H" : PhoneticEndConsTbl_.at (eCons))
+           + PhoneticToneTbl_.at (tone);
+}
+
 ///////////////////////
 //  class SylString  //
 ///////////////////////
@@ -749,6 +861,20 @@ SylString::toRoman (bool isCapitalize) const
             output += '-';
         }
         output += i->toRoman();
+    }
+
+    return output;
+}
+
+string
+SylString::toPhonetic() const
+{
+    string output;
+
+    auto i = mSyls.begin();
+    output = i->toPhonetic();
+    while (++i != mSyls.end()) {
+        output += ' ' + i->toPhonetic();
     }
 
     return output;
