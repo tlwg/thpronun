@@ -753,30 +753,30 @@ PhoneticSecInitConsTbl_ = {
 #define VW EVowel
 static const unordered_map<EVowel, string>
 PhoneticVowelTbl_ = {
-    { VW::A,     "A"    },  // อะ
-    { VW::AA,    "A:"   },  // อา
-    { VW::I,     "I"    },  // อิ
-    { VW::II,    "I:"   },  // อี
-    { VW::UE,    "UE"   },  // อึ
-    { VW::UEE,   "UE:"  },  // อือ
-    { VW::U,     "U"    },  // อุ
-    { VW::UU,    "U:"   },  // อู
-    { VW::E,     "E"    },  // เอะ
-    { VW::EE,    "E:"   },  // เอ
-    { VW::AE,    "AE"   },  // แอะ
-    { VW::AEE,   "AE:"  },  // แอ
-    { VW::IA,    "IA"   },  // เอียะ
-    { VW::IAA,   "IA:"  },  // เอีย
-    { VW::UEA,   "UEA"  },  // เอือะ
-    { VW::UEAA,  "UEA:" },  // เอือ
-    { VW::UA,    "UA"   },  // อัวะ
-    { VW::UAA,   "UA:"  },  // อัว
-    { VW::O,     "O"    },  // โอะ
-    { VW::OO,    "O:"   },  // โอ
-    { VW::AU,    "AU"   },  // เอาะ
-    { VW::AUU,   "AU:"  },  // ออ
-    { VW::OE,    "OE"   },  // เออะ
-    { VW::OEE,   "OE:"  },  // เออ
+    { VW::A,     "AH"   },  // อะ
+    { VW::AA,    "AA"   },  // อา
+    { VW::I,     "IH"   },  // อิ
+    { VW::II,    "IY"   },  // อี
+    { VW::UE,    "UEH"  },  // อึ
+    { VW::UEE,   "UEE"  },  // อือ
+    { VW::U,     "UH"   },  // อุ
+    { VW::UU,    "UW"   },  // อู
+    { VW::E,     "EH"   },  // เอะ
+    { VW::EE,    "EY"   },  // เอ
+    { VW::AE,    "AEH"  },  // แอะ
+    { VW::AEE,   "AEE"  },  // แอ
+    { VW::IA,    "IAH"  },  // เอียะ
+    { VW::IAA,   "IAA"  },  // เอีย
+    { VW::UEA,   "UEAH" },  // เอือะ
+    { VW::UEAA,  "UEAA" },  // เอือ
+    { VW::UA,    "UAH"  },  // อัวะ
+    { VW::UAA,   "UAA"  },  // อัว
+    { VW::O,     "OH"   },  // โอะ
+    { VW::OO,    "OW"   },  // โอ
+    { VW::AU,    "AOH"  },  // เอาะ
+    { VW::AUU,   "AOW"  },  // ออ
+    { VW::OE,    "OEH"  },  // เออะ
+    { VW::OEE,   "OEE"  },  // เออ
 };
 #undef VW
 
@@ -790,8 +790,8 @@ PhoneticEndConsTbl_ = {
     { EC::KONG,  "NG" },  // แม่กง
     { EC::KON,   "N"  },  // แม่กน
     { EC::KOM,   "M"  },  // แม่กม
-    { EC::KOEY,  "I"  },  // แม่เกย
-    { EC::KOEW,  "O"  },  // แม่เกอว
+    { EC::KOEY,  "Y"  },  // แม่เกย
+    { EC::KOEW,  "W"  },  // แม่เกอว
 };
 #undef EC
 
@@ -816,8 +816,7 @@ Syl::toPhonetic() const
     return PhoneticInitConsTbl_.at (iCons1)
            + PhoneticSecInitConsTbl_.at (iCons2)
            + PhoneticVowelTbl_.at (vowel)
-           + ((IsShortVowel (vowel) && EEndConsClass::NONE == eCons) ?
-              "H" : PhoneticEndConsTbl_.at (eCons))
+           + PhoneticEndConsTbl_.at (eCons)
            + PhoneticToneTbl_.at (tone);
 }
 
