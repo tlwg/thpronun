@@ -10,53 +10,83 @@
 
 inline
 Syl::Syl()
-  : iCons1 (EInitConsSound::INVALID),
-    iCons2 (ESecInitCons::NONE),
-    vowel (EVowel::INVALID),
-    eCons (EEndConsClass::NONE),
-    tone (ETone::INVALID)
+  : mICons1 (EInitConsSound::INVALID),
+    mICons2 (ESecInitCons::NONE),
+    mVowel (EVowel::INVALID),
+    mECons (EEndConsClass::NONE),
+    mTone (ETone::INVALID)
 {
 }
 
 inline
 Syl::Syl (const Syl& other)
-  : iCons1 (other.iCons1),
-    iCons2 (other.iCons2),
-    vowel (other.vowel),
-    eCons (other.eCons),
-    tone (other.tone)
+  : mICons1 (other.mICons1),
+    mICons2 (other.mICons2),
+    mVowel (other.mVowel),
+    mECons (other.mECons),
+    mTone (other.mTone)
 {
 }
 
 inline
 Syl::Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
           EEndConsClass eCons, ETone tone)
-  : iCons1 (iCons1),
-    iCons2 (iCons2),
-    vowel (vowel),
-    eCons (eCons),
-    tone (tone)
+  : mICons1 (iCons1),
+    mICons2 (iCons2),
+    mVowel (vowel),
+    mECons (eCons),
+    mTone (tone)
 {
 }
 
 inline
 Syl::Syl (char iCons1, char iCons2, char vowel, char eCons, char tone)
-  : iCons1 (InitConsCodeToSound (iCons1)),
-    iCons2 (static_cast<ESecInitCons> (iCons2)),
-    vowel (static_cast<EVowel> (vowel)),
-    eCons (EndConsCodeToClass (eCons)),
-    tone (ToneCodeToTone (tone))
+  : mICons1 (InitConsCodeToSound (iCons1)),
+    mICons2 (static_cast<ESecInitCons> (iCons2)),
+    mVowel (static_cast<EVowel> (vowel)),
+    mECons (EndConsCodeToClass (eCons)),
+    mTone (ToneCodeToTone (tone))
 {
 }
 
 inline
 Syl::Syl (const std::string& aSylStr)
-  : iCons1 (InitConsCodeToSound (aSylStr.at (0))),
-    iCons2 (static_cast<ESecInitCons> (aSylStr.at (1))),
-    vowel (static_cast<EVowel> (aSylStr.at (2))),
-    eCons (EndConsCodeToClass (aSylStr.at (3))),
-    tone (ToneCodeToTone (aSylStr.at (4)))
+  : mICons1 (InitConsCodeToSound (aSylStr.at (0))),
+    mICons2 (static_cast<ESecInitCons> (aSylStr.at (1))),
+    mVowel (static_cast<EVowel> (aSylStr.at (2))),
+    mECons (EndConsCodeToClass (aSylStr.at (3))),
+    mTone (ToneCodeToTone (aSylStr.at (4)))
 {
+}
+
+inline EInitConsSound
+Syl::iCons1() const
+{
+    return mICons1;
+}
+
+inline ESecInitCons
+Syl::iCons2() const
+{
+    return mICons2;
+}
+
+inline EVowel
+Syl::vowel() const
+{
+    return mVowel;
+}
+
+inline EEndConsClass
+Syl::eCons() const
+{
+    return mECons;
+}
+
+inline ETone
+Syl::tone() const
+{
+    return mTone;
 }
 
 ///////////////////////

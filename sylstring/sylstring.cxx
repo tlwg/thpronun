@@ -549,68 +549,68 @@ string
 Syl::toThai() const
 {
     // determine vowel form
-    switch (vowel) {
+    switch (mVowel) {
     case EVowel::A:
-        return ThaiSylA (iCons1, iCons2, eCons, tone);
+        return ThaiSylA (mICons1, mICons2, mECons, mTone);
 
     case EVowel::AA:
-        return ThaiSylAA (iCons1, iCons2, eCons, tone);
+        return ThaiSylAA (mICons1, mICons2, mECons, mTone);
 
     case EVowel::I:
     case EVowel::UE:
     case EVowel::U:
-        return ThaiSylBelowAbove (iCons1, iCons2, true, vowel,
-                                  eCons, tone);
+        return ThaiSylBelowAbove (mICons1, mICons2, true, mVowel,
+                                  mECons, mTone);
 
     case EVowel::II:
     case EVowel::UU:
-        return ThaiSylBelowAbove (iCons1, iCons2, false, vowel,
-                                  eCons, tone);
+        return ThaiSylBelowAbove (mICons1, mICons2, false, mVowel,
+                                  mECons, mTone);
 
     case EVowel::UEE:
-        return ThaiSylUEE (iCons1, iCons2, eCons, tone);
+        return ThaiSylUEE (mICons1, mICons2, mECons, mTone);
 
     case EVowel::E:
     case EVowel::AE:
-        return ThaiSylLeadShort (iCons1, iCons2, vowel, eCons, tone);
+        return ThaiSylLeadShort (mICons1, mICons2, mVowel, mECons, mTone);
 
     case EVowel::EE:
     case EVowel::AEE:
     case EVowel::OO:
-        return ThaiSylLeadLong (iCons1, iCons2, vowel, eCons, tone);
+        return ThaiSylLeadLong (mICons1, mICons2, mVowel, mECons, mTone);
 
     case EVowel::O:
-        return ThaiSylO (iCons1, iCons2, eCons, tone);
+        return ThaiSylO (mICons1, mICons2, mECons, mTone);
 
     case EVowel::IA:
-        return ThaiSylIA (iCons1, iCons2, true, eCons, tone);
+        return ThaiSylIA (mICons1, mICons2, true, mECons, mTone);
 
     case EVowel::IAA:
-        return ThaiSylIA (iCons1, iCons2, false, eCons, tone);
+        return ThaiSylIA (mICons1, mICons2, false, mECons, mTone);
 
     case EVowel::UEA:
-        return ThaiSylUEA (iCons1, iCons2, true, eCons, tone);
+        return ThaiSylUEA (mICons1, mICons2, true, mECons, mTone);
 
     case EVowel::UEAA:
-        return ThaiSylUEA (iCons1, iCons2, false, eCons, tone);
+        return ThaiSylUEA (mICons1, mICons2, false, mECons, mTone);
 
     case EVowel::UA:
-        return ThaiSylUA (iCons1, iCons2, true, eCons, tone);
+        return ThaiSylUA (mICons1, mICons2, true, mECons, mTone);
 
     case EVowel::UAA:
-        return ThaiSylUA (iCons1, iCons2, false, eCons, tone);
+        return ThaiSylUA (mICons1, mICons2, false, mECons, mTone);
 
     case EVowel::AU:
-        return ThaiSylAU (iCons1, iCons2, true, eCons, tone);
+        return ThaiSylAU (mICons1, mICons2, true, mECons, mTone);
 
     case EVowel::AUU:
-        return ThaiSylAU (iCons1, iCons2, false, eCons, tone);
+        return ThaiSylAU (mICons1, mICons2, false, mECons, mTone);
 
     case EVowel::OE:
-        return ThaiSylOE (iCons1, iCons2, true, eCons, tone);
+        return ThaiSylOE (mICons1, mICons2, true, mECons, mTone);
 
     case EVowel::OEE:
-        return ThaiSylOE (iCons1, iCons2, false, eCons, tone);
+        return ThaiSylOE (mICons1, mICons2, false, mECons, mTone);
     }
 }
 
@@ -703,10 +703,10 @@ RomanEndConsTbl_ = {
 string
 Syl::toRoman() const
 {
-    return RomanInitConsTbl_.at (iCons1)
-           + RomanSecInitConsTbl_.at (iCons2)
-           + RomanVowelTbl_.at (vowel)
-           + RomanEndConsTbl_.at (eCons);
+    return RomanInitConsTbl_.at (mICons1)
+           + RomanSecInitConsTbl_.at (mICons2)
+           + RomanVowelTbl_.at (mVowel)
+           + RomanEndConsTbl_.at (mECons);
 }
 
 //
@@ -813,11 +813,11 @@ PhoneticToneTbl_ = {
 string
 Syl::toPhonetic() const
 {
-    return PhoneticInitConsTbl_.at (iCons1)
-           + PhoneticSecInitConsTbl_.at (iCons2)
-           + PhoneticVowelTbl_.at (vowel)
-           + PhoneticEndConsTbl_.at (eCons)
-           + PhoneticToneTbl_.at (tone);
+    return PhoneticInitConsTbl_.at (mICons1)
+           + PhoneticSecInitConsTbl_.at (mICons2)
+           + PhoneticVowelTbl_.at (mVowel)
+           + PhoneticEndConsTbl_.at (mECons)
+           + PhoneticToneTbl_.at (mTone);
 }
 
 ///////////////////////
@@ -853,9 +853,9 @@ SylString::toRoman (bool isCapitalize) const
         //   1. prev->eCons == NONE and i->iCons1 == NGA
         //   2. prev->eCons == KONG and i->iCons1 == A
         //   3. i->iCons1 == A
-        if (EInitConsSound::A == i->iCons1
-            || (EEndConsClass::NONE == prev->eCons
-                && EInitConsSound::NGA == i->iCons1))
+        if (EInitConsSound::A == i->iCons1()
+            || (EEndConsClass::NONE == prev->eCons()
+                && EInitConsSound::NGA == i->iCons1()))
         {
             output += '-';
         }

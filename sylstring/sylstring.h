@@ -11,8 +11,6 @@
 #include <string>
 
 class Syl {
-    friend class SylString;
-
 public:
     Syl();
     Syl (const Syl& other);
@@ -22,16 +20,22 @@ public:
     // c-tor with string of length 5
     Syl (const std::string& aSylStr);
 
+    EInitConsSound  iCons1() const;
+    ESecInitCons    iCons2() const;
+    EVowel          vowel() const;
+    EEndConsClass   eCons() const;
+    ETone           tone() const;
+
     std::string toThai() const;
     std::string toRoman() const;
     std::string toPhonetic() const;
 
 private:
-    EInitConsSound  iCons1;
-    ESecInitCons    iCons2;
-    EVowel          vowel;
-    EEndConsClass   eCons;
-    ETone           tone;
+    EInitConsSound  mICons1;
+    ESecInitCons    mICons2;
+    EVowel          mVowel;
+    EEndConsClass   mECons;
+    ETone           mTone;
 };
 
 class SylString {
