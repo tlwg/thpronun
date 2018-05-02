@@ -12,6 +12,10 @@
 
 class SylString {
 public:
+    typedef std::list<Syl>::iterator       iterator;
+    typedef std::list<Syl>::const_iterator const_iterator;
+
+public:
     SylString();
     SylString (const SylString& other);
     SylString (SylString&& other);
@@ -21,12 +25,22 @@ public:
     SylString& operator= (const Syl& syl);
     SylString& operator+= (const Syl& syl);
 
-    std::string toThai() const;
-    std::string toRoman (bool isCapitalize = false) const;
-    std::string toPhonetic() const;
+    // iteration
+    iterator       begin();
+    iterator       end();
+    const_iterator begin() const;
+    const_iterator end() const;
 
 private:
     std::list<Syl> mSyls;
+};
+
+
+class ISylStringOut {
+public:
+    virtual ~ISylStringOut() {}
+
+    virtual std::string output (const SylString& sylStr) const = 0;
 };
 
 #include "sylstring.inl"

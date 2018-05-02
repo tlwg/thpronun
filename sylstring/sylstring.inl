@@ -41,6 +41,32 @@ SylString::operator+= (const Syl& syl)
     return *this;
 }
 
+inline SylString::iterator
+SylString::begin()
+{
+    return mSyls.begin();
+}
+
+inline SylString::iterator
+SylString::end()
+{
+    return mSyls.end();
+}
+
+
+inline SylString::const_iterator
+SylString::begin() const
+{
+    return mSyls.begin();
+}
+
+inline SylString::const_iterator
+SylString::end() const
+{
+    return mSyls.end();
+}
+
+
 /*
 vi:ts=4:ai:expandtab
 */

@@ -10,7 +10,6 @@ libsylstring_la_SOURCES = \
 	sylcomp.inl	\
 	syl.h		\
 	syl.inl		\
-	sylstring.cxx	\
 	sylstring.h	\
 	sylstring.inl	\
 	sylout-thai.h		\
@@ -19,6 +18,12 @@ libsylstring_la_SOURCES = \
 	sylout-roman.cxx	\
 	sylout-phonetic.h	\
 	sylout-phonetic.cxx	\
+	sylstrout-delim.h	\
+	sylstrout-delim.inl	\
+	sylstrout-delim.cxx	\
+	sylstrout-roman.h	\
+	sylstrout-roman.inl	\
+	sylstrout-roman.cxx	\
 	$(NULL)
 
 libsylstring_la_LIBADD = \

@@ -1,34 +1,31 @@
 #include "parser/parser.h"
+#include "sylstring/sylout-thai.h"
+#include "sylstring/sylout-roman.h"
+#include "sylstring/sylout-phonetic.h"
+#include "sylstring/sylstrout-delim.h"
+#include "sylstring/sylstrout-roman.h"
 
 #include <iostream>
+#include <list>
+#include <memory>
 
 using namespace std;
 
 void
-DoParse (string word, bool outThai, bool outRoman, bool outPhonetic)
+DoParse (string word, const list<unique_ptr<ISylStringOut>>& stringOuts)
 {
     cout << word << ":" << endl;
     auto sylList = ParseWord (word);
     for (const auto& s : sylList) {
-        if (outThai) {
-            cout << s.toThai();
-            if (outRoman) {
-                cout << '\t' << s.toRoman();
+        bool isFirst = true;
+        for (const auto& sylStrOut : stringOuts) {
+            if (!isFirst) {
+                cout << '\t';
             }
-            if (outPhonetic) {
-                cout << '\t' << s.toPhonetic();
-            }
-            cout << endl;
-        } else if (outRoman) {
-            cout << s.toRoman();
-            if (outPhonetic) {
-                cout << '\t' << s.toPhonetic();
-            }
-            cout << endl;
-        } else if (outPhonetic) {
-            cout << s.toPhonetic();
-            cout << endl;
+            isFirst = false;
+            cout << sylStrOut->output (s);
         }
+        cout << endl;
     }
 }
 
@@ -49,21 +46,31 @@ int
 main (int argc, const char* argv[])
 {
     int optCnt = 0;
-    bool outThai = false;
-    bool outRoman = false;
-    bool outPhonetic = false;
+    list<unique_ptr<ISylStringOut>> stringOuts;
 
     for (int i = 1; i < argc; ++i) {
         if ('-' == argv[i][0]) {
             switch (argv[i][1]) {
             case 'r':
-                outRoman = true;
+                stringOuts.push_back (
+                    make_unique<RomanSylStringOut> (
+                        make_unique<RomanSylOut>()
+                    )
+                );
                 break;
             case 't':
-                outThai = true;
+                stringOuts.push_back (
+                    make_unique<DelimSylStringOut> (
+                        make_unique<ThaiSylOut>(), '-'
+                    )
+                );
                 break;
             case 'p':
-                outPhonetic = true;
+                stringOuts.push_back (
+                    make_unique<DelimSylStringOut> (
+                        make_unique<PhoneticSylOut>(), ' '
+                    )
+                );
                 break;
             case 'h':
                 Usage (argv[0]);
@@ -76,21 +83,29 @@ main (int argc, const char* argv[])
             ++optCnt;
         }
     }
-    if (!outThai && !outRoman && !outPhonetic) {
-        outThai = outRoman = outPhonetic = true;
+    if (stringOuts.empty()) {
+        stringOuts.push_back (
+            make_unique<DelimSylStringOut> (make_unique<ThaiSylOut>(), '-')
+        );
+        stringOuts.push_back (
+            make_unique<RomanSylStringOut> (make_unique<RomanSylOut>())
+        );
+        stringOuts.push_back (
+            make_unique<DelimSylStringOut> (make_unique<PhoneticSylOut>(), ' ')
+        );
     }
 
     if (1 == argc - optCnt) {
         // read word list from stdin
         string word;
         while (getline (cin, word)) {
-            DoParse (word, outThai, outRoman, outPhonetic);
+            DoParse (word, stringOuts);
         }
     } else {
         // read word list from command line args
         for (int i = 1; i < argc; ++i) {
             if ('-' != argv[i][0]) {
-                DoParse (argv[i], outThai, outRoman, outPhonetic);
+                DoParse (argv[i], stringOuts);
             }
         }
     }
