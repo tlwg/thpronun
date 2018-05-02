@@ -25,16 +25,19 @@ public:
     EEndConsClass   eCons() const;
     ETone           tone() const;
 
-    std::string toThai() const;
-    std::string toRoman() const;
-    std::string toPhonetic() const;
-
 private:
     EInitConsSound  mICons1;
     ESecInitCons    mICons2;
     EVowel          mVowel;
     EEndConsClass   mECons;
     ETone           mTone;
+};
+
+class ISylOut {
+public:
+    virtual ~ISylOut() {}
+
+    virtual std::string output (const Syl& syl) const = 0;
 };
 
 #include "syl.inl"

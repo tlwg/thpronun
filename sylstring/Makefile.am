@@ -10,10 +10,15 @@ libsylstring_la_SOURCES = \
 	sylcomp.inl	\
 	syl.h		\
 	syl.inl		\
-	syl.cxx		\
 	sylstring.cxx	\
 	sylstring.h	\
 	sylstring.inl	\
+	sylout-thai.h		\
+	sylout-thai.cxx		\
+	sylout-roman.h		\
+	sylout-roman.cxx	\
+	sylout-phonetic.h	\
+	sylout-phonetic.cxx	\
 	$(NULL)
 
 libsylstring_la_LIBADD = \

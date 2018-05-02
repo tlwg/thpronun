@@ -1,8 +1,8 @@
-// syl.cxx - Thai syllable class
+// sylout-thai.cxx - Thai pronunciation output
 // Author: Theppitak Karoonboonyanan <theppitak@gmail.com>
-// Created: 2018-01-16
+// Created: 2018-05-02
 
-#include "sylstring.h"
+#include "sylout-thai.h"
 
 #include <cassert>
 #include <cctype>
@@ -12,9 +12,9 @@
 
 using namespace std;
 
-/////////////////
-//  class Syl  //
-/////////////////
+////////////////////////
+//  class ThaiSylOut  //
+////////////////////////
 static bool
 IsDeadSyl (bool isShortVowel, EEndConsClass eCons)
 {
@@ -546,279 +546,86 @@ ThaiSylOE (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
 //
 
 string
-Syl::toThai() const
+ThaiSylOut::output (const Syl& syl) const
 {
     // determine vowel form
-    switch (mVowel) {
+    switch (syl.vowel()) {
     case EVowel::A:
-        return ThaiSylA (mICons1, mICons2, mECons, mTone);
+        return ThaiSylA (syl.iCons1(), syl.iCons2(), syl.eCons(), syl.tone());
 
     case EVowel::AA:
-        return ThaiSylAA (mICons1, mICons2, mECons, mTone);
+        return ThaiSylAA (syl.iCons1(), syl.iCons2(), syl.eCons(), syl.tone());
 
     case EVowel::I:
     case EVowel::UE:
     case EVowel::U:
-        return ThaiSylBelowAbove (mICons1, mICons2, true, mVowel,
-                                  mECons, mTone);
+        return ThaiSylBelowAbove (syl.iCons1(), syl.iCons2(), true,
+                                  syl.vowel(), syl.eCons(), syl.tone());
 
     case EVowel::II:
     case EVowel::UU:
-        return ThaiSylBelowAbove (mICons1, mICons2, false, mVowel,
-                                  mECons, mTone);
+        return ThaiSylBelowAbove (syl.iCons1(), syl.iCons2(), false,
+                                  syl.vowel(), syl.eCons(), syl.tone());
 
     case EVowel::UEE:
-        return ThaiSylUEE (mICons1, mICons2, mECons, mTone);
+        return ThaiSylUEE (syl.iCons1(), syl.iCons2(), syl.eCons(), syl.tone());
 
     case EVowel::E:
     case EVowel::AE:
-        return ThaiSylLeadShort (mICons1, mICons2, mVowel, mECons, mTone);
+        return ThaiSylLeadShort (syl.iCons1(), syl.iCons2(),
+                                 syl.vowel(), syl.eCons(), syl.tone());
 
     case EVowel::EE:
     case EVowel::AEE:
     case EVowel::OO:
-        return ThaiSylLeadLong (mICons1, mICons2, mVowel, mECons, mTone);
+        return ThaiSylLeadLong (syl.iCons1(), syl.iCons2(),
+                                syl.vowel(), syl.eCons(), syl.tone());
 
     case EVowel::O:
-        return ThaiSylO (mICons1, mICons2, mECons, mTone);
+        return ThaiSylO (syl.iCons1(), syl.iCons2(), syl.eCons(), syl.tone());
 
     case EVowel::IA:
-        return ThaiSylIA (mICons1, mICons2, true, mECons, mTone);
+        return ThaiSylIA (syl.iCons1(), syl.iCons2(), true,
+                          syl.eCons(), syl.tone());
 
     case EVowel::IAA:
-        return ThaiSylIA (mICons1, mICons2, false, mECons, mTone);
+        return ThaiSylIA (syl.iCons1(), syl.iCons2(), false,
+                          syl.eCons(), syl.tone());
 
     case EVowel::UEA:
-        return ThaiSylUEA (mICons1, mICons2, true, mECons, mTone);
+        return ThaiSylUEA (syl.iCons1(), syl.iCons2(), true,
+                           syl.eCons(), syl.tone());
 
     case EVowel::UEAA:
-        return ThaiSylUEA (mICons1, mICons2, false, mECons, mTone);
+        return ThaiSylUEA (syl.iCons1(), syl.iCons2(), false,
+                           syl.eCons(), syl.tone());
 
     case EVowel::UA:
-        return ThaiSylUA (mICons1, mICons2, true, mECons, mTone);
+        return ThaiSylUA (syl.iCons1(), syl.iCons2(), true,
+                          syl.eCons(), syl.tone());
 
     case EVowel::UAA:
-        return ThaiSylUA (mICons1, mICons2, false, mECons, mTone);
+        return ThaiSylUA (syl.iCons1(), syl.iCons2(), false,
+                          syl.eCons(), syl.tone());
 
     case EVowel::AU:
-        return ThaiSylAU (mICons1, mICons2, true, mECons, mTone);
+        return ThaiSylAU (syl.iCons1(), syl.iCons2(), true,
+                          syl.eCons(), syl.tone());
 
     case EVowel::AUU:
-        return ThaiSylAU (mICons1, mICons2, false, mECons, mTone);
+        return ThaiSylAU (syl.iCons1(), syl.iCons2(), false,
+                          syl.eCons(), syl.tone());
 
     case EVowel::OE:
-        return ThaiSylOE (mICons1, mICons2, true, mECons, mTone);
+        return ThaiSylOE (syl.iCons1(), syl.iCons2(), true,
+                          syl.eCons(), syl.tone());
 
     case EVowel::OEE:
-        return ThaiSylOE (mICons1, mICons2, false, mECons, mTone);
+        return ThaiSylOE (syl.iCons1(), syl.iCons2(), false,
+                          syl.eCons(), syl.tone());
     }
 }
 
-//
-// Romanized Syllable Pronunciation Generation
-//
-
-#define ICS EInitConsSound
-static const unordered_map<EInitConsSound, string>
-RomanInitConsTbl_ = {
-    { ICS::KA,   "k"  },  // ก
-    { ICS::KHA,  "kh" },  // ข ฃ ค ฅ ฆ
-    { ICS::NGA,  "ng" },  // ง
-    { ICS::JA,   "ch" },  // จ
-    { ICS::CHA,  "ch" },  // ฉ ช ฌ
-    { ICS::YA,   "y"  },  // ญ ย
-    { ICS::DA,   "d"  },  // ฎ ด
-    { ICS::TA,   "t"  },  // ฏ ต
-    { ICS::THA,  "th" },  // ฐ ฑ ฒ ถ ท ธ
-    { ICS::NA,   "n"  },  // ณ น
-    { ICS::BA,   "b"  },  // บ
-    { ICS::PA,   "p"  },  // ป
-    { ICS::PHA,  "ph" },  // ผ พ ภ
-    { ICS::FA,   "f"  },  // ฝ ฟ
-    { ICS::MA,   "m"  },  // ม
-    { ICS::RA,   "r"  },  // ร
-    { ICS::LA,   "l"  },  // ล ฬ
-    { ICS::WA,   "w"  },  // ว
-    { ICS::SA,   "s"  },  // ซ ศ ษ ส
-    { ICS::HA,   "h"  },  // ห ฮ
-    { ICS::A,    ""   },  // อ
-};
-#undef ICS
-
-#define SC ESecInitCons
-static const unordered_map<ESecInitCons, string>
-RomanSecInitConsTbl_ = {
-    { SC::NONE,  ""  },
-    { SC::RA,    "r" },  // ร ควบ
-    { SC::LA,    "l" },  // ล ควบ
-    { SC::WA,    "w" },  // ว ควบ
-};
-#undef SC
-
-#define VW EVowel
-static const unordered_map<EVowel, string>
-RomanVowelTbl_ = {
-    { VW::A,     "a"   },  // อะ
-    { VW::AA,    "a"   },  // อา
-    { VW::I,     "i"   },  // อิ
-    { VW::II,    "i"   },  // อี
-    { VW::UE,    "ue"  },  // อึ
-    { VW::UEE,   "ue"  },  // อือ
-    { VW::U,     "u"   },  // อุ
-    { VW::UU,    "u"   },  // อู
-    { VW::E,     "e"   },  // เอะ
-    { VW::EE,    "e"   },  // เอ
-    { VW::AE,    "ae"  },  // แอะ
-    { VW::AEE,   "ae"  },  // แอ
-    { VW::IA,    "ia"  },  // เอียะ
-    { VW::IAA,   "ia"  },  // เอีย
-    { VW::UEA,   "uea" },  // เอือะ
-    { VW::UEAA,  "uea" },  // เอือ
-    { VW::UA,    "ua"  },  // อัวะ
-    { VW::UAA,   "ua"  },  // อัว
-    { VW::O,     "o"   },  // โอะ
-    { VW::OO,    "o"   },  // โอ
-    { VW::AU,    "o"   },  // เอาะ
-    { VW::AUU,   "o"   },  // ออ
-    { VW::OE,    "oe"  },  // เออะ
-    { VW::OEE,   "oe"  },  // เออ
-};
-#undef VW
-
-#define EC EEndConsClass
-static const unordered_map<EEndConsClass, string>
-RomanEndConsTbl_ = {
-    { EC::NONE,  ""   },  // แม่ ก กา
-    { EC::KOK,   "k"  },  // แม่กก
-    { EC::KOT,   "t"  },  // แม่กด
-    { EC::KOP,   "p"  },  // แม่กบ
-    { EC::KONG,  "ng" },  // แม่กง
-    { EC::KON,   "n"  },  // แม่กน
-    { EC::KOM,   "m"  },  // แม่กม
-    { EC::KOEY,  "i"  },  // แม่เกย
-    { EC::KOEW,  "o"  },  // แม่เกอว
-};
-#undef EC
-
-string
-Syl::toRoman() const
-{
-    return RomanInitConsTbl_.at (mICons1)
-           + RomanSecInitConsTbl_.at (mICons2)
-           + RomanVowelTbl_.at (mVowel)
-           + RomanEndConsTbl_.at (mECons);
-}
-
-//
-// Phonetic Syllable Pronunciation Generation
-//
-
-#define ICS EInitConsSound
-static const unordered_map<EInitConsSound, string>
-PhoneticInitConsTbl_ = {
-    { ICS::KA,   "K"  },  // ก
-    { ICS::KHA,  "KH" },  // ข ฃ ค ฅ ฆ
-    { ICS::NGA,  "NG" },  // ง
-    { ICS::JA,   "J"  },  // จ
-    { ICS::CHA,  "CH" },  // ฉ ช ฌ
-    { ICS::YA,   "Y"  },  // ญ ย
-    { ICS::DA,   "D"  },  // ฎ ด
-    { ICS::TA,   "T"  },  // ฏ ต
-    { ICS::THA,  "TH" },  // ฐ ฑ ฒ ถ ท ธ
-    { ICS::NA,   "N"  },  // ณ น
-    { ICS::BA,   "B"  },  // บ
-    { ICS::PA,   "P"  },  // ป
-    { ICS::PHA,  "PH" },  // ผ พ ภ
-    { ICS::FA,   "F"  },  // ฝ ฟ
-    { ICS::MA,   "M"  },  // ม
-    { ICS::RA,   "R"  },  // ร
-    { ICS::LA,   "L"  },  // ล ฬ
-    { ICS::WA,   "W"  },  // ว
-    { ICS::SA,   "S"  },  // ซ ศ ษ ส
-    { ICS::HA,   "H"  },  // ห ฮ
-    { ICS::A,    ""   },  // อ
-};
-#undef ICS
-
-#define SC ESecInitCons
-static const unordered_map<ESecInitCons, string>
-PhoneticSecInitConsTbl_ = {
-    { SC::NONE,  ""  },
-    { SC::RA,    "R" },  // ร ควบ
-    { SC::LA,    "L" },  // ล ควบ
-    { SC::WA,    "W" },  // ว ควบ
-};
-#undef SC
-
-#define VW EVowel
-static const unordered_map<EVowel, string>
-PhoneticVowelTbl_ = {
-    { VW::A,     "AH"   },  // อะ
-    { VW::AA,    "AA"   },  // อา
-    { VW::I,     "IH"   },  // อิ
-    { VW::II,    "IY"   },  // อี
-    { VW::UE,    "UEH"  },  // อึ
-    { VW::UEE,   "UEE"  },  // อือ
-    { VW::U,     "UH"   },  // อุ
-    { VW::UU,    "UW"   },  // อู
-    { VW::E,     "EH"   },  // เอะ
-    { VW::EE,    "EY"   },  // เอ
-    { VW::AE,    "AEH"  },  // แอะ
-    { VW::AEE,   "AEE"  },  // แอ
-    { VW::IA,    "IAH"  },  // เอียะ
-    { VW::IAA,   "IAA"  },  // เอีย
-    { VW::UEA,   "UEAH" },  // เอือะ
-    { VW::UEAA,  "UEAA" },  // เอือ
-    { VW::UA,    "UAH"  },  // อัวะ
-    { VW::UAA,   "UAA"  },  // อัว
-    { VW::O,     "OH"   },  // โอะ
-    { VW::OO,    "OW"   },  // โอ
-    { VW::AU,    "AOH"  },  // เอาะ
-    { VW::AUU,   "AOW"  },  // ออ
-    { VW::OE,    "OEH"  },  // เออะ
-    { VW::OEE,   "OEE"  },  // เออ
-};
-#undef VW
-
-#define EC EEndConsClass
-static const unordered_map<EEndConsClass, string>
-PhoneticEndConsTbl_ = {
-    { EC::NONE,  ""   },  // แม่ ก กา
-    { EC::KOK,   "K"  },  // แม่กก
-    { EC::KOT,   "T"  },  // แม่กด
-    { EC::KOP,   "P"  },  // แม่กบ
-    { EC::KONG,  "NG" },  // แม่กง
-    { EC::KON,   "N"  },  // แม่กน
-    { EC::KOM,   "M"  },  // แม่กม
-    { EC::KOEY,  "Y"  },  // แม่เกย
-    { EC::KOEW,  "W"  },  // แม่เกอว
-};
-#undef EC
-
-//
-// Tone Phonetic Pronunciations
-//
-
-#define TN ETone
-static const unordered_map<ETone, string>
-PhoneticToneTbl_ = {
-    { TN::SAMAN,     "0"    },
-    { TN::EK,        "1"    },
-    { TN::THO,       "2"    },
-    { TN::TRI,       "3"    },
-    { TN::CHATTAWA,  "4"    },
-};
-#undef TN
-
-string
-Syl::toPhonetic() const
-{
-    return PhoneticInitConsTbl_.at (mICons1)
-           + PhoneticSecInitConsTbl_.at (mICons2)
-           + PhoneticVowelTbl_.at (mVowel)
-           + PhoneticEndConsTbl_.at (mECons)
-           + PhoneticToneTbl_.at (mTone);
-}
 
 /*
 vi:ts=4:ai:expandtab

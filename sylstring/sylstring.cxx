@@ -3,6 +3,9 @@
 // Created: 2018-01-16
 
 #include "sylstring.h"
+#include "sylout-thai.h"
+#include "sylout-roman.h"
+#include "sylout-phonetic.h"
 
 using namespace std;
 
@@ -14,11 +17,12 @@ string
 SylString::toThai() const
 {
     string output;
+    ThaiSylOut sylOut;
 
     auto i = mSyls.begin();
-    output = i->toThai();
+    output = sylOut.output (*i);
     while (++i != mSyls.end()) {
-        output += '-' + i->toThai();
+        output += '-' + sylOut.output (*i);
     }
 
     return output;
@@ -28,9 +32,10 @@ string
 SylString::toRoman (bool isCapitalize) const
 {
     string output;
+    RomanSylOut sylOut;
 
     auto i = mSyls.begin();
-    output = i->toRoman();
+    output = sylOut.output (*i);
     if (isCapitalize) {
         output[0] = toupper (output[0]);
     }
@@ -45,7 +50,7 @@ SylString::toRoman (bool isCapitalize) const
         {
             output += '-';
         }
-        output += i->toRoman();
+        output += sylOut.output (*i);
     }
 
     return output;
@@ -55,11 +60,12 @@ string
 SylString::toPhonetic() const
 {
     string output;
+    PhoneticSylOut sylOut;
 
     auto i = mSyls.begin();
-    output = i->toPhonetic();
+    output = sylOut.output (*i);
     while (++i != mSyls.end()) {
-        output += ' ' + i->toPhonetic();
+        output += ' ' + sylOut.output (*i);
     }
 
     return output;
