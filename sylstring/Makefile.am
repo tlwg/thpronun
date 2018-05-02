@@ -8,6 +8,9 @@ libsylstring_la_SOURCES = \
 	sylcomp.cxx	\
 	sylcomp.h	\
 	sylcomp.inl	\
+	syl.h		\
+	syl.inl		\
+	syl.cxx		\
 	sylstring.cxx	\
 	sylstring.h	\
 	sylstring.inl	\

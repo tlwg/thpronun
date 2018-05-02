@@ -5,38 +5,10 @@
 #ifndef SYLSTRING_H
 #define SYLSTRING_H
 
-#include "sylcomp.h"
+#include "syl.h"
 
 #include <list>
 #include <string>
-
-class Syl {
-public:
-    Syl();
-    Syl (const Syl& other);
-    Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
-         EEndConsClass eCons, ETone tone);
-    Syl (char iCons1, char iCons2, char vowel, char eCons, char tone);
-    // c-tor with string of length 5
-    Syl (const std::string& aSylStr);
-
-    EInitConsSound  iCons1() const;
-    ESecInitCons    iCons2() const;
-    EVowel          vowel() const;
-    EEndConsClass   eCons() const;
-    ETone           tone() const;
-
-    std::string toThai() const;
-    std::string toRoman() const;
-    std::string toPhonetic() const;
-
-private:
-    EInitConsSound  mICons1;
-    ESecInitCons    mICons2;
-    EVowel          mVowel;
-    EEndConsClass   mECons;
-    ETone           mTone;
-};
 
 class SylString {
 public:
