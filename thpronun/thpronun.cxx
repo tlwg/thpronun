@@ -4,6 +4,7 @@
 #include "sylstring/sylout-phonetic.h"
 #include "sylstring/sylstrout-delim.h"
 #include "sylstring/sylstrout-roman.h"
+#include "sylstring/sylstrout-json.h"
 
 #include <iostream>
 #include <list>
@@ -34,6 +35,7 @@ Usage (const char* progName)
 {
     cerr << "Usage: " << progName << " [options] [word...]" << endl
          << "Options:" << endl
+         << "    -j    Turns on JSON output" << endl
          << "    -r    Outputs Romanization" << endl
          << "    -t    Outputs Thai pronunciation" << endl
          << "    -p    Outputs Phonetic form" << endl
@@ -42,35 +44,58 @@ Usage (const char* progName)
          << "If no word is given, standard input will be read." << endl;
 }
 
+static unique_ptr<ISylStringOut>
+ThaiOut (bool isJson)
+{
+    if (isJson) {
+        return make_unique<JsonSylStringOut> (make_unique<ThaiSylOut>());
+    } else {
+        return make_unique<DelimSylStringOut> (make_unique<ThaiSylOut>(), '-');
+    }
+}
+
+static unique_ptr<ISylStringOut>
+RomanOut (bool isJson)
+{
+    if (isJson) {
+        return make_unique<JsonSylStringOut> (make_unique<RomanSylOut>());
+    } else {
+        return make_unique<RomanSylStringOut> (make_unique<RomanSylOut>());
+    }
+}
+
+static unique_ptr<ISylStringOut>
+PhoneticOut (bool isJson)
+{
+    if (isJson) {
+        return make_unique<JsonSylStringOut> (make_unique<PhoneticSylOut>());
+    } else {
+        return make_unique<DelimSylStringOut> (make_unique<PhoneticSylOut>(),
+                                               ' ');
+    }
+}
+
 int
 main (int argc, const char* argv[])
 {
     int optCnt = 0;
+    bool isJson = false;
     list<unique_ptr<ISylStringOut>> stringOuts;
 
     for (int i = 1; i < argc; ++i) {
         if ('-' == argv[i][0]) {
             switch (argv[i][1]) {
+            case 'j':
+                isJson = true;
+                break;
             case 'r':
-                stringOuts.push_back (
-                    make_unique<RomanSylStringOut> (
-                        make_unique<RomanSylOut>()
-                    )
-                );
+                stringOuts.push_back (RomanOut (isJson));
                 break;
             case 't':
-                stringOuts.push_back (
-                    make_unique<DelimSylStringOut> (
-                        make_unique<ThaiSylOut>(), '-'
-                    )
-                );
+                stringOuts.push_back (ThaiOut (isJson));
                 break;
             case 'p':
-                stringOuts.push_back (
-                    make_unique<DelimSylStringOut> (
-                        make_unique<PhoneticSylOut>(), ' '
-                    )
-                );
+                stringOuts.push_back (PhoneticOut (isJson));
                 break;
             case 'h':
                 Usage (argv[0]);
@@ -84,15 +109,9 @@ main (int argc, const char* argv[])
         }
     }
     if (stringOuts.empty()) {
-        stringOuts.push_back (
-            make_unique<DelimSylStringOut> (make_unique<ThaiSylOut>(), '-')
-        );
-        stringOuts.push_back (
-            make_unique<RomanSylStringOut> (make_unique<RomanSylOut>())
-        );
-        stringOuts.push_back (
-            make_unique<DelimSylStringOut> (make_unique<PhoneticSylOut>(), ' ')
-        );
+        stringOuts.push_back (ThaiOut (isJson));
+        stringOuts.push_back (RomanOut (isJson));
+        stringOuts.push_back (PhoneticOut (isJson));
     }
 
     if (1 == argc - optCnt) {

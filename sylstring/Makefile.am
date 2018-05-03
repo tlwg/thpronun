@@ -24,6 +24,9 @@ libsylstring_la_SOURCES = \
 	sylstrout-roman.h	\
 	sylstrout-roman.inl	\
 	sylstrout-roman.cxx	\
+	sylstrout-json.h	\
+	sylstrout-json.inl	\
+	sylstrout-json.cxx	\
 	$(NULL)
 
 libsylstring_la_LIBADD = \
