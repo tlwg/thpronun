@@ -14,10 +14,11 @@ public:
     Syl();
     Syl (const Syl& other);
     Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
-         EEndConsClass eCons, ETone tone);
-    Syl (char iCons1, char iCons2, char vowel, char eCons, char tone);
+         EEndConsClass eCons, ETone tone, int endPos = -1);
+    Syl (char iCons1, char iCons2, char vowel, char eCons, char tone,
+         int endPos = -1);
     // c-tor with string of length 5
-    Syl (const std::string& aSylStr);
+    Syl (const std::string& aSylStr, int endPos = -1);
 
     EInitConsSound  iCons1() const;
     ESecInitCons    iCons2() const;
@@ -25,12 +26,17 @@ public:
     EEndConsClass   eCons() const;
     ETone           tone() const;
 
+    int             endPos() const;
+    void            setEndPos (int pos);
+
 private:
     EInitConsSound  mICons1;
     ESecInitCons    mICons2;
     EVowel          mVowel;
     EEndConsClass   mECons;
     ETone           mTone;
+
+    int             mEndPos;
 };
 
 class ISylOut {

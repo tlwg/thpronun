@@ -12,7 +12,8 @@ Syl::Syl()
     mICons2 (ESecInitCons::NONE),
     mVowel (EVowel::INVALID),
     mECons (EEndConsClass::NONE),
-    mTone (ETone::INVALID)
+    mTone (ETone::INVALID),
+    mEndPos (-1)
 {
 }
 
@@ -22,38 +23,43 @@ Syl::Syl (const Syl& other)
     mICons2 (other.mICons2),
     mVowel (other.mVowel),
     mECons (other.mECons),
-    mTone (other.mTone)
+    mTone (other.mTone),
+    mEndPos (other.mEndPos)
 {
 }
 
 inline
 Syl::Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
-          EEndConsClass eCons, ETone tone)
+          EEndConsClass eCons, ETone tone, int endPos)
   : mICons1 (iCons1),
     mICons2 (iCons2),
     mVowel (vowel),
     mECons (eCons),
-    mTone (tone)
+    mTone (tone),
+    mEndPos (endPos)
 {
 }
 
 inline
-Syl::Syl (char iCons1, char iCons2, char vowel, char eCons, char tone)
+Syl::Syl (char iCons1, char iCons2, char vowel, char eCons, char tone,
+          int endPos)
   : mICons1 (InitConsCodeToSound (iCons1)),
     mICons2 (static_cast<ESecInitCons> (iCons2)),
     mVowel (static_cast<EVowel> (vowel)),
     mECons (EndConsCodeToClass (eCons)),
-    mTone (ToneCodeToTone (tone))
+    mTone (ToneCodeToTone (tone)),
+    mEndPos (endPos)
 {
 }
 
 inline
-Syl::Syl (const std::string& aSylStr)
+Syl::Syl (const std::string& aSylStr, int endPos)
   : mICons1 (InitConsCodeToSound (aSylStr.at (0))),
     mICons2 (static_cast<ESecInitCons> (aSylStr.at (1))),
     mVowel (static_cast<EVowel> (aSylStr.at (2))),
     mECons (EndConsCodeToClass (aSylStr.at (3))),
-    mTone (ToneCodeToTone (aSylStr.at (4)))
+    mTone (ToneCodeToTone (aSylStr.at (4))),
+    mEndPos (endPos)
 {
 }
 
@@ -85,6 +91,18 @@ inline ETone
 Syl::tone() const
 {
     return mTone;
+}
+
+inline int
+Syl::endPos() const
+{
+    return mEndPos;
+}
+
+inline void
+Syl::setEndPos (int pos)
+{
+    mEndPos = pos;
 }
 
 /*

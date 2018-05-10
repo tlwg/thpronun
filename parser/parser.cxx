@@ -214,11 +214,12 @@ PartialSyl::PartialSyl (int             pos,
 }
 
 static SylString
-AddSyl (const SylString& s, const PartialSyl& p)
+AddSyl (const SylString& s, PartialSyl& p, int pos)
 {
     SylString r = s;
 
     if (p.hasPreSyl) {
+        p.preSyl.setEndPos (pos);
         r += p.preSyl;
     }
 
@@ -227,20 +228,21 @@ AddSyl (const SylString& s, const PartialSyl& p)
                          : IsDeadEndConsClass (p.eConsClass);
     r += Syl (p.iConsSound, p.iCons2, p.vowel, p.eConsClass,
               ToneFromWritten (p.iConsClass, p.tone,
-                               isDeadSyl, IsShortVowel (p.vowel)));
+                               isDeadSyl, IsShortVowel (p.vowel)),
+              pos);
 
     return r;
 }
 
 static void
 AddState (StatePool& pool, int pos, const ParseState& prevState,
-          const PartialSyl& partialSyl, bool isLinked = false);
+          PartialSyl& partialSyl, bool isLinked = false);
 
 static void
 AddState (StatePool& pool, int pos, const ParseState& prevState,
-          const PartialSyl& partialSyl, bool isLinked)
+          PartialSyl& partialSyl, bool isLinked)
 {
-    pool.add (ParseState (pos, AddSyl (prevState.sylString, partialSyl),
+    pool.add (ParseState (pos, AddSyl (prevState.sylString, partialSyl, pos),
                           isLinked));
 }
 
