@@ -1,20 +1,20 @@
-// sylstrout-roman.cxx - SylString Romanization output
+// output-roman.cxx - Romanization output
 // Author: Theppitak Karoonboonyanan <theppitak@gmail.com>
 // Created: 2018-05-02
 
-#include "sylstrout-roman.h"
+#include "output-roman.h"
 
 #include <cctype>
 
 using namespace std;
 
 string
-RomanSylStringOut::output (const SylString& sylStr) const
+RomanOutput::output (const SylString& sylStr) const
 {
     string output;
 
     auto i = sylStr.begin();
-    output = mSylOut->output (*i);
+    output = mSylOutput->output (*i);
     if (mIsCapitalize) {
         output[0] = toupper (output[0]);
     }
@@ -29,7 +29,7 @@ RomanSylStringOut::output (const SylString& sylStr) const
         {
             output += '-';
         }
-        output += mSylOut->output (*i);
+        output += mSylOutput->output (*i);
     }
 
     return output;

@@ -1,20 +1,20 @@
-// sylstrout-json.cxx - SylString JSON output
+// ouptut-json.cxx - JSON output
 // Author: Theppitak Karoonboonyanan <theppitak@gmail.com>
 // Created: 2018-05-03
 
-#include "sylstrout-json.h"
+#include "output-json.h"
 
 using namespace std;
 
 string
-JsonSylStringOut::output (const SylString& sylStr) const
+JsonOutput::output (const SylString& sylStr) const
 {
     string output;
 
     auto i = sylStr.begin();
-    output = "[\"" + mSylOut->output (*i) + "\"";
+    output = "[\"" + mSylOutput->output (*i) + "\"";
     while (++i != sylStr.end()) {
-        output += ",\"" + mSylOut->output (*i) + "\"";
+        output += ",\"" + mSylOutput->output (*i) + "\"";
     }
     output += "]";
 

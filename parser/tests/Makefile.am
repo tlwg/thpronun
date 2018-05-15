@@ -13,5 +13,6 @@ test_parser_SOURCES = \
 	$(NULL)
 test_parser_LDADD = \
 	$(top_builddir)/parser/libparser.la	\
+	$(top_builddir)/output/liboutput.la	\
 	$(NULL)
 

@@ -1,4 +1,4 @@
-// sylout-thai.cxx - Thai pronunciation output
+// sylout-thai.cxx - Thai pronunciation output for Syl
 // Author: Theppitak Karoonboonyanan <theppitak@gmail.com>
 // Created: 2018-05-02
 
@@ -12,9 +12,9 @@
 
 using namespace std;
 
-////////////////////////
-//  class ThaiSylOut  //
-////////////////////////
+///////////////////////////
+//  class ThaiSylOutput  //
+///////////////////////////
 static bool
 IsDeadSyl (bool isShortVowel, EEndConsClass eCons)
 {
@@ -546,7 +546,7 @@ ThaiSylOE (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
 //
 
 string
-ThaiSylOut::output (const Syl& syl) const
+ThaiSylOutput::output (const Syl& syl) const
 {
     // determine vowel form
     switch (syl.vowel()) {

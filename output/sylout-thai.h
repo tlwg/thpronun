@@ -1,13 +1,13 @@
-// sylout-thai.h - Thai pronunciation output
+// sylout-thai.h - Thai pronunciation output for Syl
 // Author: Theppitak Karoonboonyanan <theppitak@gmail.com>
 // Created: 2018-05-02
 
 #ifndef SYLOUT_THAI_H
 #define SYLOUT_THAI_H
 
-#include "syl.h"
+#include "isyl-output.h"
 
-class ThaiSylOut : public ISylOut {
+class ThaiSylOutput : public ISylOutput {
 public:
     virtual std::string output (const Syl& syl) const;
 };

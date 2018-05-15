@@ -1,10 +1,10 @@
 #include "parser/parser.h"
-#include "sylstring/sylout-thai.h"
-#include "sylstring/sylout-roman.h"
-#include "sylstring/sylout-phonetic.h"
-#include "sylstring/sylstrout-delim.h"
-#include "sylstring/sylstrout-roman.h"
-#include "sylstring/sylstrout-json.h"
+#include "output/sylout-thai.h"
+#include "output/sylout-roman.h"
+#include "output/sylout-phonetic.h"
+#include "output/output-delim.h"
+#include "output/output-roman.h"
+#include "output/output-json.h"
 
 #include <iostream>
 #include <list>
@@ -13,13 +13,13 @@
 using namespace std;
 
 void
-DoParse (string word, const list<unique_ptr<ISylStringOut>>& stringOuts)
+DoParse (string word, const list<unique_ptr<IOutput>>& stringOutputs)
 {
     cout << word << ":" << endl;
     auto sylList = ParseWord (word);
     for (const auto& s : sylList) {
         bool isFirst = true;
-        for (const auto& sylStrOut : stringOuts) {
+        for (const auto& sylStrOut : stringOutputs) {
             if (!isFirst) {
                 cout << '\t';
             }
@@ -44,33 +44,33 @@ Usage (const char* progName)
          << "If no word is given, standard input will be read." << endl;
 }
 
-static unique_ptr<ISylStringOut>
-ThaiOut (bool isJson)
+static unique_ptr<IOutput>
+MakeThaiOutput (bool isJson)
 {
     if (isJson) {
-        return make_unique<JsonSylStringOut> (make_unique<ThaiSylOut>());
+        return make_unique<JsonOutput> (make_unique<ThaiSylOutput>());
     } else {
-        return make_unique<DelimSylStringOut> (make_unique<ThaiSylOut>(), '-');
+        return make_unique<DelimOutput> (make_unique<ThaiSylOutput>(), '-');
     }
 }
 
-static unique_ptr<ISylStringOut>
-RomanOut (bool isJson)
+static unique_ptr<IOutput>
+MakeRomanOutput (bool isJson)
 {
     if (isJson) {
-        return make_unique<JsonSylStringOut> (make_unique<RomanSylOut>());
+        return make_unique<JsonOutput> (make_unique<RomanSylOutput>());
     } else {
-        return make_unique<RomanSylStringOut> (make_unique<RomanSylOut>());
+        return make_unique<RomanOutput> (make_unique<RomanSylOutput>());
     }
 }
 
-static unique_ptr<ISylStringOut>
-PhoneticOut (bool isJson)
+static unique_ptr<IOutput>
+MakePhoneticOutput (bool isJson)
 {
     if (isJson) {
-        return make_unique<JsonSylStringOut> (make_unique<PhoneticSylOut>());
+        return make_unique<JsonOutput> (make_unique<PhoneticSylOutput>());
     } else {
-        return make_unique<DelimSylStringOut> (make_unique<PhoneticSylOut>(),
+        return make_unique<DelimOutput> (make_unique<PhoneticSylOutput>(),
                                                ' ');
     }
 }
@@ -80,7 +80,7 @@ main (int argc, const char* argv[])
 {
     int optCnt = 0;
     bool isJson = false;
-    list<unique_ptr<ISylStringOut>> stringOuts;
+    list<unique_ptr<IOutput>> stringOutputs;
 
     for (int i = 1; i < argc; ++i) {
         if ('-' == argv[i][0]) {
@@ -89,13 +89,13 @@ main (int argc, const char* argv[])
                 isJson = true;
                 break;
             case 'r':
-                stringOuts.push_back (RomanOut (isJson));
+                stringOutputs.push_back (MakeRomanOutput (isJson));
                 break;
             case 't':
-                stringOuts.push_back (ThaiOut (isJson));
+                stringOutputs.push_back (MakeThaiOutput (isJson));
                 break;
             case 'p':
-                stringOuts.push_back (PhoneticOut (isJson));
+                stringOutputs.push_back (MakePhoneticOutput (isJson));
                 break;
             case 'h':
                 Usage (argv[0]);
@@ -108,23 +108,23 @@ main (int argc, const char* argv[])
             ++optCnt;
         }
     }
-    if (stringOuts.empty()) {
-        stringOuts.push_back (ThaiOut (isJson));
-        stringOuts.push_back (RomanOut (isJson));
-        stringOuts.push_back (PhoneticOut (isJson));
+    if (stringOutputs.empty()) {
+        stringOutputs.push_back (MakeThaiOutput (isJson));
+        stringOutputs.push_back (MakeRomanOutput (isJson));
+        stringOutputs.push_back (MakePhoneticOutput (isJson));
     }
 
     if (1 == argc - optCnt) {
         // read word list from stdin
         string word;
         while (getline (cin, word)) {
-            DoParse (word, stringOuts);
+            DoParse (word, stringOutputs);
         }
     } else {
         // read word list from command line args
         for (int i = 1; i < argc; ++i) {
             if ('-' != argv[i][0]) {
-                DoParse (argv[i], stringOuts);
+                DoParse (argv[i], stringOutputs);
             }
         }
     }

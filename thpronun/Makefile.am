@@ -9,5 +9,6 @@ thpronun_SOURCES = \
 	$(NULL)
 thpronun_LDADD = \
 	$(top_builddir)/parser/libparser.la	\
+	$(top_builddir)/output/liboutput.la	\
 	$(NULL)
 

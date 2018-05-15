@@ -39,13 +39,6 @@ private:
     int             mEndPos;
 };
 
-class ISylOut {
-public:
-    virtual ~ISylOut() {}
-
-    virtual std::string output (const Syl& syl) const = 0;
-};
-
 #include "syl.inl"
 
 #endif  // SYL_H

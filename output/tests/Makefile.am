@@ -11,5 +11,5 @@ AM_CPPFLAGS = -I$(top_srcdir)
 test_sylstring_SOURCES = \
 	test-sylstring.cxx	\
 	$(NULL)
-test_sylstring_LDADD = $(top_builddir)/sylstring/libsylstring.la
+test_sylstring_LDADD = $(top_builddir)/output/liboutput.la
 

@@ -1,8 +1,8 @@
 #include "parser/parser.h"
-#include "sylstring/sylout-thai.h"
-#include "sylstring/sylout-roman.h"
-#include "sylstring/sylstrout-delim.h"
-#include "sylstring/sylstrout-roman.h"
+#include "output/sylout-thai.h"
+#include "output/sylout-roman.h"
+#include "output/output-delim.h"
+#include "output/output-roman.h"
 
 #include <iostream>
 #include <memory>
@@ -11,17 +11,17 @@ using namespace std;
 
 bool ParseAll (list<string> words)
 {
-    auto thaiStringOut
-        = make_unique<DelimSylStringOut> (make_unique<ThaiSylOut>(), '-');
-    auto romanStringOut
-        = make_unique<RomanSylStringOut> (make_unique<RomanSylOut>());
+    auto thaiOutput
+        = make_unique<DelimOutput> (make_unique<ThaiSylOutput>(), '-');
+    auto romanOutput
+        = make_unique<RomanOutput> (make_unique<RomanSylOutput>());
 
     for (auto w : words) {
         cout << w << ':' << endl;
         auto sylList = ParseWord (w);
         for (const auto& s : sylList) {
-            cout << " - " << thaiStringOut->output (s)
-                 << '\t' << romanStringOut->output (s) << endl;
+            cout << " - " << thaiOutput->output (s)
+                 << '\t' << romanOutput->output (s) << endl;
         }
     }
     return true;

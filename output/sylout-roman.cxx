@@ -1,4 +1,4 @@
-// sylout-roman.cxx - Romanization output
+// sylout-roman.cxx - Romanization output for Syl
 // Author: Theppitak Karoonboonyanan <theppitak@gmail.com>
 // Created: 2018-05-02
 
@@ -8,9 +8,9 @@
 
 using namespace std;
 
-/////////////////////////
-//  class RomanSylOut  //
-/////////////////////////
+////////////////////////////
+//  class RomanSylOutput  //
+////////////////////////////
 
 #define ICS EInitConsSound
 static const unordered_map<EInitConsSound, string>
@@ -95,7 +95,7 @@ RomanEndConsTbl_ = {
 #undef EC
 
 string
-RomanSylOut::output (const Syl& syl) const
+RomanSylOutput::output (const Syl& syl) const
 {
     return RomanInitConsTbl_.at (syl.iCons1())
            + RomanSecInitConsTbl_.at (syl.iCons2())

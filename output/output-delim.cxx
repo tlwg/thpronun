@@ -1,20 +1,20 @@
-// sylstrout-delim.cxx - SylString deliminated output
+// output-delim.cxx - Deliminated output
 // Author: Theppitak Karoonboonyanan <theppitak@gmail.com>
 // Created: 2018-05-02
 
-#include "sylstrout-delim.h"
+#include "output-delim.h"
 
 using namespace std;
 
 string
-DelimSylStringOut::output (const SylString& sylStr) const
+DelimOutput::output (const SylString& sylStr) const
 {
     string output;
 
     auto i = sylStr.begin();
-    output = mSylOut->output (*i);
+    output = mSylOutput->output (*i);
     while (++i != sylStr.end()) {
-        output += mDelim + mSylOut->output (*i);
+        output += mDelim + mSylOutput->output (*i);
     }
 
     return output;

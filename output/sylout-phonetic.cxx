@@ -1,4 +1,4 @@
-// sylout-phonetic.cxx - Phonetic pronunciation output
+// sylout-phonetic.cxx - Phonetic output for Syl
 // Author: Theppitak Karoonboonyanan <theppitak@gmail.com>
 // Created: 2018-05-02
 
@@ -8,9 +8,9 @@
 
 using namespace std;
 
-////////////////////////////
-//  class PhoneticSylOut  //
-////////////////////////////
+///////////////////////////////
+//  class PhoneticSylOutput  //
+///////////////////////////////
 
 #define ICS EInitConsSound
 static const unordered_map<EInitConsSound, string>
@@ -110,7 +110,7 @@ PhoneticToneTbl_ = {
 #undef TN
 
 string
-PhoneticSylOut::output (const Syl& syl) const
+PhoneticSylOutput::output (const Syl& syl) const
 {
     return PhoneticInitConsTbl_.at (syl.iCons1())
            + PhoneticSecInitConsTbl_.at (syl.iCons2())

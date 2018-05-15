@@ -5,8 +5,8 @@
 #include <utility>
 
 inline
-JsonSylStringOut::JsonSylStringOut (std::unique_ptr<ISylOut> sylOut)
-    : mSylOut (std::move (sylOut))
+JsonOutput::JsonOutput (std::unique_ptr<ISylOutput> sylOutput)
+    : mSylOutput (std::move (sylOutput))
 {
 }
 

@@ -1,0 +1,28 @@
+SUBDIRS = tests
+
+AM_CPPFLAGS = -I. -I$(top_srcdir)
+
+noinst_LTLIBRARIES = liboutput.la
+
+liboutput_la_SOURCES = \
+	sylout-thai.h		\
+	sylout-thai.cxx		\
+	sylout-roman.h		\
+	sylout-roman.cxx	\
+	sylout-phonetic.h	\
+	sylout-phonetic.cxx	\
+	output-delim.h	\
+	output-delim.inl	\
+	output-delim.cxx	\
+	output-roman.h	\
+	output-roman.inl	\
+	output-roman.cxx	\
+	output-json.h	\
+	output-json.inl	\
+	output-json.cxx	\
+	$(NULL)
+
+liboutput_la_LIBADD = \
+	$(top_builddir)/sylstring/libsylstring.la	\
+	$(NULL)
+

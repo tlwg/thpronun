@@ -35,14 +35,6 @@ private:
     std::list<Syl> mSyls;
 };
 
-
-class ISylStringOut {
-public:
-    virtual ~ISylStringOut() {}
-
-    virtual std::string output (const SylString& sylStr) const = 0;
-};
-
 #include "sylstring.inl"
 
 #endif  // SYLSTRING_H
