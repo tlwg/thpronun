@@ -66,6 +66,11 @@ SylString::end() const
     return mSyls.end();
 }
 
+inline int
+SylString::endPos() const
+{
+    return mSyls.empty() ? 0 : mSyls.back().endPos();
+}
 
 /*
 vi:ts=4:ai:expandtab

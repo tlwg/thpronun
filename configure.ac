@@ -28,6 +28,7 @@ AC_CONFIG_FILES([Makefile
                  thortho/Makefile
                  thortho/tests/Makefile
                  sylstring/Makefile
+                 lattice/Makefile
                  output/Makefile
                  output/tests/Makefile
                  parser/Makefile

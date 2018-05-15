@@ -31,6 +31,8 @@ public:
     const_iterator begin() const;
     const_iterator end() const;
 
+    int            endPos() const;
+
 private:
     std::list<Syl> mSyls;
 };
