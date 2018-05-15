@@ -9,16 +9,16 @@ using namespace std;
 string
 JsonOutput::output (const SylString& sylStr) const
 {
-    string output;
+    string outStr;
 
     auto i = sylStr.begin();
-    output = "[\"" + mSylOutput->output (*i) + "\"";
+    outStr = "[\"" + mSylOutput->output (*i) + "\"";
     while (++i != sylStr.end()) {
-        output += ",\"" + mSylOutput->output (*i) + "\"";
+        outStr += ",\"" + mSylOutput->output (*i) + "\"";
     }
-    output += "]";
+    outStr += "]";
 
-    return output;
+    return outStr;
 }
 
 /*

@@ -11,12 +11,12 @@ using namespace std;
 string
 RomanOutput::output (const SylString& sylStr) const
 {
-    string output;
+    string outStr;
 
     auto i = sylStr.begin();
-    output = mRomanSylOutput.output (*i);
+    outStr = mRomanSylOutput.output (*i);
     if (mIsCapitalize) {
-        output[0] = toupper (output[0]);
+        outStr[0] = toupper (outStr[0]);
     }
     for (auto prev = i++; i != sylStr.end(); prev = i++) {
         // According to Royal Institute, insert hyphen for 3 cases:
@@ -27,12 +27,12 @@ RomanOutput::output (const SylString& sylStr) const
             || (EEndConsClass::NONE == prev->eCons()
                 && EInitConsSound::NGA == i->iCons1()))
         {
-            output += '-';
+            outStr += '-';
         }
-        output += mRomanSylOutput.output (*i);
+        outStr += mRomanSylOutput.output (*i);
     }
 
-    return output;
+    return outStr;
 }
 
 /*

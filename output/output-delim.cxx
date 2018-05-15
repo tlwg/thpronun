@@ -9,15 +9,15 @@ using namespace std;
 string
 DelimOutput::output (const SylString& sylStr) const
 {
-    string output;
+    string outStr;
 
     auto i = sylStr.begin();
-    output = mSylOutput->output (*i);
+    outStr = mSylOutput->output (*i);
     while (++i != sylStr.end()) {
-        output += mDelim + mSylOutput->output (*i);
+        outStr += mDelim + mSylOutput->output (*i);
     }
 
-    return output;
+    return outStr;
 }
 
 /*
