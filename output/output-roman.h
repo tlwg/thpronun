@@ -13,6 +13,7 @@ public:
     RomanOutput (bool isCapitalize = false);
 
     virtual std::string output (const SylString& sylStr) const;
+    virtual std::string output (const std::list<SylString>& strList) const;
 
 private:
     RomanSylOutput mRomanSylOutput;

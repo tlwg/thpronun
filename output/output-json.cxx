@@ -21,6 +21,22 @@ JsonOutput::output (const SylString& sylStr) const
     return outStr;
 }
 
+string
+JsonOutput::output (const list<SylString>& strList) const
+{
+    string outStr;
+
+    outStr = "[";
+    auto i = strList.begin();
+    outStr += output (*i);
+    while (++i != strList.end()) {
+        outStr += "," + output (*i);
+    }
+    outStr += "]";
+
+    return outStr;
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

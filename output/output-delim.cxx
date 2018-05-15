@@ -20,6 +20,18 @@ DelimOutput::output (const SylString& sylStr) const
     return outStr;
 }
 
+string
+DelimOutput::output (const list<SylString>& strList) const
+{
+    string outStr;
+
+    for (const auto& str : strList) {
+        outStr += output (str) + '\n';
+    }
+
+    return outStr;
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

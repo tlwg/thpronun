@@ -15,6 +15,7 @@ public:
     DelimOutput (std::unique_ptr<ISylOutput> sylOutput, char delim);
 
     virtual std::string output (const SylString& sylStr) const;
+    virtual std::string output (const std::list<SylString>& strList) const;
 
 private:
     std::unique_ptr<ISylOutput> mSylOutput;

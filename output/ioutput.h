@@ -8,12 +8,14 @@
 #include "sylstring/sylstring.h"
 
 #include <string>
+#include <list>
 
 class IOutput {
 public:
     virtual ~IOutput() {}
 
     virtual std::string output (const SylString& sylStr) const = 0;
+    virtual std::string output (const std::list<SylString>& strList) const = 0;
 };
 
 #endif  // IOUTPUT_H
