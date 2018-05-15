@@ -5,6 +5,8 @@ AM_CPPFLAGS = -I. -I$(top_srcdir)
 noinst_LTLIBRARIES = liboutput.la
 
 liboutput_la_SOURCES = \
+	isyl-output.h		\
+	ioutput.h		\
 	sylout-thai.h		\
 	sylout-thai.cxx		\
 	sylout-roman.h		\
