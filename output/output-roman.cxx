@@ -14,7 +14,7 @@ RomanOutput::output (const SylString& sylStr) const
     string output;
 
     auto i = sylStr.begin();
-    output = mSylOutput->output (*i);
+    output = mRomanSylOutput.output (*i);
     if (mIsCapitalize) {
         output[0] = toupper (output[0]);
     }
@@ -29,7 +29,7 @@ RomanOutput::output (const SylString& sylStr) const
         {
             output += '-';
         }
-        output += mSylOutput->output (*i);
+        output += mRomanSylOutput.output (*i);
     }
 
     return output;

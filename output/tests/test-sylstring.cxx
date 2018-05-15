@@ -183,10 +183,8 @@ TestRomanPronun()
 {
     bool isSuccess = true;
     SylString syls;
-    auto output
-        = make_unique<RomanOutput> (make_unique<RomanSylOutput>());
-    auto outputCap
-        = make_unique<RomanOutput> (make_unique<RomanSylOutput>(), true);
+    auto output    = make_unique<RomanOutput>();
+    auto outputCap = make_unique<RomanOutput> (true);
 
     // กกต้นหูกฺวางเหฺลียวเลาะร้องเป็นตาแซ่บ
     syls = Syl ("k_ok1");

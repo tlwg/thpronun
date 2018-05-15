@@ -6,20 +6,17 @@
 #define OUTPUT_ROMAN_H
 
 #include "ioutput.h"
-#include "isyl-output.h"
-
-#include <memory>
+#include "sylout-roman.h"
 
 class RomanOutput : public IOutput {
 public:
-    RomanOutput (std::unique_ptr<ISylOutput> sylOutput,
-                 bool                        isCapitalize = false);
+    RomanOutput (bool isCapitalize = false);
 
     virtual std::string output (const SylString& sylStr) const;
 
 private:
-    std::unique_ptr<ISylOutput> mSylOutput;
-    bool                        mIsCapitalize;
+    RomanSylOutput mRomanSylOutput;
+    bool           mIsCapitalize;
 };
 
 #include "output-roman.inl"

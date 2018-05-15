@@ -14,7 +14,7 @@ bool ParseAll (list<string> words)
     auto thaiOutput
         = make_unique<DelimOutput> (make_unique<ThaiSylOutput>(), '-');
     auto romanOutput
-        = make_unique<RomanOutput> (make_unique<RomanSylOutput>());
+        = make_unique<RomanOutput>();
 
     for (auto w : words) {
         cout << w << ':' << endl;

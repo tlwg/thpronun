@@ -60,7 +60,7 @@ MakeRomanOutput (bool isJson)
     if (isJson) {
         return make_unique<JsonOutput> (make_unique<RomanSylOutput>());
     } else {
-        return make_unique<RomanOutput> (make_unique<RomanSylOutput>());
+        return make_unique<RomanOutput>();
     }
 }
 
