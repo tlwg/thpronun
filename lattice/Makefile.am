@@ -1,3 +1,5 @@
+SUBDIRS = tests
+
 AM_CPPFLAGS = -I. -I$(top_srcdir)
 
 noinst_LTLIBRARIES = liblattice.la
@@ -6,6 +8,8 @@ liblattice_la_SOURCES = \
 	lattice.h	\
 	lattice.inl	\
 	lattice.cxx	\
+	dag.h		\
+	dag.inl		\
 	$(NULL)
 
 liblattice_la_LIBADD = \
