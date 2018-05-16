@@ -37,6 +37,37 @@ JsonOutput::output (const list<SylString>& strList) const
     return outStr;
 }
 
+string
+JsonOutput::output (const PronunLatt& latt) const
+{
+    string outStr;
+
+    outStr = "[";
+    for (auto chain = latt.begin(); chain != latt.end(); ++chain) {
+        if (chain != latt.begin()) {
+            outStr += ",";
+        }
+        outStr += "[";
+        for (auto frac = chain->begin(); frac != chain->end(); ++frac) {
+            if (frac != chain->begin()) {
+                outStr += ",";
+            }
+            outStr += "[";
+            for (auto sylStr = frac->begin(); sylStr != frac->end(); ++sylStr) {
+                if (sylStr != frac->begin()) {
+                    outStr += ",";
+                }
+                outStr += output (*sylStr);
+            }
+            outStr += "]";
+        }
+        outStr += "]";
+    }
+    outStr += "]";
+
+    return outStr;
+}
+
 /*
 vi:ts=4:ai:expandtab
 */
