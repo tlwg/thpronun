@@ -28,6 +28,13 @@ SylString::operator= (const SylString& other)
 }
 
 inline SylString&
+SylString::operator+= (const SylString& other)
+{
+    mSyls.insert (mSyls.end(), other.mSyls.begin(), other.mSyls.end());
+    return *this;
+}
+
+inline SylString&
 SylString::operator= (const Syl& syl)
 {
     mSyls.clear();

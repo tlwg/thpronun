@@ -21,6 +21,7 @@ public:
     SylString (SylString&& other);
 
     SylString& operator= (const SylString& other);
+    SylString& operator+= (const SylString& other);
 
     SylString& operator= (const Syl& syl);
     SylString& operator+= (const Syl& syl);
