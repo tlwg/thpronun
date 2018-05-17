@@ -31,7 +31,7 @@ WordDAG()
 }
 
 bool
-TestEdgeExist (const DAG<char> dag)
+TestEdgeExist (const DAG<char>& dag)
 {
     bool isSuccess = true;
 
