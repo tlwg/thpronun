@@ -10,6 +10,8 @@ liblattice_la_SOURCES = \
 	lattice.cxx	\
 	dag.h		\
 	dag.inl		\
+	pron-dag.h	\
+	pron-dag.cxx	\
 	$(NULL)
 
 liblattice_la_LIBADD = \

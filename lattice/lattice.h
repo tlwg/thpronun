@@ -36,6 +36,8 @@ public:
     int            endPos() const;
     void           setEndPos (int endPos);
 
+    bool operator== (const PronunFrac& other) const;
+
 private:
     std::list<SylString>    mAltPronuns;
     int                     mEndPos;

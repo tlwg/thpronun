@@ -72,6 +72,24 @@ SylString::endPos() const
     return mSyls.empty() ? 0 : mSyls.back().endPos();
 }
 
+inline bool
+SylString::operator!= (const SylString& other) const
+{
+    return !(*this == other);
+}
+
+inline bool
+SylString::operator<= (const SylString& other) const
+{
+    return !(*this > other);
+}
+
+inline bool
+SylString::operator>= (const SylString& other) const
+{
+    return !(*this < other);
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

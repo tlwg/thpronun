@@ -29,6 +29,15 @@ public:
     int             endPos() const;
     void            setEndPos (int pos);
 
+    bool operator== (const Syl& other) const;
+    bool operator!= (const Syl& other) const;
+
+    // for sorting purpose
+    bool operator< (const Syl& other) const;
+    bool operator> (const Syl& other) const;
+    bool operator<= (const Syl& other) const;
+    bool operator>= (const Syl& other) const;
+
 private:
     EInitConsSound  mICons1;
     ESecInitCons    mICons2;

@@ -33,6 +33,15 @@ public:
 
     int            endPos() const;
 
+    bool operator== (const SylString& other) const;
+    bool operator!= (const SylString& other) const;
+
+    // for sorting purpose
+    bool operator< (const SylString& other) const;
+    bool operator> (const SylString& other) const;
+    bool operator<= (const SylString& other) const;
+    bool operator>= (const SylString& other) const;
+
 private:
     std::list<Syl> mSyls;
 };

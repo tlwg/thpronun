@@ -105,6 +105,24 @@ Syl::setEndPos (int pos)
     mEndPos = pos;
 }
 
+inline bool
+Syl::operator!= (const Syl& other) const
+{
+    return !(*this == other);
+}
+
+inline bool
+Syl::operator<= (const Syl& other) const
+{
+    return !(*this > other);
+}
+
+inline bool
+Syl::operator>= (const Syl& other) const
+{
+    return !(*this < other);
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

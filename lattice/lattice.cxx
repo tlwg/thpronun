@@ -23,8 +23,28 @@ PronunFrac::operator+= (const PronunFrac& other)
 PronunFrac&
 PronunFrac::operator+= (const SylString& sylString)
 {
-    mAltPronuns.push_back (sylString);
+    // keep mAltPronuns sorted & unique
+    auto it = mAltPronuns.begin();
+    while (it != mAltPronuns.end() && *it < sylString) {
+        ++it;
+    }
+    if (it == mAltPronuns.end() || *it != sylString) {
+        mAltPronuns.insert (it, sylString);
+    }
+
     return *this;
+}
+
+bool
+PronunFrac::operator== (const PronunFrac& other) const
+{
+    auto thisIt = this->begin();
+    auto otherIt = other.begin();
+    while (thisIt != this->end() && otherIt != other.end()) {
+        if (*thisIt != *otherIt) return false;
+        ++thisIt; ++otherIt;
+    }
+    return thisIt == this->end() && otherIt == other.end();
 }
 
 /*
