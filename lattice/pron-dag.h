@@ -21,6 +21,8 @@ class PronunDAG : public DAG<Syl> {
 public:
     PronunDAG();
     PronunDAG (const std::list<SylString> sylStrings);
+
+    FracDAG fracDAG() const;
 };
 
 #endif  // PRON_DAG_H

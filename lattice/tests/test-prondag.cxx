@@ -99,11 +99,11 @@ CreatePronDAG()
 }
 
 bool
-TestEdgeExist (const PronunDAG& dag)
+TestPronDAGEdgeExist (const PronunDAG& dag)
 {
     bool isSuccess = true;
 
-    cout << "Testing edge existence" << endl;
+    cout << "Testing pronunciation DAG edge existence" << endl;
     // test existing edges
     if (!dag.isEdgeExist (0, -3, Syl ("c_a_1"))) {
         cout << "Edge (0, -3, 'c_a_1') should exist, but doesn't!" << endl;
@@ -179,13 +179,107 @@ TestEdgeExist (const PronunDAG& dag)
     return isSuccess;
 }
 
+inline PronunFrac
+MakeFrac (int endPos, const char* syl)
+{
+    return PronunFrac (endPos, SylString (Syl (syl)));
+}
+
+bool
+TestFracDAGEdgeExist (const FracDAG& dag)
+{
+    bool isSuccess = true;
+
+    cout << "Testing Fraction DAG edge existence" << endl;
+    // test existing edges
+    if (!dag.isEdgeExist (0, -3, MakeFrac (-3, "c_a_1"))) {
+        cout << "Edge (0, -3, 'c_a_1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (0, 1, MakeFrac (1, "c_a_1"))) {
+        cout << "Edge (0, 1, 'c_a_1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (0, 2, MakeFrac (2, "c_on4"))) {
+        cout << "Edge (0, 2, 'c_on4') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (-3, 3, MakeFrac (3, "n_om4"))) {
+        cout << "Edge (-3, 3, 'n_om4') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (1, 3, MakeFrac (3, "n_om0"))) {
+        cout << "Edge (1, 3, 'n_om0') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (2, 5, MakeFrac (5, "m_Cp2"))) {
+        cout << "Edge (2, 5, 'm_Cp2') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (2, 4, MakeFrac (4, "m_C_0"))) {
+        cout << "Edge (2, 4, 'm_C_0') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (3, 5, MakeFrac (5, "?_op1"))) {
+        cout << "Edge (3, 5, '?_op1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (3, 4, MakeFrac (4, "?_a_1"))) {
+        cout << "Edge (3, 4, '?_a_1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (4, 6, MakeFrac (6, "b_ok1"))) {
+        cout << "Edge (4, 6, 'b_ok1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (5, 9, MakeFrac (9, "krCp1"))) {
+        cout << "Edge (5, 9, 'krCp1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (5, 7, MakeFrac (7, "k_Cn0"))) {
+        cout << "Edge (5, 7, 'k_Cn0') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (7, 9, MakeFrac (9, "?_op1"))) {
+        cout << "Edge (7, 9, '?_op1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (6, 9, MakeFrac (9, "r_Cp2"))) {
+        cout << "Edge (6, 9, 'r_Cp2') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+
+    // test non-existing edges
+    if (dag.isEdgeExist (0, -3, MakeFrac (-3, "n_om4"))) {
+        cout << "Edge (0, -3, 'n_om4') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (1, 2, MakeFrac (2, "?_op1"))) {
+        cout << "Edge (1, 2, '?_op1') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (0, 5, MakeFrac (5, "m_Cp2"))) {
+        cout << "Edge (0, 5, 'o') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
 int main()
 {
     bool isSuccess = true;
 
     PronunDAG pronDAG = CreatePronDAG();
 
-    if (!TestEdgeExist (pronDAG)) {
+    if (!TestPronDAGEdgeExist (pronDAG)) {
+        isSuccess = false;
+    }
+
+    cout << "Creating FracDAG" << endl;
+    FracDAG fracDAG = pronDAG.fracDAG();
+
+    if (!TestFracDAGEdgeExist (fracDAG)) {
         isSuccess = false;
     }
 

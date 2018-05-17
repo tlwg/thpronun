@@ -17,6 +17,7 @@ public:
 
 public:
     SylString();
+    SylString (const Syl& syl);
     SylString (const SylString& other);
     SylString (SylString&& other);
 

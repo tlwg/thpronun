@@ -43,6 +43,21 @@ PronunDAG::PronunDAG (const std::list<SylString> sylStrings)
     }
 }
 
+FracDAG
+PronunDAG::fracDAG() const
+{
+    FracDAG fDAG;
+
+    for (auto it = outBegin(); it != outEnd(); ++it) {
+        fDAG.addEdge (
+            it->first, it->second.target,
+            PronunFrac (it->second.target, SylString (it->second.edgeVal))
+        );
+    }
+
+    return fDAG;
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

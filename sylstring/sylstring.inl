@@ -13,6 +13,13 @@ SylString::SylString()
     : mSyls() {}
 
 inline
+SylString::SylString (const Syl& syl)
+    : mSyls()
+{
+    *this += syl;
+}
+
+inline
 SylString::SylString (const SylString& other)
     : mSyls (other.mSyls) {}
 
