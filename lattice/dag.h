@@ -35,6 +35,7 @@ public:
 
     bool addEdge (int from, int to, const TEdgeVal& edgeVal);
     bool removeEdge (int from, int to, const TEdgeVal& edgeVal);
+    bool removeDirectEdges (int from, int to);
 
     bool isEdgeExist (int from, int to, const TEdgeVal& syl) const;
     int  outDegree (int from) const;

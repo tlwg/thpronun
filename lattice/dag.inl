@@ -179,6 +179,35 @@ DAG<TEdgeVal>::removeEdge (int from, int to, const TEdgeVal& edgeVal)
     return isRemoved;
 }
 
+template<typename TEdgeVal>
+bool
+DAG<TEdgeVal>::removeDirectEdges (int from, int to)
+{
+    bool isRemoved = false;
+
+    auto range = mFrom.equal_range (from);
+    for (auto it = range.first; it != range.second; /*noop*/) {
+        if (it->second.target == to) {
+            mFrom.erase (it++);
+            isRemoved = true;
+        } else {
+            ++it;
+        }
+    }
+
+    range = mTo.equal_range (to);
+    for (auto it = range.first; it != range.second; /*noop*/) {
+        if (it->second.target == from) {
+            mTo.erase (it++);
+            isRemoved = true;
+        } else {
+            ++it;
+        }
+    }
+
+    return isRemoved;
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

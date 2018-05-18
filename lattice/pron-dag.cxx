@@ -47,6 +47,38 @@ FracDAG::mergeSingles()
     }
 }
 
+void
+FracDAG::mergeParallels()
+{
+    for (auto it = outBegin(); it != outEnd(); ++it) {
+        int from = it->first;
+        int to = it->second.target;
+
+        // skip node already merged
+        if (outDegree (from) == 1)
+            continue;
+
+        // Merge fractions for paths from 'from' to 'to'
+        PronunFrac mergedFrac;
+        int        edgeCount = 0;
+        auto range = outEdges (from);
+        for (auto outIt = range.first; outIt != range.second; ++outIt) {
+            if (outIt->second.target == to) {
+                mergedFrac += outIt->second.edgeVal;
+                ++edgeCount;
+            }
+        }
+        if (edgeCount > 1) {
+            removeDirectEdges (from, to);
+            addEdge (from, to, mergedFrac);
+
+            // 'it' is now inaccessible -> reset it
+            // (loop increment is OK, as first node is always done)
+            it = outBegin();
+        }
+    }
+}
+
 ///////////////////////
 //  class PronunDAG  //
 ///////////////////////

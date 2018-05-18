@@ -17,6 +17,7 @@ public:
     FracDAG (FracDAG&& other);
 
     void mergeSingles();
+    void mergeParallels();
 };
 
 class PronunDAG : public DAG<Syl> {

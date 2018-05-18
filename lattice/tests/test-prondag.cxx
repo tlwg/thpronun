@@ -1,4 +1,6 @@
 #include "lattice/pron-dag.h"
+#include "output/sylout-thai.h"
+#include "output/output-delim.h"
 
 #include <iostream>
 #include <list>
@@ -407,6 +409,190 @@ TestFracDAGEdgeExist_NoSingle (const FracDAG& dag)
     return isSuccess;
 }
 
+PronunFrac
+MakeFrac (int endPos, const list<list<const char*>>& sylStrs)
+{
+    PronunFrac frac;
+    for (const auto& str : sylStrs) {
+        frac += MakeFrac (endPos, str);
+    }
+    return frac;
+}
+
+//
+// FracDAG after merging parallel edges
+//
+// (0)--{ขะ-นม,ขะ-หฺนม}-->(3)--{อบ}-->(5)--{กอน-อบ,กฺรอบ}--->(9)
+//  |                     |           ^                     ^
+//  |                     `--{อะ}--.  |                     |
+//  |           ,------{มอบ}-------|--'                     |
+//  `---{ขน}-->(2)                 v                        |
+//              `------{มอ}------>(4)-------{บก-รอบ}--------'
+//
+bool
+TestFracDAGEdgeExist_NoParallel (const FracDAG& dag)
+{
+    bool isSuccess = true;
+
+    cout << "Testing Fraction DAG edge existence after merging parallels"
+         << endl;
+    // test existing edges
+    /** Disable for now, as constructing Syl element with negative endPos
+     ** is way too complicated to do
+    if (!dag.isEdgeExist (
+            0, 3, MakeFrac (3, {{"c_a_1", "n_om4"}, {"c_a_1", "n_om0"}})
+        ))
+    {
+        cout << "Edge (0, 3, {'c_a_1,n_om4','c_a_1,n_om0'}) should exist, "
+             << "but doesn't!" << endl;
+        isSuccess = false;
+    }
+     **/
+    if (!dag.isEdgeExist (0, 2, MakeFrac (2, "c_on4"))) {
+        cout << "Edge (0, 2, 'c_on4') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (2, 5, MakeFrac (5, "m_Cp2"))) {
+        cout << "Edge (2, 5, 'm_Cp2') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (2, 4, MakeFrac (4, "m_C_0"))) {
+        cout << "Edge (2, 4, 'm_C_0') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (3, 5, MakeFrac (5, "?_op1"))) {
+        cout << "Edge (3, 5, '?_op1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (3, 4, MakeFrac (4, "?_a_1"))) {
+        cout << "Edge (3, 4, '?_a_1') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (
+            4, 9, MakeFrac (9, list<const char*> ({"b_ok1", "r_Cp2"}))
+        ))
+    {
+        cout << "Edge (4, 9, 'b_ok1,r_Cp2') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (
+            5, 9, MakeFrac (9, {{"k_Cn0", "?_op1"}, {"krCp1"}})
+        ))
+    {
+        cout << "Edge (5, 9, {'k_Cn0,?_op1','krCp1'}) should exist, "
+             << "but doesn't!" << endl;
+        isSuccess = false;
+    }
+
+    // test removed edges
+    if (dag.isEdgeExist (
+            0, 3, MakeFrac (3, list<const char*> ({"c_a_1", "n_om4"}))
+        ))
+    {
+        cout << "Edge (0, 3, 'c_a_1,n_om4') should have been removed, "
+             << "but hadn't!" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (
+            0, 3, MakeFrac (3, list<const char*> ({"c_a_1", "n_om0"}))
+        ))
+    {
+        cout << "Edge (0, 3, 'c_a_1,n_om0') should have been removed, "
+             << "but hadn't!" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (5, 9, MakeFrac (9, "krCp1"))) {
+        cout << "Edge (5, 9, 'krCp1') should have been removed, "
+             << "but hadn't!" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (
+            5, 9, MakeFrac (9, list<const char*> ({"k_Cn0", "?_op1"}))
+        ))
+    {
+        cout << "Edge (5, 9, 'k_Cn0,?_op1') should have been removed, "
+             << "but hadn't!" << endl;
+        isSuccess = false;
+    }
+
+    // test removed edges from merge singles phase
+    if (dag.isEdgeExist (0, -3, MakeFrac (-3, "c_a_1"))) {
+        cout << "Edge (0, -3, 'c_a_1') should have been removed, but hadn't!"
+             << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (0, 1, MakeFrac (1, "c_a_1"))) {
+        cout << "Edge (0, 1, 'c_a_1') should have been removed, but hadn't!"
+             << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (-3, 3, MakeFrac (3, "n_om4"))) {
+        cout << "Edge (-3, 3, 'n_om4') should have been removed, but hadn't!"
+             << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (1, 3, MakeFrac (3, "n_om0"))) {
+        cout << "Edge (1, 3, 'n_om0') should have been removed, but hadn't!"
+             << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (5, 7, MakeFrac (7, "k_Cn0"))) {
+        cout << "Edge (5, 7, 'k_Cn0') should have been removed, but hadn't!"
+             << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (7, 9, MakeFrac (9, "?_op1"))) {
+        cout << "Edge (7, 9, '?_op1') should have been removed, but hadn't!"
+             << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (4, 6, MakeFrac (6, "b_ok1"))) {
+        cout << "Edge (4, 6, 'b_ok1') should have been removed, but hadn't!"
+             << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (6, 9, MakeFrac (9, "r_Cp2"))) {
+        cout << "Edge (6, 9, 'r_Cp2') should have been removed, but hadn't!"
+             << endl;
+        isSuccess = false;
+    }
+
+    // test non-existing edges
+    if (dag.isEdgeExist (0, -3, MakeFrac (-3, "n_om4"))) {
+        cout << "Edge (0, -3, 'n_om4') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (1, 2, MakeFrac (2, "?_op1"))) {
+        cout << "Edge (1, 2, '?_op1') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (0, 5, MakeFrac (5, "m_Cp2"))) {
+        cout << "Edge (0, 5, 'o') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
+void
+DumpFracDAG (const FracDAG& fracDAG)
+{
+    DelimOutput output (make_unique<ThaiSylOutput>(), '-');
+
+    cout << "FracDAG dump:" << endl;
+    for (auto it = fracDAG.outBegin(); it != fracDAG.outEnd(); ++it) {
+        cout << "  (" << it->first << ")--{";
+        bool isFirst = true;
+        for (const auto& syl : it->second.edgeVal) {
+            if (!isFirst) {
+                cout << ",";
+            }
+            cout << output.output (syl);
+            isFirst = false;
+        }
+        cout << "}-->(" << it->second.target << ")" << endl;
+    }
+}
 
 int main()
 {
@@ -425,12 +611,25 @@ int main()
         isSuccess = false;
     }
 
+    DumpFracDAG (fracDAG);
+
     cout << "Merging single edges in FracDAG" << endl;
     fracDAG.mergeSingles();
 
     if (!TestFracDAGEdgeExist_NoSingle (fracDAG)) {
         isSuccess = false;
     }
+
+    DumpFracDAG (fracDAG);
+
+    cout << "Merging parallel edges in FracDAG" << endl;
+    fracDAG.mergeParallels();
+
+    if (!TestFracDAGEdgeExist_NoParallel (fracDAG)) {
+        isSuccess = false;
+    }
+
+    DumpFracDAG (fracDAG);
 
     return isSuccess ? 0 : 1;
 }

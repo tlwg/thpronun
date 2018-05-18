@@ -19,5 +19,6 @@ test_prondag_SOURCES = \
 	$(NULL)
 test_prondag_LDADD = \
 	$(top_builddir)/lattice/liblattice.la	\
+	$(top_builddir)/output/liboutput.la	\
 	$(NULL)
 

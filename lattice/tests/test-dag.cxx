@@ -253,6 +253,43 @@ TestInEdges (const DAG<char>& dag)
     return isSuccess;
 }
 
+bool
+TestRemoveEdges (DAG<char>& dag)
+{
+    bool isSuccess = true;
+
+    cout << "Test removing edge (2)-n->(5)" << endl;
+    if (!dag.removeEdge (2, 5, 'n')) {
+        cout << "Fail to remove edge (2)-n->(5)" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (2, 5, 'n')) {
+        cout << "Edge (2)-n->(5) should have been removed, but hadn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag.isEdgeExist (2, 5, 't')) {
+        cout << "Edge (2)-t->(5) shouldn't have been removed, but had been!"
+             << endl;
+        isSuccess = false;
+    }
+
+    cout << "Test removing all edges from (0) to (1)" << endl;
+    if (!dag.removeDirectEdges (0, 1)) {
+        cout << "Failed to remove edges from (0) to (1)" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (0, 1, 'c')) {
+        cout << "Edge (0)-c->(1) should have been removed, but hadn't!" << endl;
+        isSuccess = false;
+    }
+    if (dag.isEdgeExist (0, 1, 'f')) {
+        cout << "Edge (0)-f->(1) should have been removed, but hadn't!" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
 void
 DumpOutEdges (const DAG<char>& dag)
 {
@@ -298,6 +335,10 @@ int main()
     }
 
     if (!TestInEdges (wordDAG)) {
+        isSuccess = false;
+    }
+
+    if (!TestRemoveEdges (wordDAG)) {
         isSuccess = false;
     }
 
