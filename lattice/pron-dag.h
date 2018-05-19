@@ -16,6 +16,9 @@ public:
     FracDAG();
     FracDAG (FracDAG&& other);
 
+    void mergeFractions();
+
+private:
     void mergeSingles();
     void mergeParallels();
 };

@@ -23,6 +23,18 @@ FracDAG::FracDAG(FracDAG&& other)
 }
 
 void
+FracDAG::mergeFractions()
+{
+    // Merge all series of edges with no branch
+    // into single strings
+    mergeSingles();
+
+    // Then, merge all parallel edges between two adjacent nodes
+    // by making them alternatives of single fractions
+    mergeParallels();
+}
+
+void
 FracDAG::mergeSingles()
 {
     for (auto it = outBegin(); it != outEnd(); /* noop */) {

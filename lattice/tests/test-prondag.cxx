@@ -613,6 +613,14 @@ int main()
 
     DumpFracDAG (fracDAG);
 
+    //
+    // Disabled private method tests
+    //
+    // For fine-grained testing, make FracDAG::mergeSingles()
+    // and FracDAG::mergeParallels() public and replace
+    // fracDAG.mergeFractions() call with this code
+    //
+#if 0 // MERGE-SINGLE TEST
     cout << "Merging single edges in FracDAG" << endl;
     fracDAG.mergeSingles();
 
@@ -624,6 +632,9 @@ int main()
 
     cout << "Merging parallel edges in FracDAG" << endl;
     fracDAG.mergeParallels();
+#endif // MERGE-SINGLE TEST
+
+    fracDAG.mergeFractions();
 
     if (!TestFracDAGEdgeExist_NoParallel (fracDAG)) {
         isSuccess = false;
