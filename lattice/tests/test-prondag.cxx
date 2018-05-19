@@ -576,6 +576,19 @@ TestFracDAGEdgeExist_NoParallel (const FracDAG& dag)
 }
 
 void
+DumpPronunDAG (const PronunDAG& pronDAG)
+{
+    DelimOutput output (make_unique<ThaiSylOutput>(), '-');
+
+    cout << "PronunDAG dump:" << endl;
+    for (auto it = pronDAG.outBegin(); it != pronDAG.outEnd(); ++it) {
+        cout << "  (" << it->first << ")--"
+             << output.output (it->second.edgeVal)
+             << "-->(" << it->second.target << ")" << endl;
+    }
+}
+
+void
 DumpFracDAG (const FracDAG& fracDAG)
 {
     DelimOutput output (make_unique<ThaiSylOutput>(), '-');
@@ -604,6 +617,8 @@ int main()
     if (!TestPronDAGEdgeExist (pronDAG)) {
         isSuccess = false;
     }
+
+    DumpPronunDAG (pronDAG);
 
     cout << "Creating FracDAG" << endl;
     FracDAG fracDAG = pronDAG.fracDAG();
