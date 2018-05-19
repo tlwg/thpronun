@@ -623,6 +623,13 @@ int main()
     cout << "Creating FracDAG" << endl;
     FracDAG fracDAG = pronDAG.fracDAG();
 
+    //
+    // Disabled intermediate FracDAG checks
+    //
+    // For fine-grained testing, comment out fDAG.mergeFractions() call
+    // in PronunDAG::fracDAG()
+    //
+#if 0 // INTERMEDIATE FRACDAG CHECKS
     if (!TestFracDAGEdgeExist (fracDAG)) {
         isSuccess = false;
     }
@@ -651,6 +658,7 @@ int main()
 #endif // MERGE-SINGLE TEST
 
     fracDAG.mergeFractions();
+#endif // INTERMEDIATE FRACDAG CHECKS
 
     if (!TestFracDAGEdgeExist_NoParallel (fracDAG)) {
         isSuccess = false;

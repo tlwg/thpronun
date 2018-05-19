@@ -155,6 +155,8 @@ PronunDAG::fracDAG() const
         );
     }
 
+    fDAG.mergeFractions();
+
     return fDAG;
 }
 

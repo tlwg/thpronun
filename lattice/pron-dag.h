@@ -12,17 +12,23 @@
 #include <list>
 
 class FracDAG : public DAG<PronunFrac> {
+    friend class PronunDAG;
+
 public:
     FracDAG();
     FracDAG (FracDAG&& other);
 
-    void mergeFractions();
     PronunLatt lattice() const;
 
 private:
+    // Exclusive for PronunDAG
+    void mergeFractions();
+
+    // Helpers for mergeFractions()
     void mergeSingles();
     void mergeParallels();
 
+    // Helper for lattice()
     PronunLatt nodeLattice (int from) const;
 };
 
