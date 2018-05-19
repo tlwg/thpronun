@@ -17,10 +17,13 @@ public:
     FracDAG (FracDAG&& other);
 
     void mergeFractions();
+    PronunLatt lattice() const;
 
 private:
     void mergeSingles();
     void mergeParallels();
+
+    PronunLatt nodeLattice (int from) const;
 };
 
 class PronunDAG : public DAG<Syl> {

@@ -91,6 +91,37 @@ FracDAG::mergeParallels()
     }
 }
 
+PronunLatt
+FracDAG::lattice() const
+{
+    return nodeLattice (0);
+}
+
+PronunLatt
+FracDAG::nodeLattice (int from) const
+{
+    PronunLatt latt;
+    auto range = outEdges (from);
+    for (auto it = range.first; it != range.second; ++it) {
+        PronunLatt childLatt = nodeLattice (it->second.target);
+        if (childLatt.altCount() == 0) {
+            // Child is leaf with null lattice -> Just take the edge
+            latt += PronunChain (it->second.edgeVal);
+        } else {
+            // Concat each chain in child lattice to the edge chain.
+            // In general, child lattice comprises only one chain,
+            // but it can contain more than one in ambiguous cases.
+            for (const auto& chain : childLatt) {
+                PronunChain edgeChain (it->second.edgeVal);
+                edgeChain += chain;
+                latt += edgeChain;
+            }
+        }
+    }
+
+    return latt;
+}
+
 ///////////////////////
 //  class PronunDAG  //
 ///////////////////////

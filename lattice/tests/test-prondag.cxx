@@ -1,6 +1,7 @@
 #include "lattice/pron-dag.h"
 #include "output/sylout-thai.h"
 #include "output/output-delim.h"
+#include "output/output-json.h"
 
 #include <iostream>
 #include <list>
@@ -641,6 +642,13 @@ int main()
     }
 
     DumpFracDAG (fracDAG);
+
+    cout << "Creating PronunLatt" << endl;
+    PronunLatt pronLatt = fracDAG.lattice();
+
+    JsonOutput output (make_unique<ThaiSylOutput>());
+    cout << "PronunLatt dump:" << endl;
+    cout << output.output (pronLatt) << endl;
 
     return isSuccess ? 0 : 1;
 }
