@@ -219,7 +219,7 @@ AddSyl (const SylString& s, PartialSyl& p, int pos)
     SylString r = s;
 
     if (p.hasPreSyl) {
-        p.preSyl.setEndPos (-pos);
+        p.preSyl.setEndPos (-(r.endPos() * 100 + pos));
         r += p.preSyl;
     }
 

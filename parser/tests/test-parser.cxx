@@ -3,6 +3,7 @@
 #include "output/sylout-roman.h"
 #include "output/output-delim.h"
 #include "output/output-roman.h"
+#include "output/output-gjson.h"
 
 #include <iostream>
 #include <memory>
@@ -22,6 +23,15 @@ bool ParseAll (list<string> words)
                  << '\t' << romanOutput.output (s) << endl;
         }
     }
+
+    GroupedJsonOutput gJsonOutput (make_unique<ThaiSylOutput>());
+
+    for (auto w : words) {
+        cout << w << ':' << endl;
+        auto sylList = ParseWord (w);
+        cout << gJsonOutput.output (sylList) << endl;
+    }
+
     return true;
 }
 
