@@ -18,8 +18,6 @@ public:
     virtual std::string output (const SylString& sylStr) const;
     virtual std::string output (const std::list<SylString>& strList) const;
 
-    std::string output (const PronunLatt& latt) const;
-
 private:
     std::unique_ptr<ISylOutput> mSylOutput;
 };

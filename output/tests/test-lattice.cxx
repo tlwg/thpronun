@@ -1,6 +1,6 @@
 #include "lattice/lattice.h"
 #include "output/sylout-thai.h"
-#include "output/output-json.h"
+#include "output/output-gjson.h"
 
 #include <iostream>
 #include <memory>
@@ -252,7 +252,7 @@ TestLatt (const PronunLatt& latt, const string& expected)
 {
     bool isSuccess = true;
     auto output
-        = make_unique<JsonOutput> (make_unique<ThaiSylOutput>());
+        = make_unique<GroupedJsonOutput> (make_unique<ThaiSylOutput>());
 
     string outStr = output->output (latt);
     cout << outStr << endl;

@@ -4,6 +4,7 @@
 #include "output/output-delim.h"
 #include "output/output-roman.h"
 #include "output/output-json.h"
+#include "output/output-gjson.h"
 
 #include <iostream>
 #include <list>
@@ -19,17 +20,17 @@ PrepareList()
     SylString sylStr;
 
     // เพ-ลา
-    sylStr = Syl ("P_E_0");
-    sylStr += Syl ("l_A_0");
+    sylStr = Syl ("P_E_0", 2);
+    sylStr += Syl ("l_A_0", 4);
     strList.push_back (sylStr);
 
     // เพฺลา
-    sylStr = Syl ("Plaw0");
+    sylStr = Syl ("Plaw0", 4);
     strList.push_back (sylStr);
 
     // พะ-เลา
-    sylStr = Syl ("P_a_3");
-    sylStr += Syl ("l_aw0");
+    sylStr = Syl ("P_a_3", -4);
+    sylStr += Syl ("l_aw0", 4);
     strList.push_back (sylStr);
 
     return strList;
@@ -110,6 +111,38 @@ TestJson()
     return isSuccess;
 }
 
+bool
+TestGroupedJson()
+{
+    bool isSuccess = true;
+    SylString syls;
+    auto output
+        = make_unique<GroupedJsonOutput> (make_unique<ThaiSylOutput>());
+
+    auto strList = PrepareList();
+
+    cout << "Testing Grouped JSON output" << endl;
+    string result = output->output (strList);
+    static const string expected =
+        "["
+            "["
+                "["
+                    "[\"เพ\",\"ลา\"],"
+                    "[\"พะ\",\"เลา\"],"
+                    "[\"เพฺลา\"]"
+                "]"
+            "]"
+        "]";
+    if (result == expected) {
+        cout << "OK" << endl;
+    } else {
+        cout << "Got unexpected result:'" << result << "'" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -124,6 +157,10 @@ main()
     }
 
     if (!TestJson()) {
+        isSuccess = false;
+    }
+
+    if (!TestGroupedJson()) {
         isSuccess = false;
     }
 

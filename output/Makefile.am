@@ -22,9 +22,13 @@ liboutput_la_SOURCES = \
 	output-json.h	\
 	output-json.inl	\
 	output-json.cxx	\
+	output-gjson.h		\
+	output-gjson.inl	\
+	output-gjson.cxx	\
 	$(NULL)
 
 liboutput_la_LIBADD = \
 	$(top_builddir)/sylstring/libsylstring.la	\
+	$(top_builddir)/lattice/liblattice.la		\
 	$(NULL)
 
