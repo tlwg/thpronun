@@ -11,17 +11,15 @@ using namespace std;
 
 bool ParseAll (list<string> words)
 {
-    auto thaiOutput
-        = make_unique<DelimOutput> (make_unique<ThaiSylOutput>(), '-');
-    auto romanOutput
-        = make_unique<RomanOutput>();
+    DelimOutput thaiOutput (make_unique<ThaiSylOutput>(), '-');
+    RomanOutput romanOutput;
 
     for (auto w : words) {
         cout << w << ':' << endl;
         auto sylList = ParseWord (w);
         for (const auto& s : sylList) {
-            cout << " - " << thaiOutput->output (s)
-                 << '\t' << romanOutput->output (s) << endl;
+            cout << " - " << thaiOutput.output (s)
+                 << '\t' << romanOutput.output (s) << endl;
         }
     }
     return true;
