@@ -1,2 +1,6 @@
-thaipronun is a program for transliterating Thai words, either into
-Thai pronunciation or in Romanized form.
+thpronun is a program for analyzing pronunciation of Thai words.
+The output can be in Thai pronunciation, Romanization, or in any other
+phonetic systems. It is designed to be extensible.
+
+This software is provided as free software under the sponsorship
+of Metamedia Technology Co., Ltd.
