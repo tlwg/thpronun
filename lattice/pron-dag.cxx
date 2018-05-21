@@ -94,7 +94,7 @@ FracDAG::mergeParallels()
 PronunLatt
 FracDAG::lattice() const
 {
-    return nodeLattice (0);
+    return nodeLattice(0).mergeSingles();
 }
 
 PronunLatt

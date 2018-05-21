@@ -64,6 +64,8 @@ public:
     const_iterator begin() const;
     const_iterator end() const;
 
+    PronunChain&  mergeSingles();
+
 private:
     std::list<PronunFrac>   mFracs;
 };
@@ -89,6 +91,8 @@ public:
     iterator       end();
     const_iterator begin() const;
     const_iterator end() const;
+
+    PronunLatt&  mergeSingles();
 
 private:
     std::list<PronunChain>   mAltChains;

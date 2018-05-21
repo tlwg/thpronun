@@ -47,6 +47,41 @@ PronunFrac::operator== (const PronunFrac& other) const
     return thisIt == this->end() && otherIt == other.end();
 }
 
+/////////////////////////
+//  class PronunChain  //
+/////////////////////////
+
+PronunChain&
+PronunChain::mergeSingles()
+{
+    for (auto fracIt = mFracs.begin(); fracIt != mFracs.end(); ++fracIt) {
+        if (fracIt->altCount() == 1) {
+            auto nextIt = fracIt;
+            ++nextIt;
+            while (nextIt != mFracs.end() && nextIt->altCount() == 1) {
+                *fracIt->begin() += *nextIt->begin();
+                nextIt = mFracs.erase (nextIt);
+            }
+        }
+    }
+
+    return *this;
+}
+
+////////////////////////
+//  class PronunLatt  //
+////////////////////////
+
+PronunLatt&
+PronunLatt::mergeSingles()
+{
+    for (auto& chain : *this) {
+        chain.mergeSingles();
+    }
+
+    return *this;
+}
+
 /*
 vi:ts=4:ai:expandtab
 */
