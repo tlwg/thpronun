@@ -47,10 +47,12 @@ Usage (const char* progName)
 static unique_ptr<IOutput>
 MakeThaiOutput (bool isJson)
 {
+    auto thaiSylOutput = make_unique<ThaiSylOutput>();
+
     if (isJson) {
-        return make_unique<JsonOutput> (make_unique<ThaiSylOutput>());
+        return make_unique<JsonOutput> (move (thaiSylOutput));
     } else {
-        return make_unique<DelimOutput> (make_unique<ThaiSylOutput>(), '-');
+        return make_unique<DelimOutput> (move (thaiSylOutput), '-');
     }
 }
 
@@ -67,11 +69,12 @@ MakeRomanOutput (bool isJson)
 static unique_ptr<IOutput>
 MakePhoneticOutput (bool isJson)
 {
+    auto phoneticSylOutput = make_unique<PhoneticSylOutput>();
+
     if (isJson) {
-        return make_unique<JsonOutput> (make_unique<PhoneticSylOutput>());
+        return make_unique<JsonOutput> (move (phoneticSylOutput));
     } else {
-        return make_unique<DelimOutput> (make_unique<PhoneticSylOutput>(),
-                                               ' ');
+        return make_unique<DelimOutput> (move (phoneticSylOutput), ' ');
     }
 }
 
