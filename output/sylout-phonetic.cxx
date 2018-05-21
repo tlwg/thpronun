@@ -15,26 +15,26 @@ using namespace std;
 #define ICS EInitConsSound
 static const unordered_map<EInitConsSound, string>
 PhoneticInitConsTbl_ = {
-    { ICS::KA,   "K"  },  // ก
-    { ICS::KHA,  "KH" },  // ข ฃ ค ฅ ฆ
-    { ICS::NGA,  "NG" },  // ง
-    { ICS::JA,   "J"  },  // จ
-    { ICS::CHA,  "CH" },  // ฉ ช ฌ
-    { ICS::YA,   "Y"  },  // ญ ย
-    { ICS::DA,   "D"  },  // ฎ ด
-    { ICS::TA,   "T"  },  // ฏ ต
-    { ICS::THA,  "TH" },  // ฐ ฑ ฒ ถ ท ธ
-    { ICS::NA,   "N"  },  // ณ น
-    { ICS::BA,   "B"  },  // บ
-    { ICS::PA,   "P"  },  // ป
-    { ICS::PHA,  "PH" },  // ผ พ ภ
-    { ICS::FA,   "F"  },  // ฝ ฟ
-    { ICS::MA,   "M"  },  // ม
-    { ICS::RA,   "R"  },  // ร
-    { ICS::LA,   "L"  },  // ล ฬ
-    { ICS::WA,   "W"  },  // ว
-    { ICS::SA,   "S"  },  // ซ ศ ษ ส
-    { ICS::HA,   "H"  },  // ห ฮ
+    { ICS::KA,   "k"  },  // ก
+    { ICS::KHA,  "kh" },  // ข ฃ ค ฅ ฆ
+    { ICS::NGA,  "ng" },  // ง
+    { ICS::JA,   "j"  },  // จ
+    { ICS::CHA,  "ch" },  // ฉ ช ฌ
+    { ICS::YA,   "y"  },  // ญ ย
+    { ICS::DA,   "d"  },  // ฎ ด
+    { ICS::TA,   "t"  },  // ฏ ต
+    { ICS::THA,  "th" },  // ฐ ฑ ฒ ถ ท ธ
+    { ICS::NA,   "n"  },  // ณ น
+    { ICS::BA,   "b"  },  // บ
+    { ICS::PA,   "p"  },  // ป
+    { ICS::PHA,  "ph" },  // ผ พ ภ
+    { ICS::FA,   "f"  },  // ฝ ฟ
+    { ICS::MA,   "m"  },  // ม
+    { ICS::RA,   "r"  },  // ร
+    { ICS::LA,   "l"  },  // ล ฬ
+    { ICS::WA,   "w"  },  // ว
+    { ICS::SA,   "s"  },  // ซ ศ ษ ส
+    { ICS::HA,   "h"  },  // ห ฮ
     { ICS::A,    ""   },  // อ
 };
 #undef ICS
@@ -43,39 +43,39 @@ PhoneticInitConsTbl_ = {
 static const unordered_map<ESecInitCons, string>
 PhoneticSecInitConsTbl_ = {
     { SC::NONE,  ""  },
-    { SC::RA,    "R" },  // ร ควบ
-    { SC::LA,    "L" },  // ล ควบ
-    { SC::WA,    "W" },  // ว ควบ
+    { SC::RA,    "r" },  // ร ควบ
+    { SC::LA,    "l" },  // ล ควบ
+    { SC::WA,    "w" },  // ว ควบ
 };
 #undef SC
 
 #define VW EVowel
 static const unordered_map<EVowel, string>
 PhoneticVowelTbl_ = {
-    { VW::A,     "AH"   },  // อะ
-    { VW::AA,    "AA"   },  // อา
-    { VW::I,     "IH"   },  // อิ
-    { VW::II,    "IY"   },  // อี
-    { VW::UE,    "UEH"  },  // อึ
-    { VW::UEE,   "UEE"  },  // อือ
-    { VW::U,     "UH"   },  // อุ
-    { VW::UU,    "UW"   },  // อู
-    { VW::E,     "EH"   },  // เอะ
-    { VW::EE,    "EY"   },  // เอ
-    { VW::AE,    "AEH"  },  // แอะ
-    { VW::AEE,   "AEE"  },  // แอ
-    { VW::IA,    "IAH"  },  // เอียะ
-    { VW::IAA,   "IAA"  },  // เอีย
-    { VW::UEA,   "UEAH" },  // เอือะ
-    { VW::UEAA,  "UEAA" },  // เอือ
-    { VW::UA,    "UAH"  },  // อัวะ
-    { VW::UAA,   "UAA"  },  // อัว
-    { VW::O,     "OH"   },  // โอะ
-    { VW::OO,    "OW"   },  // โอ
-    { VW::AU,    "AOH"  },  // เอาะ
-    { VW::AUU,   "AOW"  },  // ออ
-    { VW::OE,    "OEH"  },  // เออะ
-    { VW::OEE,   "OEE"  },  // เออ
+    { VW::A,     "ah"   },  // อะ
+    { VW::AA,    "aa"   },  // อา
+    { VW::I,     "ih"   },  // อิ
+    { VW::II,    "iy"   },  // อี
+    { VW::UE,    "ueh"  },  // อึ
+    { VW::UEE,   "uee"  },  // อือ
+    { VW::U,     "uh"   },  // อุ
+    { VW::UU,    "uw"   },  // อู
+    { VW::E,     "eh"   },  // เอะ
+    { VW::EE,    "ey"   },  // เอ
+    { VW::AE,    "aeh"  },  // แอะ
+    { VW::AEE,   "aee"  },  // แอ
+    { VW::IA,    "iah"  },  // เอียะ
+    { VW::IAA,   "iaa"  },  // เอีย
+    { VW::UEA,   "ueah" },  // เอือะ
+    { VW::UEAA,  "ueaa" },  // เอือ
+    { VW::UA,    "uah"  },  // อัวะ
+    { VW::UAA,   "uaa"  },  // อัว
+    { VW::O,     "oh"   },  // โอะ
+    { VW::OO,    "ow"   },  // โอ
+    { VW::AU,    "aoh"  },  // เอาะ
+    { VW::AUU,   "aow"  },  // ออ
+    { VW::OE,    "oeh"  },  // เออะ
+    { VW::OEE,   "oee"  },  // เออ
 };
 #undef VW
 
@@ -83,14 +83,14 @@ PhoneticVowelTbl_ = {
 static const unordered_map<EEndConsClass, string>
 PhoneticEndConsTbl_ = {
     { EC::NONE,  ""   },  // แม่ ก กา
-    { EC::KOK,   "K"  },  // แม่กก
-    { EC::KOT,   "T"  },  // แม่กด
-    { EC::KOP,   "P"  },  // แม่กบ
-    { EC::KONG,  "NG" },  // แม่กง
-    { EC::KON,   "N"  },  // แม่กน
-    { EC::KOM,   "M"  },  // แม่กม
-    { EC::KOEY,  "Y"  },  // แม่เกย
-    { EC::KOEW,  "W"  },  // แม่เกอว
+    { EC::KOK,   "k"  },  // แม่กก
+    { EC::KOT,   "t"  },  // แม่กด
+    { EC::KOP,   "p"  },  // แม่กบ
+    { EC::KONG,  "ng" },  // แม่กง
+    { EC::KON,   "n"  },  // แม่กน
+    { EC::KOM,   "m"  },  // แม่กม
+    { EC::KOEY,  "y"  },  // แม่เกย
+    { EC::KOEW,  "w"  },  // แม่เกอว
 };
 #undef EC
 

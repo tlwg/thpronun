@@ -394,70 +394,70 @@ TestPhonetic()
     syls = Syl ("k_ok1");
 
     auto phonetic = output->output (syls);
-    if (phonetic != "KOHK1") {
+    if (phonetic != "kohk1") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("t_on2");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2") {
+    if (phonetic != "kohk1 tohn2") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("h_U_4");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2 HUW4") {
+    if (phonetic != "kohk1 tohn2 huw4") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("kwAg0");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2 HUW4 KWAANG0") {
+    if (phonetic != "kohk1 tohn2 huw4 kwaang0") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("l_Yw4");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2 HUW4 KWAANG0 LIAAW4") {
+    if (phonetic != "kohk1 tohn2 huw4 kwaang0 liaaw4") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("l_c_3");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2 HUW4 KWAANG0 LIAAW4 LAOH3") {
+    if (phonetic != "kohk1 tohn2 huw4 kwaang0 liaaw4 laoh3") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("r_Cg3");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2 HUW4 KWAANG0 LIAAW4 LAOH3 RAOWNG3") {
+    if (phonetic != "kohk1 tohn2 huw4 kwaang0 liaaw4 laoh3 raowng3") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("p_en0");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2 HUW4 KWAANG0 LIAAW4 LAOH3 RAOWNG3 PEHN0") {
+    if (phonetic != "kohk1 tohn2 huw4 kwaang0 liaaw4 laoh3 raowng3 pehn0") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("t_A_0");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2 HUW4 KWAANG0 LIAAW4 LAOH3 RAOWNG3 PEHN0 TAA0") {
+    if (phonetic != "kohk1 tohn2 huw4 kwaang0 liaaw4 laoh3 raowng3 pehn0 taa0") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     syls += Syl ("s_xp2");
     phonetic = output->output (syls);
-    if (phonetic != "KOHK1 TOHN2 HUW4 KWAANG0 LIAAW4 LAOH3 RAOWNG3 PEHN0 TAA0 SAEHP2") {
+    if (phonetic != "kohk1 tohn2 huw4 kwaang0 liaaw4 laoh3 raowng3 pehn0 taa0 saehp2") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
@@ -468,7 +468,7 @@ TestPhonetic()
     syls += Syl ("l_an1");
     syls += Syl ("l_A_3");
     phonetic = output->output (syls);
-    if (phonetic != "LAH3 LAHN0 LAHN1 LAA3") {
+    if (phonetic != "lah3 lahn0 lahn1 laa3") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
@@ -485,7 +485,7 @@ TestPhonetic()
     syls += Syl ("m_ay4");
     syls += Syl ("l_aw2");
     phonetic = output->output (syls);
-    if (phonetic != "KHRAHY0 KHRAHY2 KHAAY4 KHAHY1 KAHY1 KHRAA0 KHRAHM2 MAAY3 MAHY4 LAHW2") {
+    if (phonetic != "khrahy0 khrahy2 khaay4 khahy1 kahy1 khraa0 khrahm2 maay3 mahy4 lahw2") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
@@ -508,7 +508,7 @@ TestPhonetic()
     syls += Syl ("r_Yn0");
     phonetic = output->output (syls);
     if (phonetic !=
-        "MAEEW0 LAEH3 DEHK1 LEY1 LEHN2 JOEH1 JOEE0 KLUEAA0 DOEEN0 KLUEAAK1 KHUAA2 KLIHNG2 RUAAM2 ROWNG0 RIAAN0")
+        "maeew0 laeh3 dehk1 ley1 lehn2 joeh1 joee0 klueaa0 doeen0 klueaak1 khuaa2 klihng2 ruaam2 rowng0 riaan0")
     {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
@@ -528,7 +528,7 @@ TestPhonetic()
     syls += Syl ("l_u_3");
     syls += Syl ("r_v_3");
     phonetic = output->output (syls);
-    if (phonetic != "MUEE0 MUEET2 KRIYT1 KUHNG2 PHUWN3 NUEHNG1 SIHNG1 MIH3 MIY0 NGUW0 LUH3 RUEH3")
+    if (phonetic != "muee0 mueet2 kriyt1 kuhng2 phuwn3 nuehng1 sihng1 mih3 miy0 nguw0 luh3 rueh3")
     {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
@@ -539,7 +539,7 @@ TestPhonetic()
     syls += Syl ("l_Wy0");
     syls += Syl ("m_Wy3");
     phonetic = output->output (syls);
-    if (phonetic != "KOEEN0 LOEEY0 MOEEY3")
+    if (phonetic != "koeen0 loeey0 moeey3")
     {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
