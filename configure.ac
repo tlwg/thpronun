@@ -17,6 +17,7 @@ AM_PROG_LIBTOOL
 
 # Checks for libraries.
 PKG_CHECK_MODULES(LIBTHAI, libthai)
+PKG_CHECK_MODULES(LIBDATRIE, datrie-0.2)
 
 # Checks for header files.
 
@@ -33,6 +34,8 @@ AC_CONFIG_FILES([Makefile
                  lattice/tests/Makefile
                  output/Makefile
                  output/tests/Makefile
+                 dict/Makefile
+                 dict/tests/Makefile
                  parser/Makefile
                  parser/tests/Makefile
                  thpronun/Makefile])
