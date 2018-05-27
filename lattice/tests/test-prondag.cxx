@@ -27,40 +27,22 @@ CreatePronDAG()
 
     cout << "Creating pronunciation DAG" << endl;
 
-    SylString khanom1;
-    khanom1 = Syl ("c_a_1", -3);
-    khanom1 += Syl ("n_om4", 3);
+    SylString khanom1 ("c_a_1@-3,n_om4@3");
+    SylString khanom2 ("c_a_1@1,n_om0@3");
 
-    SylString khanom2;
-    khanom2 = Syl ("c_a_1", 1);
-    khanom2 += Syl ("n_om0", 3);
+    SylString op1 ("?_op1@5");
 
-    SylString op1;
-    op1 = Syl ("?_op1", 5);
+    SylString kraup ("krCp1@9");
 
-    SylString kraup;
-    kraup = Syl ("krCp1", 9);
+    SylString kornOp ("k_Cn0@7,?_op1@9");
 
-    SylString kornOp;
-    kornOp = Syl ("k_Cn0", 7);
-    kornOp += Syl ("?_op1", 9);
+    SylString a ("?_a_1@4");
 
-    SylString a;
-    a = Syl ("?_a_1", 4);
+    SylString bokRop ("b_ok1@6,r_Cp2@9");
 
-    SylString bokRop;
-    bokRop = Syl ("b_ok1", 6);
-    bokRop += Syl ("r_Cp2", 9);
+    SylString khonMop ("c_on4@2,m_Cp2@5");
 
-    SylString khonMop;
-    khonMop = Syl ("c_on4", 2);
-    khonMop += Syl ("m_Cp2", 5);
-
-    SylString khonMauBokRop;
-    khonMauBokRop = Syl ("c_on4", 2);
-    khonMauBokRop += Syl ("m_C_0", 4);
-    khonMauBokRop += Syl ("b_ok1", 6);
-    khonMauBokRop += Syl ("r_Cp2", 9);
+    SylString khonMauBokRop ("c_on4@2,m_C_0@4,b_ok1@6,r_Cp2@9");
 
     SylString str1_1;
     str1_1 += khanom1;

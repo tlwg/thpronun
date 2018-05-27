@@ -17,21 +17,14 @@ PrepareList()
 {
     list<SylString> strList;
 
-    SylString sylStr;
-
     // เพ-ลา
-    sylStr = Syl ("P_E_0", 2);
-    sylStr += Syl ("l_A_0", 4);
-    strList.push_back (sylStr);
+    strList.push_back (SylString ("P_E_0@2,l_A_0@4"));
 
     // เพฺลา
-    sylStr = Syl ("Plaw0", 4);
-    strList.push_back (sylStr);
+    strList.push_back (SylString ("Plaw0@4"));
 
     // พะ-เลา
-    sylStr = Syl ("P_a_3", -4);
-    sylStr += Syl ("l_aw0", 4);
-    strList.push_back (sylStr);
+    strList.push_back (SylString ("P_a_3@-4,l_aw0@4"));
 
     return strList;
 }

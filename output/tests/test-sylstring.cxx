@@ -91,10 +91,7 @@ TestThaiPronun()
     }
 
     // ละลันหลั่นล้า
-    syls = Syl ("l_a_3");
-    syls += Syl ("l_an0");
-    syls += Syl ("l_an1");
-    syls += Syl ("l_A_3");
+    syls = SylString ("l_a_3,l_an0,l_an1,l_A_3");
     thaiPronun = output->output (syls);
     if (thaiPronun != u8"ละ-ลัน-หฺลั่น-ล้า") {
         cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
@@ -102,16 +99,9 @@ TestThaiPronun()
     }
 
     // ใครใคร่ขายไข่ไก่คราคร่ำไม้ไหมเล่า
-    syls = Syl ("cray0");
-    syls += Syl ("cray2");
-    syls += Syl ("c_Ay4");
-    syls += Syl ("c_ay1");
-    syls += Syl ("k_ay1");
-    syls += Syl ("crA_0");
-    syls += Syl ("cram2");
-    syls += Syl ("m_Ay3");
-    syls += Syl ("m_ay4");
-    syls += Syl ("l_aw2");
+    syls = SylString (
+        "cray0,cray2,c_Ay4,c_ay1,k_ay1,crA_0,cram2,m_Ay3,m_ay4,l_aw2"
+    );
     thaiPronun = output->output (syls);
     if (thaiPronun != u8"คฺรัย-คฺรั่ย-ขาย-ขั่ย-กั่ย-คฺรา-คฺรั่ม-ม้าย-หฺมัย-เล่า") {
         cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
@@ -119,21 +109,10 @@ TestThaiPronun()
     }
 
     // แมวและเด็กเหล่เล่นเจอะเจอเกลือเดินเกลือกคั่วกลิ้งร่วมโรงเรียน
-    syls = Syl ("m_Xw0");
-    syls += Syl ("l_x_3");
-    syls += Syl ("d_ek1");
-    syls += Syl ("l_E_1");
-    syls += Syl ("l_en2");
-    syls += Syl ("j_w_1");
-    syls += Syl ("j_W_0");
-    syls += Syl ("klZ_0");
-    syls += Syl ("d_Wn0");
-    syls += Syl ("klZk1");
-    syls += Syl ("c_T_2");
-    syls += Syl ("klig2");
-    syls += Syl ("r_Tm2");
-    syls += Syl ("r_Og0");
-    syls += Syl ("r_Yn0");
+    syls = SylString (
+        "m_Xw0,l_x_3,d_ek1,l_E_1,l_en2,j_w_1,j_W_0,klZ_0,d_Wn0,klZk1,"
+        "c_T_2,klig2,r_Tm2,r_Og0,r_Yn0"
+    );
     thaiPronun = output->output (syls);
     if (thaiPronun !=
         u8"แมว-และ-เด็ก-เหฺล่-เล่น-เจอะ-เจอ-เกฺลือ-เดิน-เกฺลือก-คั่ว-กฺลิ้ง-ร่วม-โรง-เรียน")
@@ -143,18 +122,10 @@ TestThaiPronun()
     }
 
     // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
-    syls = Syl ("m_V_0");
-    syls += Syl ("m_Vt2");
-    syls += Syl ("krIt1");
-    syls += Syl ("k_ug2");
-    syls += Syl ("P_Un3");
-    syls += Syl ("n_vg1");
-    syls += Syl ("s_ig1");
-    syls += Syl ("m_i_3");
-    syls += Syl ("m_I_0");
-    syls += Syl ("g_U_0");
-    syls += Syl ("l_u_3");
-    syls += Syl ("r_v_3");
+    syls = SylString (
+        "m_V_0,m_Vt2,krIt1,k_ug2,P_Un3,n_vg1,s_ig1,m_i_3,m_I_0,g_U_0,"
+        "l_u_3,r_v_3"
+    );
     thaiPronun = output->output (syls);
     if (thaiPronun !=
         u8"มือ-มืด-กฺรีด-กุ้ง-พู้น-หฺนึ่ง-สิ่ง-มิ-มี-งู-ลุ-รึ")
@@ -164,9 +135,7 @@ TestThaiPronun()
     }
 
     // เกินเลยเม้ย
-    syls = Syl ("k_Wn0");
-    syls += Syl ("l_Wy0");
-    syls += Syl ("m_Wy3");
+    syls = SylString ("k_Wn0,l_Wy0,m_Wy3");
     thaiPronun = output->output (syls);
     if (thaiPronun !=
         u8"เกิน-เลย-เม้ย")
@@ -259,10 +228,7 @@ TestRomanPronun()
     }
 
     // ละลันหลั่นล้า
-    syls = Syl ("l_a_3");
-    syls += Syl ("l_an0");
-    syls += Syl ("l_an1");
-    syls += Syl ("l_A_3");
+    syls = SylString ("l_a_3,l_an0,l_an1,l_A_3");
     romanized = output->output (syls);
     if (romanized != "lalanlanla") {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
@@ -270,16 +236,9 @@ TestRomanPronun()
     }
 
     // ใครใคร่ขายไข่ไก่คราคร่ำไม้ไหมเล่า
-    syls = Syl ("cray0");
-    syls += Syl ("cray2");
-    syls += Syl ("c_Ay4");
-    syls += Syl ("c_ay1");
-    syls += Syl ("k_ay1");
-    syls += Syl ("crA_0");
-    syls += Syl ("cram2");
-    syls += Syl ("m_Ay3");
-    syls += Syl ("m_ay4");
-    syls += Syl ("l_aw2");
+    syls = SylString (
+        "cray0,cray2,c_Ay4,c_ay1,k_ay1,crA_0,cram2,m_Ay3,m_ay4,l_aw2"
+    );
     romanized = output->output (syls);
     if (romanized != "khraikhraikhaikhaikaikhrakhrammaimailao") {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
@@ -287,21 +246,10 @@ TestRomanPronun()
     }
 
     // แมวและเด็กเหล่เล่นเจอะเจอเกลือเดินเกลือกคั่วกลิ้งร่วมโรงเรียน
-    syls = Syl ("m_Xw0");
-    syls += Syl ("l_x_3");
-    syls += Syl ("d_ek1");
-    syls += Syl ("l_E_1");
-    syls += Syl ("l_en2");
-    syls += Syl ("j_w_1");
-    syls += Syl ("j_W_0");
-    syls += Syl ("klZ_0");
-    syls += Syl ("d_Wn0");
-    syls += Syl ("klZk1");
-    syls += Syl ("c_T_2");
-    syls += Syl ("klig2");
-    syls += Syl ("r_Tm2");
-    syls += Syl ("r_Og0");
-    syls += Syl ("r_Yn0");
+    syls = SylString (
+        "m_Xw0,l_x_3,d_ek1,l_E_1,l_en2,j_w_1,j_W_0,klZ_0,d_Wn0,klZk1,"
+        "c_T_2,klig2,r_Tm2,r_Og0,r_Yn0"
+    );
     romanized = outputCap->output (syls);
     if (romanized !=
         "Maeolaedeklelenchoechoeklueadoenklueakkhuaklingruamrongrian")
@@ -311,18 +259,10 @@ TestRomanPronun()
     }
 
     // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
-    syls = Syl ("m_V_0");
-    syls += Syl ("m_Vt2");
-    syls += Syl ("krIt1");
-    syls += Syl ("k_ug2");
-    syls += Syl ("P_Un3");
-    syls += Syl ("n_vg1");
-    syls += Syl ("s_ig1");
-    syls += Syl ("m_i_3");
-    syls += Syl ("m_I_0");
-    syls += Syl ("g_U_0");
-    syls += Syl ("l_u_3");
-    syls += Syl ("r_v_3");
+    syls = SylString (
+        "m_V_0,m_Vt2,krIt1,k_ug2,P_Un3,n_vg1,s_ig1,m_i_3,m_I_0,g_U_0,"
+        "l_u_3,r_v_3"
+    );
     romanized = output->output (syls);
     if (romanized != u8"muemuetkritkungphunnuengsingmimi-ngulurue")
     {
@@ -331,9 +271,7 @@ TestRomanPronun()
     }
 
     // เกินเลยเม้ย
-    syls = Syl ("k_Wn0");
-    syls += Syl ("l_Wy0");
-    syls += Syl ("m_Wy3");
+    syls = SylString ("k_Wn0,l_Wy0,m_Wy3");
     romanized = output->output (syls);
     if (romanized != u8"koenloeimoei")
     {
@@ -344,8 +282,7 @@ TestRomanPronun()
     // Test hyphenation cases
 
     // สง่า = sa-nga
-    syls = Syl ("s_a_1");
-    syls += Syl ("g_A_1");
+    syls = SylString ("s_a_1,g_A_1");
     romanized = output->output (syls);
     if (romanized != "sa-nga") {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
@@ -353,8 +290,7 @@ TestRomanPronun()
     }
 
     // บังอร = bang-on
-    syls = Syl ("b_ag0");
-    syls += Syl ("?_Cn0");
+    syls = SylString ("b_ag0,?_Cn0");
     romanized = output->output (syls);
     if (romanized != "bang-on") {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
@@ -362,8 +298,7 @@ TestRomanPronun()
     }
 
     // สะอาด = sa-at
-    syls = Syl ("s_a_1");
-    syls += Syl ("?_At1");
+    syls = SylString ("s_a_1,?_At1");
     romanized = output->output (syls);
     if (romanized != "sa-at") {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
@@ -371,8 +306,7 @@ TestRomanPronun()
     }
 
     // สำอาง = sam-ang
-    syls = Syl ("s_am4");
-    syls += Syl ("?_Ag0");
+    syls = SylString ("s_am4,?_Ag0");
     romanized = output->output (syls);
     if (romanized != "sam-ang") {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
@@ -463,10 +397,7 @@ TestPhonetic()
     }
 
     // ละลันหลั่นล้า
-    syls = Syl ("l_a_3");
-    syls += Syl ("l_an0");
-    syls += Syl ("l_an1");
-    syls += Syl ("l_A_3");
+    syls = SylString ("l_a_3,l_an0,l_an1,l_A_3");
     phonetic = output->output (syls);
     if (phonetic != "lah3 lahn0 lahn1 laa3") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
@@ -474,16 +405,9 @@ TestPhonetic()
     }
 
     // ใครใคร่ขายไข่ไก่คราคร่ำไม้ไหมเล่า
-    syls = Syl ("cray0");
-    syls += Syl ("cray2");
-    syls += Syl ("c_Ay4");
-    syls += Syl ("c_ay1");
-    syls += Syl ("k_ay1");
-    syls += Syl ("crA_0");
-    syls += Syl ("cram2");
-    syls += Syl ("m_Ay3");
-    syls += Syl ("m_ay4");
-    syls += Syl ("l_aw2");
+    syls = SylString (
+        "cray0,cray2,c_Ay4,c_ay1,k_ay1,crA_0,cram2,m_Ay3,m_ay4,l_aw2"
+    );
     phonetic = output->output (syls);
     if (phonetic != "khrahy0 khrahy2 khaay4 khahy1 kahy1 khraa0 khrahm2 maay3 mahy4 lahw2") {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
@@ -491,42 +415,24 @@ TestPhonetic()
     }
 
     // แมวและเด็กเหล่เล่นเจอะเจอเกลือเดินเกลือกคั่วกลิ้งร่วมโรงเรียน
-    syls = Syl ("m_Xw0");
-    syls += Syl ("l_x_3");
-    syls += Syl ("d_ek1");
-    syls += Syl ("l_E_1");
-    syls += Syl ("l_en2");
-    syls += Syl ("j_w_1");
-    syls += Syl ("j_W_0");
-    syls += Syl ("klZ_0");
-    syls += Syl ("d_Wn0");
-    syls += Syl ("klZk1");
-    syls += Syl ("c_T_2");
-    syls += Syl ("klig2");
-    syls += Syl ("r_Tm2");
-    syls += Syl ("r_Og0");
-    syls += Syl ("r_Yn0");
+    syls = SylString (
+        "m_Xw0,l_x_3,d_ek1,l_E_1,l_en2,j_w_1,j_W_0,klZ_0,d_Wn0,klZk1,"
+        "c_T_2,klig2,r_Tm2,r_Og0,r_Yn0"
+    );
     phonetic = output->output (syls);
     if (phonetic !=
-        "maeew0 laeh3 dehk1 ley1 lehn2 joeh1 joee0 klueaa0 doeen0 klueaak1 khuaa2 klihng2 ruaam2 rowng0 riaan0")
+        "maeew0 laeh3 dehk1 ley1 lehn2 joeh1 joee0 klueaa0 doeen0 klueaak1 "
+        "khuaa2 klihng2 ruaam2 rowng0 riaan0")
     {
         cerr << "Wrong phonetic '" << phonetic << "'" << endl;
         isSuccess = false;
     }
 
     // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
-    syls = Syl ("m_V_0");
-    syls += Syl ("m_Vt2");
-    syls += Syl ("krIt1");
-    syls += Syl ("k_ug2");
-    syls += Syl ("P_Un3");
-    syls += Syl ("n_vg1");
-    syls += Syl ("s_ig1");
-    syls += Syl ("m_i_3");
-    syls += Syl ("m_I_0");
-    syls += Syl ("g_U_0");
-    syls += Syl ("l_u_3");
-    syls += Syl ("r_v_3");
+    syls = SylString (
+        "m_V_0,m_Vt2,krIt1,k_ug2,P_Un3,n_vg1,s_ig1,m_i_3,m_I_0,g_U_0,"
+        "l_u_3,r_v_3"
+    );
     phonetic = output->output (syls);
     if (phonetic != "muee0 mueet2 kriyt1 kuhng2 phuwn3 nuehng1 sihng1 mih3 miy0 nguw0 luh3 rueh3")
     {
@@ -535,9 +441,7 @@ TestPhonetic()
     }
 
     // เกินเลยเม้ย
-    syls = Syl ("k_Wn0");
-    syls += Syl ("l_Wy0");
-    syls += Syl ("m_Wy3");
+    syls = SylString ("k_Wn0,l_Wy0,m_Wy3");
     phonetic = output->output (syls);
     if (phonetic != "koeen0 loeey0 moeey3")
     {
@@ -629,10 +533,7 @@ TestJson()
     }
 
     // ละลันหลั่นล้า
-    syls = Syl ("l_a_3");
-    syls += Syl ("l_an0");
-    syls += Syl ("l_an1");
-    syls += Syl ("l_A_3");
+    syls = SylString ("l_a_3,l_an0,l_an1,l_A_3");
     thaiPronun = output->output (syls);
     if (thaiPronun != u8"[\"ละ\",\"ลัน\",\"หฺลั่น\",\"ล้า\"]") {
         cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
@@ -640,16 +541,9 @@ TestJson()
     }
 
     // ใครใคร่ขายไข่ไก่คราคร่ำไม้ไหมเล่า
-    syls = Syl ("cray0");
-    syls += Syl ("cray2");
-    syls += Syl ("c_Ay4");
-    syls += Syl ("c_ay1");
-    syls += Syl ("k_ay1");
-    syls += Syl ("crA_0");
-    syls += Syl ("cram2");
-    syls += Syl ("m_Ay3");
-    syls += Syl ("m_ay4");
-    syls += Syl ("l_aw2");
+    syls = SylString (
+        "cray0,cray2,c_Ay4,c_ay1,k_ay1,crA_0,cram2,m_Ay3,m_ay4,l_aw2"
+    );
     thaiPronun = output->output (syls);
     if (thaiPronun != u8"[\"คฺรัย\",\"คฺรั่ย\",\"ขาย\",\"ขั่ย\",\"กั่ย\",\"คฺรา\",\"คฺรั่ม\",\"ม้าย\",\"หฺมัย\",\"เล่า\"]") {
         cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
@@ -657,21 +551,10 @@ TestJson()
     }
 
     // แมวและเด็กเหล่เล่นเจอะเจอเกลือเดินเกลือกคั่วกลิ้งร่วมโรงเรียน
-    syls = Syl ("m_Xw0");
-    syls += Syl ("l_x_3");
-    syls += Syl ("d_ek1");
-    syls += Syl ("l_E_1");
-    syls += Syl ("l_en2");
-    syls += Syl ("j_w_1");
-    syls += Syl ("j_W_0");
-    syls += Syl ("klZ_0");
-    syls += Syl ("d_Wn0");
-    syls += Syl ("klZk1");
-    syls += Syl ("c_T_2");
-    syls += Syl ("klig2");
-    syls += Syl ("r_Tm2");
-    syls += Syl ("r_Og0");
-    syls += Syl ("r_Yn0");
+    syls = SylString (
+        "m_Xw0,l_x_3,d_ek1,l_E_1,l_en2,j_w_1,j_W_0,klZ_0,d_Wn0,klZk1,"
+        "c_T_2,klig2,r_Tm2,r_Og0,r_Yn0"
+    );
     thaiPronun = output->output (syls);
     if (thaiPronun !=
         u8"[\"แมว\",\"และ\",\"เด็ก\",\"เหฺล่\",\"เล่น\",\"เจอะ\",\"เจอ\",\"เกฺลือ\",\"เดิน\",\"เกฺลือก\",\"คั่ว\",\"กฺลิ้ง\",\"ร่วม\",\"โรง\",\"เรียน\"]")
@@ -681,18 +564,10 @@ TestJson()
     }
 
     // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
-    syls = Syl ("m_V_0");
-    syls += Syl ("m_Vt2");
-    syls += Syl ("krIt1");
-    syls += Syl ("k_ug2");
-    syls += Syl ("P_Un3");
-    syls += Syl ("n_vg1");
-    syls += Syl ("s_ig1");
-    syls += Syl ("m_i_3");
-    syls += Syl ("m_I_0");
-    syls += Syl ("g_U_0");
-    syls += Syl ("l_u_3");
-    syls += Syl ("r_v_3");
+    syls = SylString (
+        "m_V_0,m_Vt2,krIt1,k_ug2,P_Un3,n_vg1,s_ig1,m_i_3,m_I_0,g_U_0,"
+        "l_u_3,r_v_3"
+    );
     thaiPronun = output->output (syls);
     if (thaiPronun !=
         u8"[\"มือ\",\"มืด\",\"กฺรีด\",\"กุ้ง\",\"พู้น\",\"หฺนึ่ง\",\"สิ่ง\",\"มิ\",\"มี\",\"งู\",\"ลุ\",\"รึ\"]")
@@ -702,9 +577,7 @@ TestJson()
     }
 
     // เกินเลยเม้ย
-    syls = Syl ("k_Wn0");
-    syls += Syl ("l_Wy0");
-    syls += Syl ("m_Wy3");
+    syls = SylString ("k_Wn0,l_Wy0,m_Wy3");
     thaiPronun = output->output (syls);
     if (thaiPronun !=
         u8"[\"เกิน\",\"เลย\",\"เม้ย\"]")

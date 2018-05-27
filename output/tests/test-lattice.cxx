@@ -31,25 +31,16 @@ const string Latt1Expect =
 PronunLatt
 PrepareLatt1()
 {
-    SylString sylStr;
-
     PronunFrac maFrac;
-    sylStr = Syl ("m_A_0");
-    maFrac += sylStr;
-    sylStr = Syl ("m_At2");
-    maFrac += sylStr;
+    maFrac += SylString ("m_A_0");
+    maFrac += SylString ("m_At2");
 
     PronunFrac traFrac;
-    sylStr = Syl ("trA_0");
-    traFrac += sylStr;
-    sylStr = Syl ("t_a_1");
-    sylStr += Syl ("r_A_0");
-    traFrac += sylStr;
+    traFrac += SylString ("trA_0");
+    traFrac += SylString ("t_a_1,r_A_0");
 
     PronunFrac matRaFrac;
-    sylStr = Syl ("m_At2");
-    sylStr += Syl ("r_A_0");
-    matRaFrac += sylStr;
+    matRaFrac += SylString ("m_At2,r_A_0");
 
     PronunChain chain1;
     chain1 += maFrac;
@@ -93,26 +84,18 @@ const string Latt2Expect =
 PronunLatt
 PrepareLatt2()
 {
-    SylString sylStr;
-
     PronunFrac jatRatFrac;
-    sylStr = Syl ("j_at1");
-    sylStr += Syl ("r_at3");
-    jatRatFrac += sylStr;
+    jatRatFrac += SylString ("j_at1,r_at3");
 
     PronunFrac jatFrac;
-    sylStr = Syl ("j_at1");
-    jatFrac += sylStr;
+    jatFrac += SylString ("j_at1");
 
     PronunFrac tuFrac;
-    sylStr = Syl ("t_u_1");
-    tuFrac += sylStr;
-    sylStr = Syl ("t_un0");
-    tuFrac += sylStr;
+    tuFrac += SylString ("t_u_1");
+    tuFrac += SylString ("t_un0");
 
     PronunFrac ratFrac;
-    sylStr = Syl ("r_at3");
-    ratFrac += sylStr;
+    ratFrac += SylString ("r_at3");
 
     PronunChain chain1;
     chain1 += jatRatFrac;
@@ -179,47 +162,28 @@ const string Latt3Expect =
 PronunLatt
 PrepareLatt3()
 {
-    SylString sylStr;
-
     PronunFrac khanomFrac;
-    sylStr = Syl ("c_a_1");
-    sylStr += Syl ("n_om4");
-    khanomFrac += sylStr;
-    sylStr = Syl ("c_a_1");
-    sylStr += Syl ("n_om0");
-    khanomFrac += sylStr;
+    khanomFrac += SylString ("c_a_1,n_om4");
+    khanomFrac += SylString ("c_a_1,n_om0");
 
     PronunFrac opFrac;
-    sylStr = Syl ("?_op1");
-    opFrac += sylStr;
+    opFrac += SylString ("?_op1");
 
     PronunFrac kraupFrac;
-    sylStr = Syl ("krCp1");
-    kraupFrac += sylStr;
-    sylStr = Syl ("k_Cn0");
-    sylStr += Syl ("?_op1");
-    kraupFrac += sylStr;
+    kraupFrac += SylString ("krCp1");
+    kraupFrac += SylString ("k_Cn0,?_op1");
 
     PronunFrac aFrac;
-    sylStr = Syl ("?_a_1");
-    aFrac += sylStr;
+    aFrac += SylString ("?_a_1");
 
     PronunFrac bokRopFrac;
-    sylStr = Syl ("b_ok1");
-    sylStr += Syl ("r_Cp2");
-    bokRopFrac += sylStr;
+    bokRopFrac += SylString ("b_ok1,r_Cp2");
 
     PronunFrac khonMopFrac;
-    sylStr = Syl ("c_on4");
-    sylStr += Syl ("m_Cp2");
-    khonMopFrac += sylStr;
+    khonMopFrac += SylString ("c_on4,m_Cp2");
 
     PronunFrac khonMauBokRopFrac;
-    sylStr = Syl ("c_on4");
-    sylStr += Syl ("m_C_0");
-    sylStr += Syl ("b_ok1");
-    sylStr += Syl ("r_Cp2");
-    khonMauBokRopFrac += sylStr;
+    khonMauBokRopFrac += SylString ("c_on4,m_C_0,b_ok1,r_Cp2");
 
     PronunChain chain1;
     chain1 += khanomFrac;
