@@ -52,17 +52,6 @@ Syl::Syl (char iCons1, char iCons2, char vowel, char eCons, char tone,
 {
 }
 
-inline
-Syl::Syl (const std::string& aSylStr, int endPos)
-  : mICons1 (InitConsCodeToSound (aSylStr.at (0))),
-    mICons2 (static_cast<ESecInitCons> (aSylStr.at (1))),
-    mVowel (static_cast<EVowel> (aSylStr.at (2))),
-    mECons (EndConsCodeToClass (aSylStr.at (3))),
-    mTone (ToneCodeToTone (aSylStr.at (4))),
-    mEndPos (endPos)
-{
-}
-
 inline EInitConsSound
 Syl::iCons1() const
 {

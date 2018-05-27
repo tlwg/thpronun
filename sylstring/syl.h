@@ -17,8 +17,8 @@ public:
          EEndConsClass eCons, ETone tone, int endPos = -1);
     Syl (char iCons1, char iCons2, char vowel, char eCons, char tone,
          int endPos = -1);
-    // c-tor with string of length 5
-    Syl (const std::string& aSylStr, int endPos = -1);
+    // c-tor with description string (of length >= 5)
+    Syl (const std::string& desc, int endPos = -1);
 
     EInitConsSound  iCons1() const;
     ESecInitCons    iCons2() const;

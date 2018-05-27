@@ -10,6 +10,19 @@ using namespace std;
 //  class Syl  //
 /////////////////
 
+Syl::Syl (const std::string& desc, int endPos)
+  : mICons1 (InitConsCodeToSound (desc[0])),
+    mICons2 (static_cast<ESecInitCons> (desc[1])),
+    mVowel (static_cast<EVowel> (desc[2])),
+    mECons (EndConsCodeToClass (desc[3])),
+    mTone (ToneCodeToTone (desc[4])),
+    mEndPos (endPos)
+{
+    if (desc.size() > 6 && desc[5] == '@') {
+        mEndPos = stoi (desc.substr (6));
+    }
+}
+
 bool
 Syl::operator== (const Syl& other) const
 {

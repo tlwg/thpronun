@@ -115,7 +115,7 @@ TestOrdering()
     bool isSuccess = true;
 
     Syl kok1Syl1 ("k_ok1", 2);
-    Syl kok1Syl2 ("k_ok1", 2);
+    Syl kok1Syl2 ("k_ok1@2");
     cout << "Testing operator < on 'k_ok1'@2 and 'k_ok1'@2" << endl;
     if (kok1Syl1 < kok1Syl2) {
         cout << "  FAIL" << endl;
@@ -145,7 +145,7 @@ TestOrdering()
         isSuccess = false;
     }
 
-    Syl kok1Syl3 ("k_ok1", 4);
+    Syl kok1Syl3 ("k_ok1@4");
     cout << "Testing operator < on 'k_ok1'@2 and 'k_ok1'@4" << endl;
     if (kok1Syl1 < kok1Syl3) {
         cout << "  OK" << endl;
@@ -175,7 +175,7 @@ TestOrdering()
         cout << "  OK" << endl;
     }
 
-    Syl cok1Syl ("c_ok1", 2);
+    Syl cok1Syl ("c_ok1@2");
     cout << "Testing operator < on 'k_ok1'@2 and 'c_ok1'@2" << endl;
     if (kok1Syl1 < cok1Syl) {
         cout << "  OK" << endl;
@@ -205,7 +205,7 @@ TestOrdering()
         cout << "  OK" << endl;
     }
 
-    Syl krok1Syl ("krok1");
+    Syl krok1Syl ("krok1@2");
     cout << "Testing operator < on 'k_ok1'@2 and 'krok1'@2" << endl;
     if (kok1Syl1 < krok1Syl) {
         cout << "  OK" << endl;
@@ -235,7 +235,7 @@ TestOrdering()
         cout << "  OK" << endl;
     }
 
-    Syl kOk1Syl ("k_Ok1", 2);
+    Syl kOk1Syl ("k_Ok1@2");
     cout << "Testing operator < on 'k_ok1'@2 and 'k_Ok1'@2" << endl;
     if (kok1Syl1 < kOk1Syl) {
         cout << "  FAIL" << endl;
@@ -265,7 +265,7 @@ TestOrdering()
         isSuccess = false;
     }
 
-    Syl kon1Syl ("k_on1", 2);
+    Syl kon1Syl ("k_on1@2");
     cout << "Testing operator < on 'k_ok1'@2 and 'k_on1'@2" << endl;
     if (kok1Syl1 < kon1Syl) {
         cout << "  OK" << endl;
@@ -295,7 +295,7 @@ TestOrdering()
         cout << "  OK" << endl;
     }
 
-    Syl kok3Syl ("k_ok3", 2);
+    Syl kok3Syl ("k_ok3@2");
     cout << "Testing operator < on 'k_ok1'@2 and 'k_ok3'@2" << endl;
     if (kok1Syl1 < kok3Syl) {
         cout << "  OK" << endl;
