@@ -9,17 +9,9 @@ TestEquality()
 {
     bool isSuccess = true;
 
-    SylString str1;
-    str1 += Syl ("m_At2", 2);
-    str1 += Syl ("trA_0", 5);
-
-    SylString str2;
-    str2 += Syl ("m_At2", 2);
-    str2 += Syl ("trA_0", 5);
-
-    SylString str3;
-    str3 += Syl ("m_A_0", 2);
-    str3 += Syl ("trA_0", 5);
+    SylString str1 ("m_At2@2,trA_0@5");
+    SylString str2 ("m_At2@2,trA_0@5");
+    SylString str3 ("m_A_0@2,trA_0@5");
 
     cout << "Testing operator == with 'm_At2@2,trA_0@5' and 'm_At2@2,trA_0@5'"
          << endl;
@@ -63,17 +55,9 @@ TestOrdering()
 {
     bool isSuccess = true;
 
-    SylString str1;
-    str1 += Syl ("m_At2", 2);
-    str1 += Syl ("trA_0", 5);
-
-    SylString str2;
-    str2 += Syl ("m_At2", 2);
-    str2 += Syl ("trA_0", 5);
-
-    SylString str3;
-    str3 += Syl ("m_A_0", 2);
-    str3 += Syl ("trA_0", 5);
+    SylString str1 ("m_At2@2,trA_0@5");
+    SylString str2 ("m_At2@2,trA_0@5");
+    SylString str3 ("m_A_0@2,trA_0@5");
 
     cout << "Testing operator < with 'm_At2@2,trA_0@5' and 'm_At2@2,trA_0@5'"
          << endl;
@@ -143,7 +127,7 @@ TestOrdering()
     }
 
 
-    str2 += Syl ("s_Tn1", 9);
+    str2 += Syl ("s_Tn1@9");
 
     cout << "Testing operator < with 'm_At2@2,trA_0@5' and "
          << "'m_At2@2,trA_0@5,s_Tn1@9'"

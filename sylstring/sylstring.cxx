@@ -4,9 +4,22 @@
 
 #include "sylstring.h"
 
+using namespace std;
+
 ///////////////////////
 //  class SylString  //
 ///////////////////////
+
+SylString::SylString (const string& desc)
+{
+    size_t begin = 0;
+    size_t end;
+    while ((end = desc.find (',', begin)) != string::npos) {
+        *this += Syl (desc.substr (begin, end - begin));
+        begin = end + 1;
+    }
+    *this += Syl (desc.substr (begin));
+}
 
 bool
 SylString::operator== (const SylString& other) const
