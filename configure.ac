@@ -12,6 +12,7 @@ AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE(dist-xz no-dist-gzip)
 
 # Checks for programs.
+AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_LIBTOOL
 
