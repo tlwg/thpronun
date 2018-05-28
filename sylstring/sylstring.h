@@ -35,6 +35,7 @@ public:
     const_iterator end() const;
 
     int            endPos() const;
+    void           shiftEndPos (int offset);
 
     bool operator== (const SylString& other) const;
     bool operator!= (const SylString& other) const;

@@ -1505,8 +1505,27 @@ ParseRuLu (const u16string& u16word, ParseState& state, StatePool& pool)
     }
 }
 
+static int
+FindExceptions (const u16string& u16word, ParseState& state, StatePool& pool,
+                const Dict* exceptDict)
+{
+    int nExcepts = 0;
+
+    Match match (u16word, state.pos, exceptDict);
+    while (match.findNext()) {
+        SylString newSylStr = state.sylString;
+        SylString matchedSylStr (match.getData());
+        matchedSylStr.shiftEndPos (state.pos);
+        newSylStr += matchedSylStr;
+        pool.add (ParseState (match.getCurPos(), newSylStr));
+        ++nExcepts;
+    }
+
+    return nExcepts;
+}
+
 static list<SylString>
-ParseU16 (const u16string& u16word, StatePool& pool)
+ParseU16 (const u16string& u16word, StatePool& pool, const Dict* exceptDict)
 {
     list<SylString> sylStrings;
     ParseState s;
@@ -1514,6 +1533,11 @@ ParseU16 (const u16string& u16word, StatePool& pool)
         if (s.pos >= u16word.size()) {
             sylStrings.push_back (s.sylString);
         } else {
+            if (exceptDict
+                && FindExceptions (u16word, s, pool, exceptDict) > 0)
+            {
+                continue;
+            }
             auto c = u16word.at (s.pos);
             if (th_wcisthcons (c)) {
                 ParseThCons (u16word, s, pool);
@@ -1529,8 +1553,26 @@ ParseU16 (const u16string& u16word, StatePool& pool)
     return sylStrings;
 }
 
+Parser::Parser()
+    : mExceptDict()
+{
+}
+
+Parser::Parser (const char* exceptDictPath)
+    : mExceptDict()
+{
+    loadExceptDict (exceptDictPath);
+}
+
+bool
+Parser::loadExceptDict (const char* exceptDictPath)
+{
+    mExceptDict = make_unique<Dict>();
+    return mExceptDict->open (exceptDictPath);
+}
+
 list<SylString>
-ParseWord (string word)
+Parser::parseWord (string word) const
 {
     // convert UTF-8 word string to UTF-16
     wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> u16conv;
@@ -1539,7 +1581,7 @@ ParseWord (string word)
     // parse the UTF-16 word
     StatePool pool;
     pool.add (ParseState());
-    return ParseU16 (u16word, pool);
+    return ParseU16 (u16word, pool, mExceptDict.get());
 }
 
 /*

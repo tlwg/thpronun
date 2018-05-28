@@ -59,6 +59,22 @@ SylString::operator> (const SylString& other) const
     return thisIt != this->end();
 }
 
+void
+SylString::shiftEndPos (int offset)
+{
+    for (auto& syl : *this) {
+        int curEndPos = syl.endPos();
+        if (curEndPos < 0) {
+            // for negetive end pos, shift both the encoded begin & end pos
+            // See AddSyl() in parser/parser.cxx for pre-syllable end pos
+            // encoding
+            syl.setEndPos (curEndPos - offset*101);
+        } else {
+            syl.setEndPos (curEndPos + offset);
+        }
+    }
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

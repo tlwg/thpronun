@@ -11,6 +11,7 @@ libparser_la_SOURCES = \
 
 libparser_la_LIBADD = \
 	$(top_builddir)/sylstring/libsylstring.la	\
+	$(top_builddir)/dict/libdict.la			\
 	$(LIBTHAI_LIBS)	\
 	$(NULL)
 

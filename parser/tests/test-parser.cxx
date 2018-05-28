@@ -10,14 +10,14 @@
 
 using namespace std;
 
-bool ParseAll (list<string> words)
+bool ParseAll (const Parser& parser, list<string> words)
 {
     DelimOutput thaiOutput (make_unique<ThaiSylOutput>(), '-');
     RomanOutput romanOutput;
 
     for (auto w : words) {
         cout << w << ':' << endl;
-        auto sylList = ParseWord (w);
+        auto sylList = parser.parseWord (w);
         for (const auto& s : sylList) {
             cout << " - " << thaiOutput.output (s)
                  << '\t' << romanOutput.output (s) << endl;
@@ -28,7 +28,7 @@ bool ParseAll (list<string> words)
 
     for (auto w : words) {
         cout << w << ':' << endl;
-        auto sylList = ParseWord (w);
+        auto sylList = parser.parseWord (w);
         cout << gJsonOutput.output (sylList) << endl;
     }
 
@@ -146,32 +146,34 @@ TestThCons()
 
     bool isSuccess = true;
 
+    Parser parser;
+
     cout << "TestThCons: Simple forms..." << endl;
-    if (!ParseAll (thConsSimple)) {
+    if (!ParseAll (parser, thConsSimple)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: With cluster as initial consonants..." << endl;
-    if (!ParseAll (thConsCluster)) {
+    if (!ParseAll (parser, thConsCluster)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: With linked syllables..." << endl;
-    if (!ParseAll (thConsLinked)) {
+    if (!ParseAll (parser, thConsLinked)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: Complicated forms..." << endl;
-    if (!ParseAll (thConsComplicated)) {
+    if (!ParseAll (parser, thConsComplicated)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: AU consonant sound..." << endl;
-    if (!ParseAll (thConsAu)) {
+    if (!ParseAll (parser, thConsAu)) {
         isSuccess = false;
     }
     cout << endl;
@@ -266,38 +268,40 @@ TestSaraE()
 
     bool isSuccess = true;
 
+    Parser parser;
+
     cout << "TestSareE: Sara E..." << endl;
-    if (!ParseAll (saraE)) {
+    if (!ParseAll (parser, saraE)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: Sara OE..." << endl;
-    if (!ParseAll (saraOE)) {
+    if (!ParseAll (parser, saraOE)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: Sara IA..." << endl;
-    if (!ParseAll (saraIA)) {
+    if (!ParseAll (parser, saraIA)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: Sara UEA..." << endl;
-    if (!ParseAll (saraUEA)) {
+    if (!ParseAll (parser, saraUEA)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: Sara AW..." << endl;
-    if (!ParseAll (saraAW)) {
+    if (!ParseAll (parser, saraAW)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: Sara AU..." << endl;
-    if (!ParseAll (saraAU)) {
+    if (!ParseAll (parser, saraAU)) {
         isSuccess = false;
     }
     cout << endl;
@@ -356,20 +360,22 @@ TestOtherLV()
 
     bool isSuccess = true;
 
+    Parser parser;
+
     cout << "TestSareE: Sara AE..." << endl;
-    if (!ParseAll (saraAE)) {
+    if (!ParseAll (parser, saraAE)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: Sara O..." << endl;
-    if (!ParseAll (saraO)) {
+    if (!ParseAll (parser, saraO)) {
         isSuccess = false;
     }
     cout << endl;
 
     cout << "TestThCons: Sara AI..." << endl;
-    if (!ParseAll (saraAI)) {
+    if (!ParseAll (parser, saraAI)) {
         isSuccess = false;
     }
     cout << endl;
@@ -413,8 +419,10 @@ TestRu()
 
     bool isSuccess = true;
 
+    Parser parser;
+
     cout << "TestRu: Words containg RU..." << endl;
-    if (!ParseAll (ru)) {
+    if (!ParseAll (parser, ru)) {
         isSuccess = false;
     }
     cout << endl;
@@ -458,8 +466,35 @@ TestMuteECons()
 
     bool isSuccess = true;
 
+    Parser parser;
+
     cout << "TestRu: Words containg muted end cons..." << endl;
-    if (!ParseAll (muteECons)) {
+    if (!ParseAll (parser, muteECons)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    return isSuccess;
+}
+
+bool
+TestExceptDict()
+{
+    bool isSuccess = true;
+
+    Parser parser;
+    if (!parser.loadExceptDict ("except.dic")) {
+        cerr << "Failed to load exception dict 'except.dic'" << endl;
+        isSuccess = false;
+    }
+
+    list<string> exceptSamples = {
+        u8"สามารถปรารถนาได้",
+        u8"ได้ปรารถนาเป็นสามารถ",
+    };
+
+    cout << "Test parsing with exception dictionary..." << endl;
+    if (!ParseAll (parser, exceptSamples)) {
         isSuccess = false;
     }
     cout << endl;
@@ -489,6 +524,10 @@ main()
     }
 
     if (!TestMuteECons()) {
+        isSuccess = false;
+    }
+
+    if (!TestExceptDict()) {
         isSuccess = false;
     }
 

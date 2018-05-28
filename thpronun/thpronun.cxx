@@ -11,13 +11,16 @@
 #include <list>
 #include <memory>
 
+#define EXCEPT_DICT_PATH "except.dic"
+
 using namespace std;
 
 void
-DoParse (string word, const list<unique_ptr<IOutput>>& stringOutputs)
+DoParse (const Parser& parser, string word,
+         const list<unique_ptr<IOutput>>& stringOutputs)
 {
     cout << word << ":" << endl;
-    auto sylList = ParseWord (word);
+    auto sylList = parser.parseWord (word);
     for (const auto& sylStrOut : stringOutputs) {
         cout << sylStrOut->output (sylList) << endl;;
     }
@@ -130,17 +133,23 @@ main (int argc, const char* argv[])
         stringOutputs.push_back (MakePhoneticOutput (isJson, isGroup));
     }
 
+    Parser parser;
+    if (!parser.loadExceptDict (EXCEPT_DICT_PATH)) {
+        cerr << "Failed to load exception dictionary " EXCEPT_DICT_PATH
+             << endl;
+    }
+
     if (1 == argc - optCnt) {
         // read word list from stdin
         string word;
         while (getline (cin, word)) {
-            DoParse (word, stringOutputs);
+            DoParse (parser, word, stringOutputs);
         }
     } else {
         // read word list from command line args
         for (int i = 1; i < argc; ++i) {
             if ('-' != argv[i][0]) {
-                DoParse (argv[i], stringOutputs);
+                DoParse (parser, argv[i], stringOutputs);
             }
         }
     }

@@ -6,12 +6,24 @@
 #define PARSER_H
 
 #include "sylstring/sylstring.h"
+#include "dict/dict.h"
 
 #include <list>
 #include <string>
+#include <memory>
 
-std::list<SylString>
-ParseWord (std::string word);
+class Parser {
+public:
+    Parser();
+    Parser (const char* exceptDictPath);
+
+    bool loadExceptDict (const char* exceptDictPath);
+
+    std::list<SylString> parseWord (std::string word) const;
+
+private:
+    std::unique_ptr<Dict>  mExceptDict;
+};
 
 #endif // PARSER_H
 
