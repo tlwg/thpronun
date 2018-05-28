@@ -37,6 +37,7 @@ AC_CONFIG_FILES([Makefile
                  output/tests/Makefile
                  dict/Makefile
                  dict/tests/Makefile
+                 data/Makefile
                  parser/Makefile
                  parser/tests/Makefile
                  thpronun/Makefile])

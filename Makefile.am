@@ -1,4 +1,4 @@
-SUBDIRS = thortho sylstring lattice output dict parser thpronun
+SUBDIRS = thortho sylstring lattice output dict data parser thpronun
 
 dist-hook:
 	echo $(VERSION) > $(distdir)/VERSION
