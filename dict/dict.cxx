@@ -78,18 +78,26 @@ Match::Match (const std::u16string& word, int beginPos, const Dict* dict)
       mBeginPos (beginPos),
       mCurPos (beginPos),
       mDict (dict),
-      mTrieState (trie_root (dict->trie()))
+      mTrieState (nullptr)
 {
+    if (dict->trie()) {
+        mTrieState = trie_root (dict->trie());
+    }
 }
 
 Match::~Match()
 {
-    trie_state_free (mTrieState);
+    if (mTrieState) {
+        trie_state_free (mTrieState);
+    }
 }
 
 bool
 Match::findNext()
 {
+    if (!mTrieState)
+        return false;
+
     while (mCurPos < mWord.size()
            && trie_state_walk (mTrieState, mWord[mCurPos]))
     {
