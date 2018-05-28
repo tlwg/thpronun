@@ -11,7 +11,8 @@
 #include <list>
 #include <memory>
 
-#define EXCEPT_DICT_PATH "except.dic"
+#define EXCEPT_DICT_NAME "except.dic"
+#define EXCEPT_DICT_PATH EXCEPT_DICT_DIR "/" EXCEPT_DICT_NAME
 
 using namespace std;
 
@@ -31,6 +32,8 @@ Usage (const char* progName)
 {
     cerr << "Usage: " << progName << " [options] [word...]" << endl
          << "Options:" << endl
+         << "    -d<dict-path>  Use exception dict from <dict-path>" << endl
+         << endl
          << "    -j    Turns on JSON output" << endl
          << "    -g    Turns on grouping in JSON output (implies '-j')" << endl
          << "    -r    Outputs Romanization" << endl
@@ -89,17 +92,44 @@ MakePhoneticOutput (bool isJson, bool isGroup)
     }
 }
 
+static bool
+LoadExceptDict (Parser& parser, const char* dictPath)
+{
+    if (dictPath) {
+        if (parser.loadExceptDict (dictPath))
+            return true;
+        cerr << "Failed to load exception dictionary '" << dictPath << "'"
+             << endl;
+        return false;
+    }
+
+    if (parser.loadExceptDict (EXCEPT_DICT_PATH))
+        return true;
+    cerr << "Failed to load exception dictionary " EXCEPT_DICT_PATH
+         << endl;
+
+    return false;
+}
+
 int
 main (int argc, const char* argv[])
 {
     int optCnt = 0;
     bool isJson = false;
     bool isGroup = false;
+    const char* dictPath = nullptr;
     list<unique_ptr<IOutput>> stringOutputs;
 
     for (int i = 1; i < argc; ++i) {
         if ('-' == argv[i][0]) {
             switch (argv[i][1]) {
+            case 'd':
+                if (!argv[i][2]) {
+                    cerr << "Missing <dict-path> argument for -d" << endl;
+                    return 1;
+                }
+                dictPath = argv[i] + 2;
+                break;
             case 'j':
                 isJson = true;
                 break;
@@ -134,9 +164,8 @@ main (int argc, const char* argv[])
     }
 
     Parser parser;
-    if (!parser.loadExceptDict (EXCEPT_DICT_PATH)) {
-        cerr << "Failed to load exception dictionary " EXCEPT_DICT_PATH
-             << endl;
+    if (!LoadExceptDict (parser, dictPath)) {
+        cerr << "Warning: Working without exception dictionary" << endl;
     }
 
     if (1 == argc - optCnt) {
