@@ -56,12 +56,12 @@ ThCharToAboveBelowVowel (char16_t c)
 
 struct ParseState {
     int         pos;
-    SylString   sylString;
+    PronunDAG   pronDAG;
     bool        isLinked;
 
 public:
     ParseState();
-    ParseState (int pos, const SylString& sylString, bool isLinked = false);
+    ParseState (int pos, const PronunDAG& pronDAG, bool isLinked = false);
     ParseState (const ParseState& other);
     ParseState (ParseState&& other);
 
@@ -70,27 +70,27 @@ public:
 
 inline
 ParseState::ParseState()
-    : pos (0), sylString(), isLinked (false) {}
+    : pos (0), pronDAG(), isLinked (false) {}
 
 inline
-ParseState::ParseState (int pos, const SylString& sylString, bool isLinked)
-    : pos (pos), sylString (sylString), isLinked (isLinked) {}
+ParseState::ParseState (int pos, const PronunDAG& pronDAG, bool isLinked)
+    : pos (pos), pronDAG (pronDAG), isLinked (isLinked) {}
 
 inline
 ParseState::ParseState (const ParseState& other)
-    : pos (other.pos), sylString (other.sylString), isLinked (other.isLinked) {}
+    : pos (other.pos), pronDAG (other.pronDAG), isLinked (other.isLinked) {}
 
 inline
 ParseState::ParseState (ParseState&& other)
     : pos (other.pos),
-      sylString (move (other.sylString)),
+      pronDAG (move (other.pronDAG)),
       isLinked (other.isLinked) {}
 
 ParseState&
 ParseState::operator= (const ParseState& other)
 {
     pos       = other.pos;
-    sylString = other.sylString;
+    pronDAG   = other.pronDAG;
     isLinked  = other.isLinked;
 }
 
@@ -110,6 +110,16 @@ private:
 void
 StatePool::add (const ParseState& state)
 {
+    for (auto it = mStates.begin(); it != mStates.end(); ++it) {
+        if (it->pos == state.pos && it->isLinked == state.isLinked) {
+            it->pronDAG.unionDAG (state.pronDAG);
+            return;
+        }
+        if (it->pos >= state.pos) {
+            mStates.insert (it, state);
+            return;
+        }
+    }
     mStates.push_back (state);
 }
 
@@ -213,25 +223,34 @@ PartialSyl::PartialSyl (int             pos,
 {
 }
 
-static SylString
-AddSyl (const SylString& s, PartialSyl& p, int pos)
+static PronunDAG
+AddSyl (const ParseState& prevState, PartialSyl& p, int pos)
 {
-    SylString r = s;
+    PronunDAG dag = prevState.pronDAG;
+    int curPos = prevState.pos;
 
     if (p.hasPreSyl) {
-        p.preSyl.setEndPos (-(r.endPos() * 100 + pos));
-        r += p.preSyl;
+        int nextPos = -(curPos * 100 + pos);
+        p.preSyl.setEndPos (nextPos);
+        dag.addEdge (curPos, nextPos, p.preSyl);
+        curPos = nextPos;
     }
 
     bool isDeadSyl = (EEndConsClass::NONE == p.eConsClass)
                          ? IsShortVowel (p.vowel)
                          : IsDeadEndConsClass (p.eConsClass);
-    r += Syl (p.iConsSound, p.iCons2, p.vowel, p.eConsClass,
-              ToneFromWritten (p.iConsClass, p.tone,
-                               isDeadSyl, IsShortVowel (p.vowel)),
-              pos);
+    dag.addEdge (
+        curPos, pos,
+        Syl (
+            p.iConsSound, p.iCons2, p.vowel, p.eConsClass,
+            ToneFromWritten (
+                p.iConsClass, p.tone, isDeadSyl, IsShortVowel (p.vowel)
+            ),
+            pos
+        )
+    );
 
-    return r;
+    return dag;
 }
 
 static void
@@ -242,8 +261,7 @@ static void
 AddState (StatePool& pool, int pos, const ParseState& prevState,
           PartialSyl& partialSyl, bool isLinked)
 {
-    pool.add (ParseState (pos, AddSyl (prevState.sylString, partialSyl, pos),
-                          isLinked));
+    pool.add (ParseState (pos, AddSyl (prevState, partialSyl, pos), isLinked));
 }
 
 static inline bool
@@ -1513,25 +1531,25 @@ FindExceptions (const u16string& u16word, ParseState& state, StatePool& pool,
 
     Match match (u16word, state.pos, exceptDict);
     while (match.findNext()) {
-        SylString newSylStr = state.sylString;
+        PronunDAG newDAG = state.pronDAG;
         SylString matchedSylStr (match.getData());
         matchedSylStr.shiftEndPos (state.pos);
-        newSylStr += matchedSylStr;
-        pool.add (ParseState (match.getCurPos(), newSylStr));
+        newDAG.addSylString (state.pos, matchedSylStr);
+        pool.add (ParseState (match.getCurPos(), newDAG));
         ++nExcepts;
     }
 
     return nExcepts;
 }
 
-static list<SylString>
+static PronunDAG
 ParseU16 (const u16string& u16word, StatePool& pool, const Dict* exceptDict)
 {
-    list<SylString> sylStrings;
+    PronunDAG pronDAG;
     ParseState s;
     while (pool.pop (s)) {
         if (s.pos >= u16word.size()) {
-            sylStrings.push_back (s.sylString);
+            pronDAG.unionDAG (s.pronDAG);
         } else {
             if (exceptDict
                 && FindExceptions (u16word, s, pool, exceptDict) > 0)
@@ -1550,7 +1568,7 @@ ParseU16 (const u16string& u16word, StatePool& pool, const Dict* exceptDict)
             }
         }
     }
-    return sylStrings;
+    return pronDAG;
 }
 
 Parser::Parser()
@@ -1571,7 +1589,7 @@ Parser::loadExceptDict (const char* exceptDictPath)
     return mExceptDict->open (exceptDictPath);
 }
 
-list<SylString>
+PronunDAG
 Parser::parseWord (string word) const
 {
     // convert UTF-8 word string to UTF-16

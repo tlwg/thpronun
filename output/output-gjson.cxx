@@ -14,6 +14,12 @@ GroupedJsonOutput::output (const list<SylString>& strList) const
 }
 
 string
+GroupedJsonOutput::output (const PronunDAG& pronDAG) const
+{
+    return output (pronDAG.fracDAG().lattice());
+}
+
+string
 GroupedJsonOutput::output (const PronunLatt& latt) const
 {
     string outStr;

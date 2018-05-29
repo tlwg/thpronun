@@ -37,6 +37,8 @@ public:
     PronunDAG();
     PronunDAG (const std::list<SylString> sylStrings);
 
+    void addSylString (int pos, const SylString& sylString);
+
     FracDAG fracDAG() const;
 };
 

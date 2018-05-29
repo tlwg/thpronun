@@ -47,6 +47,12 @@ RomanOutput::output (const list<SylString>& strList) const
     return outStr;
 }
 
+string
+RomanOutput::output (const PronunDAG& pronDAG) const
+{
+    return output (DAGSylStrings (pronDAG, 0));
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

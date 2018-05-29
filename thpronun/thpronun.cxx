@@ -21,9 +21,9 @@ DoParse (const Parser& parser, string word,
          const list<unique_ptr<IOutput>>& stringOutputs)
 {
     cout << word << ":" << endl;
-    auto sylList = parser.parseWord (word);
-    for (const auto& sylStrOut : stringOutputs) {
-        cout << sylStrOut->output (sylList) << endl;;
+    auto pronDAG = parser.parseWord (word);
+    for (const auto& strOut : stringOutputs) {
+        cout << strOut->output (pronDAG) << endl;;
     }
 }
 

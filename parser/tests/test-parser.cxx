@@ -17,19 +17,17 @@ bool ParseAll (const Parser& parser, list<string> words)
 
     for (auto w : words) {
         cout << w << ':' << endl;
-        auto sylList = parser.parseWord (w);
-        for (const auto& s : sylList) {
-            cout << " - " << thaiOutput.output (s)
-                 << '\t' << romanOutput.output (s) << endl;
-        }
+        auto pronDAG = parser.parseWord (w);
+        cout << thaiOutput.output (pronDAG) << endl;
+        cout << romanOutput.output (pronDAG) << endl;
     }
 
     GroupedJsonOutput gJsonOutput (make_unique<ThaiSylOutput>());
 
     for (auto w : words) {
         cout << w << ':' << endl;
-        auto sylList = parser.parseWord (w);
-        cout << gJsonOutput.output (sylList) << endl;
+        auto pronDAG = parser.parseWord (w);
+        cout << gJsonOutput.output (pronDAG) << endl;
     }
 
     return true;
