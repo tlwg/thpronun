@@ -5,10 +5,9 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "sylstring/sylstring.h"
+#include "lattice/pron-dag.h"
 #include "dict/dict.h"
 
-#include <list>
 #include <string>
 #include <memory>
 
@@ -19,7 +18,7 @@ public:
 
     bool loadExceptDict (const char* exceptDictPath);
 
-    std::list<SylString> parseWord (std::string word) const;
+    PronunDAG parseWord (std::string word) const;
 
 private:
     std::unique_ptr<Dict>  mExceptDict;

@@ -135,11 +135,17 @@ PronunDAG::PronunDAG (const std::list<SylString> sylStrings)
     : DAG<Syl>()
 {
     for (const auto& sylString : sylStrings) {
-        int from = 0;
-        for (const auto& syl : sylString) {
-            addEdge (from, syl.endPos(), syl);
-            from = syl.endPos();
-        }
+        addSylString (0, sylString);
+    }
+}
+
+void
+PronunDAG::addSylString (int pos, const SylString& sylString)
+{
+    int from = pos;
+    for (const auto& syl : sylString) {
+        addEdge (from, syl.endPos(), syl);
+        from = syl.endPos();
     }
 }
 

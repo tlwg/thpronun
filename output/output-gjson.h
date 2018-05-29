@@ -15,6 +15,7 @@ public:
     GroupedJsonOutput (std::unique_ptr<ISylOutput> sylOutput);
 
     virtual std::string output (const std::list<SylString>& strList) const;
+    virtual std::string output (const PronunDAG& pronDAG) const;
 
     std::string output (const PronunLatt& latt) const;
 };

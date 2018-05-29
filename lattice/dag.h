@@ -56,6 +56,8 @@ public:
     EdgeIter      inEnd();
     ConstEdgeIter inEnd() const;
 
+    DAG<TEdgeVal>& operator= (const DAG<TEdgeVal>& other);
+
 private:
     std::multimap<int, DAGEdge<TEdgeVal>> mFrom;
     std::multimap<int, DAGEdge<TEdgeVal>> mTo;

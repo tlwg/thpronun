@@ -14,6 +14,7 @@ public:
 
     virtual std::string output (const SylString& sylStr) const;
     virtual std::string output (const std::list<SylString>& strList) const;
+    virtual std::string output (const PronunDAG& pronDAG) const;
 
 private:
     RomanSylOutput mRomanSylOutput;

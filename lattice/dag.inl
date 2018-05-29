@@ -140,6 +140,15 @@ DAG<TEdgeVal>::inEnd() const
 }
 
 template<typename TEdgeVal>
+DAG<TEdgeVal>&
+DAG<TEdgeVal>::operator= (const DAG<TEdgeVal>& other)
+{
+    mFrom = other.mFrom;
+    mTo   = other.mTo;
+    return *this;
+}
+
+template<typename TEdgeVal>
 bool
 DAG<TEdgeVal>::addEdge (int from, int to, const TEdgeVal& edgeVal)
 {
