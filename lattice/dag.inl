@@ -208,6 +208,15 @@ DAG<TEdgeVal>::removeDirectEdges (int from, int to)
     return isRemoved;
 }
 
+template<typename TEdgeVal>
+void
+DAG<TEdgeVal>::unionDAG (const DAG<TEdgeVal>& other)
+{
+    for (auto it = other.outBegin(); it != other.outEnd(); ++it) {
+        addEdge (it->first, it->second.target, it->second.edgeVal);
+    }
+}
+
 /*
 vi:ts=4:ai:expandtab
 */

@@ -312,6 +312,110 @@ DumpInEdges (const DAG<char>& dag)
     }
 }
 
+//
+// Another Word DAG
+//
+//  ,---b----.
+//  |        v
+// (0)--r-->(1)--a-->(2)--m-->(5)
+//
+DAG<char>
+WordDAG2()
+{
+    DAG<char> dag;
+
+    dag.addEdge (0, 1, 'b');
+    dag.addEdge (0, 1, 'r');
+    dag.addEdge (1, 2, 'a');
+    dag.addEdge (2, 5, 'm');
+
+    return dag;
+}
+
+bool
+TestUnionDAG()
+{
+    bool isSuccess = true;
+
+    cout << "Testing DAG union" << endl;
+
+    cout << "Before: DAG1:" << endl;
+    DAG<char> dag1 = WordDAG();
+    DumpOutEdges (dag1);
+
+    DAG<char> dag2 = WordDAG2();
+    cout << "Before: DAG2:" << endl;
+    DumpOutEdges (dag2);
+
+    dag1.unionDAG (dag2);
+
+    cout << "After: Union DAG:" << endl;
+    DumpOutEdges (dag1);
+
+    cout << "Testing edge existence" << endl;
+    // test existing edges
+    if (!dag1.isEdgeExist (0, 1, 'b')) {
+        cout << "Edge (0, 1, 'b') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (0, 1, 'c')) {
+        cout << "Edge (0, 1, 'c') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (0, 1, 'f')) {
+        cout << "Edge (0, 1, 'f') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (0, 1, 'r')) {
+        cout << "Edge (0, 1, 'r') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (1, 2, 'a')) {
+        cout << "Edge (1, 2, 'a') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (2, 5, 'm')) {
+        cout << "Edge (2, 5, 'm') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (2, 5, 'n')) {
+        cout << "Edge (2, 5, 'n') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (2, 5, 't')) {
+        cout << "Edge (2, 5, 't') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (1, 3, 'o')) {
+        cout << "Edge (1, 3, 'o') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (3, 4, 'r')) {
+        cout << "Edge (3, 4, 'r') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+    if (!dag1.isEdgeExist (4, 5, 'k')) {
+        cout << "Edge (4, 5, 'k') should exist, but doesn't!" << endl;
+        isSuccess = false;
+    }
+
+    // test non-existing edges
+    if (dag1.isEdgeExist (0, 1, 'a')) {
+        cout << "Edge (0, 1, 'a') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+    if (dag1.isEdgeExist (1, 2, 'c')) {
+        cout << "Edge (1, 2, 'c') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+    if (dag1.isEdgeExist (0, 5, 'o')) {
+        cout << "Edge (0, 5, 'o') shouldn't exist, but does!" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
 int main()
 {
     bool isSuccess = true;
@@ -344,6 +448,10 @@ int main()
 
     DumpOutEdges (wordDAG);
     DumpInEdges (wordDAG);
+
+    if (!TestUnionDAG()) {
+        isSuccess = false;
+    }
 
     return isSuccess ? 0 : 1;
 }

@@ -37,6 +37,8 @@ public:
     bool removeEdge (int from, int to, const TEdgeVal& edgeVal);
     bool removeDirectEdges (int from, int to);
 
+    void unionDAG (const DAG<TEdgeVal>& other);
+
     bool isEdgeExist (int from, int to, const TEdgeVal& syl) const;
     int  outDegree (int from) const;
     int  inDegree (int to) const;
