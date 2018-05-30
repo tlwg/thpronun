@@ -271,17 +271,16 @@ IsSylStart (char16_t c)
 }
 
 // Match initial consonant part of the syllable form
-// Returns whether the match is successful
 static list<PartialSyl>
-MatchInitCons (const u16string& u16word, const ParseState& state)
+MatchInitCons (const u16string& u16word, int pos, bool isLinked)
 {
     list<PartialSyl> partialSyls;
-    auto firstCons = u16word.at (state.pos);
+    auto firstCons = u16word.at (pos);
     auto firstConsSound = InitConsSound (firstCons);
     auto firstConsClass = InitConsClass (firstCons);
 
-    if (state.pos + 1 < u16word.size()) {
-        auto secChar = u16word.at (state.pos + 1);
+    if (pos + 1 < u16word.size()) {
+        auto secChar = u16word.at (pos + 1);
 
         if (th_wcisthcons (secChar)) {
             auto secConsSound = InitConsSound (secChar);
@@ -296,14 +295,14 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 case UTH_SO_SO:
                 case UTH_SO_SALA:
                 case UTH_SO_SUA:
-                    if (state.isLinked)
+                    if (isLinked)
                         break;
                     // add อักษรควบไม่แท้, but not for cรร, which is ร หัน
-                    if (state.pos + 2 >= u16word.size() ||
-                        UTH_RO_RUA != u16word.at (state.pos + 2))
+                    if (pos + 2 >= u16word.size() ||
+                        UTH_RO_RUA != u16word.at (pos + 2))
                     {
                         partialSyls.push_back (
-                            PartialSyl (state.pos + 2, firstConsSound,
+                            PartialSyl (pos + 2, firstConsSound,
                                         firstConsClass)
                         );
                     }
@@ -316,7 +315,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 case UTH_BO_BAIMAI:
                 case UTH_PHO_PHAN:
                 case UTH_FO_FAN:
-                    if (state.isLinked)
+                    if (isLinked)
                         break;
                     // fall through for non-linked syllable
                     // examples of linked syllable with อักษรควบแท้:
@@ -325,11 +324,11 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 case UTH_TO_TAO:
                 case UTH_PO_PLA:
                     // add อักษรควบแท้, but not for cรร, which is ร หัน
-                    if (state.pos + 2 >= u16word.size() ||
-                        UTH_RO_RUA != u16word.at (state.pos + 2))
+                    if (pos + 2 >= u16word.size() ||
+                        UTH_RO_RUA != u16word.at (pos + 2))
                     {
                         partialSyls.push_back (
-                            PartialSyl (state.pos + 2,
+                            PartialSyl (pos + 2,
                                         firstConsSound,
                                         firstConsClass,
                                         ESecInitCons::RA)
@@ -355,15 +354,15 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     UTH_O_ANG,          // อรดี, อรสา
                 };
 
-                if (state.pos + 2 < u16word.size()
-                    && UTH_RO_RUA != u16word.at (state.pos + 2)) // prevent cรร
+                if (pos + 2 < u16word.size()
+                    && UTH_RO_RUA != u16word.at (pos + 2)) // prevent cรร
                 {
-                    auto nextChar = u16word.at (state.pos + 2);
-                    if (IsSylStart (u16word.at (state.pos + 2))) {
+                    auto nextChar = u16word.at (pos + 2);
+                    if (IsSylStart (nextChar)) {
                         if (auraCons.find (firstCons) != auraCons.end()) {
                             partialSyls.push_back (
                                 PartialSyl (
-                                    state.pos + 2,
+                                    pos + 2,
                                     Syl (
                                         firstConsSound, ESecInitCons::NONE,
                                         EVowel::AUU, EEndConsClass::NONE,
@@ -387,7 +386,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                         // บริษัท, บริเวณ, บริบูรณ์
                         partialSyls.push_back (
                             PartialSyl (
-                                state.pos + 3,
+                                pos + 3,
                                 Syl (
                                     firstConsSound, ESecInitCons::NONE,
                                     EVowel::AUU, EEndConsClass::NONE,
@@ -410,7 +409,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                         // จระเข้
                         partialSyls.push_back (
                             PartialSyl (
-                                state.pos + 3,
+                                pos + 3,
                                 Syl (
                                     firstConsSound, ESecInitCons::NONE,
                                     EVowel::AUU, EEndConsClass::NONE,
@@ -440,11 +439,11 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 case UTH_PHO_PHUNG:
                 case UTH_PHO_PHAN:
                 case UTH_FO_FAN:
-                    if (state.isLinked)
+                    if (isLinked)
                         break;
                     // add อักษรควบแท้
                     partialSyls.push_back (
-                        PartialSyl (state.pos + 2,
+                        PartialSyl (pos + 2,
                                     firstConsSound,
                                     firstConsClass,
                                     ESecInitCons::LA)
@@ -457,11 +456,11 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 case UTH_KO_KAI:
                 case UTH_KHO_KHAI:
                 case UTH_KHO_KHWAI:
-                    if (state.isLinked)
+                    if (isLinked)
                         break;
                     // add อักษรควบแท้
                     partialSyls.push_back (
-                        PartialSyl (state.pos + 2,
+                        PartialSyl (pos + 2,
                                     firstConsSound,
                                     firstConsClass,
                                     ESecInitCons::WA)
@@ -476,12 +475,12 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                 EInitConsClass::LOWS == secConsClass)
             {
                 // add อักษรนำเสียงสนิท, but not for หรร, which is ร หัน
-                if (state.pos + 2 >= u16word.size() ||
+                if (pos + 2 >= u16word.size() ||
                     UTH_RO_RUA != secChar ||
-                    UTH_RO_RUA != u16word.at (state.pos + 2))
+                    UTH_RO_RUA != u16word.at (pos + 2))
                 {
                     partialSyls.push_back (
-                        PartialSyl (state.pos + 2,
+                        PartialSyl (pos + 2,
                                     secConsSound,
                                     EInitConsClass::HIGH)
                     );
@@ -493,12 +492,12 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
             //   e.g. ขนม, ขมิบ, จรวด, จมูก, เฉลิม, โตนด, ตลาด, ผลิต, สนิม, สยบ,
             //   สรุป, สลาย, สวรรค์, สวัสดี, อร่อย, อร่าม
             // - but not for cรร, which is ร หัน
-            if (state.pos + 2 >= u16word.size() ||
+            if (pos + 2 >= u16word.size() ||
                 UTH_RO_RUA != secChar ||
-                UTH_RO_RUA != u16word.at (state.pos + 2))
+                UTH_RO_RUA != u16word.at (pos + 2))
             {
                 partialSyls.push_back (
-                    PartialSyl (state.pos + 2,
+                    PartialSyl (pos + 2,
                                 Syl (firstConsSound, ESecInitCons::NONE,
                                      EVowel::A, EEndConsClass::NONE,
                                      ToneFromWritten (firstConsClass,
@@ -512,13 +511,13 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
 
             // special case: บดี, บดินทร์
             if (UTH_BO_BAIMAI == firstCons && UTH_DO_DEK == secChar
-                && state.pos + 2 < u16word.size())
+                && pos + 2 < u16word.size())
             {
-                auto nextChar = u16word.at (state.pos + 2);
+                auto nextChar = u16word.at (pos + 2);
                 if (UTH_SARA_I == nextChar || UTH_SARA_II == nextChar) {
                     partialSyls.push_back (
                         PartialSyl (
-                            state.pos + 1,
+                            pos + 1,
                             firstConsSound,
                             firstConsClass,
                             ESecInitCons::NONE,
@@ -533,9 +532,9 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
         } else if (UTH_RU == secChar) {
             // make sure it's not ฤๅ
             // note: "ตฤๅ" is supposed to be in exception dict here
-            if (state.pos + 2 >= u16word.size() || (
-                    UTH_LAKKHANGYAO != u16word.at (state.pos + 2) &&
-                    UTH_SARA_AA != u16word.at (state.pos + 2)
+            if (pos + 2 >= u16word.size() || (
+                    UTH_LAKKHANGYAO != u16word.at (pos + 2) &&
+                    UTH_SARA_AA != u16word.at (pos + 2)
                 ))
             {
                 // RU after these cons are always pronounced "RI" clustered
@@ -572,7 +571,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     // อังกฤษ, ตฤณ, ปฤจฉา
                     partialSyls.push_back (
                         PartialSyl (
-                            state.pos + 2,
+                            pos + 2,
                             firstConsSound,
                             firstConsClass,
                             ESecInitCons::RA,
@@ -583,7 +582,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     // ศฤงคาร
                     partialSyls.push_back (
                         PartialSyl (
-                            state.pos + 2,
+                            pos + 2,
                             firstConsSound,
                             firstConsClass,
                             ESecInitCons::NONE,
@@ -593,7 +592,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     // สฤษฎ์
                     partialSyls.push_back (
                         PartialSyl (
-                            state.pos + 2,
+                            pos + 2,
                             Syl (
                                 firstConsSound, ESecInitCons::NONE,
                                 EVowel::A, EEndConsClass::NONE,
@@ -612,7 +611,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     // วฤก, วฤษภ, วฤษละ
                     partialSyls.push_back (
                         PartialSyl (
-                            state.pos + 2,
+                            pos + 2,
                             firstConsSound,
                             firstConsClass,
                             ESecInitCons::RA,
@@ -623,7 +622,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     // นฤบาล
                     partialSyls.push_back (
                         PartialSyl (
-                            state.pos + 2,
+                            pos + 2,
                             Syl (
                                 firstConsSound, ESecInitCons::NONE,
                                 EVowel::A, EEndConsClass::NONE,
@@ -638,13 +637,13 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     );
                 } else if (ruCons.find (firstCons) != ruCons.end()) {
                     // peek next possible end cons
-                    if (state.pos + 2 < u16word.size() &&
-                        EEndConsClass::NONE != EndConsClass (u16word.at (state.pos + 2)))
+                    if (pos + 2 < u16word.size() &&
+                        EEndConsClass::NONE != EndConsClass (u16word.at (pos + 2)))
                     {
                         // คฤนถ์, คฤธระ, พฤกษ์, พฤศจิก
                         partialSyls.push_back (
                             PartialSyl (
-                                state.pos + 2,
+                                pos + 2,
                                 firstConsSound,
                                 firstConsClass,
                                 ESecInitCons::RA,
@@ -655,7 +654,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                         // คฤหัสถ์, คฤโฆษ, พฤหัส
                         partialSyls.push_back (
                             PartialSyl (
-                                state.pos + 2,
+                                pos + 2,
                                 Syl (
                                     firstConsSound, ESecInitCons::NONE,
                                     EVowel::A, EEndConsClass::NONE,
@@ -674,7 +673,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     if (UTH_HO_HIP != firstCons) {
                         partialSyls.push_back (
                             PartialSyl (
-                                state.pos + 2,
+                                pos + 2,
                                 firstConsSound,
                                 firstConsClass,
                                 ESecInitCons::RA,
@@ -685,7 +684,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     // หฤษฎ์
                     partialSyls.push_back (
                         PartialSyl (
-                            state.pos + 2,
+                            pos + 2,
                             Syl (
                                 firstConsSound, ESecInitCons::NONE,
                                 EVowel::A, EEndConsClass::NONE,
@@ -702,7 +701,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     if (UTH_HO_HIP != firstCons) {
                         partialSyls.push_back (
                             PartialSyl (
-                                state.pos + 2,
+                                pos + 2,
                                 firstConsSound,
                                 firstConsClass,
                                 ESecInitCons::RA,
@@ -713,7 +712,7 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
                     // หฤทัย
                     partialSyls.push_back (
                         PartialSyl (
-                            state.pos + 2,
+                            pos + 2,
                             Syl (
                                 firstConsSound, ESecInitCons::NONE,
                                 EVowel::A, EEndConsClass::NONE,
@@ -733,16 +732,14 @@ MatchInitCons (const u16string& u16word, const ParseState& state)
 
     // add single initial consonant sound
     partialSyls.push_back (
-        PartialSyl (state.pos + 1, firstConsSound, firstConsClass)
+        PartialSyl (pos + 1, firstConsSound, firstConsClass)
     );
 
     // add Pali-Sanskrit -a consonant sound
-    if (state.pos + 1 < u16word.size()
-        && IsSylStart (u16word.at (state.pos + 1)))
-    {
+    if (pos + 1 < u16word.size() && IsSylStart (u16word.at (pos + 1))) {
         partialSyls.push_back (
             PartialSyl (
-                state.pos + 1,
+                pos + 1,
                 firstConsSound,
                 firstConsClass,
                 ESecInitCons::NONE,
@@ -929,9 +926,10 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
 
 // Progress the parsing from given state, where a Thai consonant was found.
 static void
-ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
+ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
 {
-    list<PartialSyl> partialSyls = MatchInitCons (u16word, state);
+    list<PartialSyl> partialSyls = MatchInitCons (u16word, state.pos,
+                                                  state.isLinked);
 
     for (auto& p : partialSyls) {
         if (p.pos >= u16word.size()) {
@@ -1162,16 +1160,16 @@ ParseThCons (const u16string& u16word, ParseState& state, StatePool& pool)
 
 // Progress the parsing from given state, where Sara E was found.
 static void
-ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
+ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
 {
     assert (UTH_SARA_E == u16word.at (state.pos));
 
-    ++state.pos; // skip SARA E
-    if (state.pos >= u16word.size()) {
+    if (state.pos + 1 >= u16word.size()) {
         return;
     }
 
-    list<PartialSyl> partialSyls = MatchInitCons (u16word, state);
+    list<PartialSyl> partialSyls = MatchInitCons (u16word, state.pos + 1,
+                                                  state.isLinked);
 
     for (auto& p : partialSyls) {
         if (p.isComplete) {
@@ -1365,16 +1363,17 @@ ParseSaraE (const u16string& u16word, ParseState& state, StatePool& pool)
 // Progress the parsing from given state, where a Thai leading vowel
 // other than Sara E was found.
 static void
-ParseOtherLV (const u16string& u16word, ParseState& state, StatePool& pool)
+ParseOtherLV (const u16string& u16word, const ParseState& state,
+              StatePool& pool)
 {
     assert (state.pos < u16word.size());
     assert (th_wcisldvowel (u16word.at (state.pos)));
     assert (UTH_SARA_E != u16word.at (state.pos));
 
     auto ldv = u16word.at (state.pos);
-    ++state.pos; // skip the leading vowel kept in ldv
 
-    list<PartialSyl> partialSyls = MatchInitCons (u16word, state);
+    list<PartialSyl> partialSyls = MatchInitCons (u16word, state.pos + 1,
+                                                  state.isLinked);
 
     for (auto& p : partialSyls) {
         if (p.isComplete) {
@@ -1461,17 +1460,16 @@ ParseOtherLV (const u16string& u16word, ParseState& state, StatePool& pool)
 
 // Progress the parsing from given state, where RU or LU was found.
 static void
-ParseRuLu (const u16string& u16word, ParseState& state, StatePool& pool)
+ParseRuLu (const u16string& u16word, const ParseState& state, StatePool& pool)
 {
     assert (state.pos < u16word.size());
     assert (UTH_RU == u16word.at (state.pos) ||
             UTH_LU == u16word.at (state.pos));
 
     auto firstChar = u16word.at (state.pos);
-    ++state.pos; // skip RU/LU
 
     PartialSyl p (
-        state.pos,
+        state.pos + 1,
         ((UTH_LU == firstChar) ? EInitConsSound::LA : EInitConsSound::RA),
         EInitConsClass::LOWS,
         ESecInitCons::NONE
@@ -1485,30 +1483,30 @@ ParseRuLu (const u16string& u16word, ParseState& state, StatePool& pool)
         UTH_SO_RUSI,
     };
 
-    if (state.pos >= u16word.size()) {
+    if (state.pos + 1 >= u16word.size()) {
         // ฤ/ฦ at string end
         p.vowel = EVowel::UE;
         p.eConsClass = EEndConsClass::NONE;
         AddState (pool, state.pos, state, p);
     } else {
-        auto secChar = u16word.at (state.pos);
+        auto secChar = u16word.at (state.pos + 1);
         if (UTH_LAKKHANGYAO == secChar || UTH_SARA_AA == secChar) {
             // ฤๅ, ฦๅ, also allowing ฤา ฦา
             p.vowel = EVowel::UEE;
             p.eConsClass = EEndConsClass::NONE;
-            AddState (pool, state.pos + 1, state, p);
+            AddState (pool, state.pos + 2, state, p);
         } else if (th_wcisthcons (secChar)) {
             auto secConsClass = EndConsClass (secChar);
             if (EEndConsClass::NONE == secConsClass || (
-                    state.pos + 1 < u16word.size() &&
-                    !IsSylStart (u16word.at (state.pos + 1))
+                    state.pos + 2 < u16word.size() &&
+                    !IsSylStart (u16word.at (state.pos + 2))
                 ))
             {
                 // ฤ/ฦ + { ห, อ, ฮ }
                 // ฤทัย, ฤดู, ฤษี, ฤชา
                 p.vowel = EVowel::UE;
                 p.eConsClass = EEndConsClass::NONE;
-                AddState (pool, state.pos, state, p);
+                AddState (pool, state.pos + 1, state, p);
             } else if (riECons.find (secChar) != riECons.end()) {
                 // ฤทธิ์, ฤณ, ฤษยา
                 p.vowel = EVowel::I;
@@ -1524,8 +1522,8 @@ ParseRuLu (const u16string& u16word, ParseState& state, StatePool& pool)
 }
 
 static int
-FindExceptions (const u16string& u16word, ParseState& state, StatePool& pool,
-                const Dict* exceptDict)
+FindExceptions (const u16string& u16word, const ParseState& state,
+                StatePool& pool, const Dict* exceptDict)
 {
     int nExcepts = 0;
 
