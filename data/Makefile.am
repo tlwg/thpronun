@@ -4,6 +4,7 @@ pkgdata_DATA = \
 
 EXCEPT_SRC = \
 	ex-montho-d.tsv	\
+	ex-misc.tsv	\
 	ex-multi-end.tsv	\
 	ex-tone.tsv	\
 	ex-tr-so.tsv	\
