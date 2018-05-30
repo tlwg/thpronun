@@ -4,6 +4,7 @@ pkgdata_DATA = \
 
 EXCEPT_SRC = \
 	ex-montho-d.tsv	\
+	ex-multi-end.tsv	\
 	ex-tr-so.tsv	\
 	$(NULL)
 
