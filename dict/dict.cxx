@@ -15,7 +15,7 @@ using namespace std;
 static bool
 ReadInt32 (FILE* input, int32_t& output)
 {
-    char buff[4];
+    unsigned char buff[4];
     if (fread (buff, 4, 1, input) != 1)
         return false;
 
