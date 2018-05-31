@@ -275,7 +275,11 @@ static list<PartialSyl>
 MatchInitCons (const u16string& u16word, int pos, bool isLinked)
 {
     list<PartialSyl> partialSyls;
+
     auto firstCons = u16word.at (pos);
+    if (!th_wcisthcons (firstCons))
+        return partialSyls;
+
     auto firstConsSound = InitConsSound (firstCons);
     auto firstConsClass = InitConsClass (firstCons);
 
