@@ -14,6 +14,8 @@ liboutput_la_SOURCES = \
 	sylout-roman.cxx	\
 	sylout-phonetic.h	\
 	sylout-phonetic.cxx	\
+	sylout-raw.h		\
+	sylout-raw.cxx		\
 	output-delim.h	\
 	output-delim.inl	\
 	output-delim.cxx	\

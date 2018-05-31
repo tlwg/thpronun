@@ -1,6 +1,7 @@
 #include "output/sylout-thai.h"
 #include "output/sylout-roman.h"
 #include "output/sylout-phonetic.h"
+#include "output/sylout-raw.h"
 #include "output/output-delim.h"
 #include "output/output-roman.h"
 #include "output/output-json.h"
@@ -453,6 +454,145 @@ TestPhonetic()
 }
 
 bool
+TestRawPronun()
+{
+    bool isSuccess = true;
+    SylString syls;
+    auto output
+        = make_unique<DelimOutput> (make_unique<RawSylOutput>(), ',');
+
+    // กกต้นหูกฺวางเหฺลียวเลาะร้องเป็นตาแซ่บ
+    syls = Syl ("k_ok1@2");
+
+    auto rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("t_on2@5");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("h_U_4@7");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5,h_U_4@7") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("kwAg0@11");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5,h_U_4@7,kwAg0@11") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("l_Yw4@17");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5,h_U_4@7,kwAg0@11,l_Yw4@17") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("l_c_3@21");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5,h_U_4@7,kwAg0@11,l_Yw4@17,l_c_3@21") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("r_Cg3@25");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5,h_U_4@7,kwAg0@11,l_Yw4@17,l_c_3@21,r_Cg3@25") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("p_en0@29");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5,h_U_4@7,kwAg0@11,l_Yw4@17,l_c_3@21,r_Cg3@25,p_en0@29") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("t_A_0@31");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5,h_U_4@7,kwAg0@11,l_Yw4@17,l_c_3@21,r_Cg3@25,p_en0@29,t_A_0@31") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("s_xp2@35");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_ok1@2,t_on2@5,h_U_4@7,kwAg0@11,l_Yw4@17,l_c_3@21,r_Cg3@25,p_en0@29,t_A_0@31,s_xp2@35") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    // ละลันหลั่นล้า
+    syls = SylString ("l_a_3@2,l_an0@5,l_an1@10,l_A_3@13");
+    rawPronun = output->output (syls);
+    if (rawPronun != "l_a_3@2,l_an0@5,l_an1@10,l_A_3@13") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    // ใครใคร่ขายไข่ไก่คราคร่ำไม้ไหมเล่า
+    syls = SylString (
+        "cray0@3,cray2@7,c_Ay4@10,c_ay1@13,k_ay1@16,crA_0@19,cram2@23,m_Ay3@26,m_ay4@29,l_aw2@33"
+    );
+    rawPronun = output->output (syls);
+    if (rawPronun != "cray0@3,cray2@7,c_Ay4@10,c_ay1@13,k_ay1@16,crA_0@19,cram2@23,m_Ay3@26,m_ay4@29,l_aw2@33") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    // แมวและเด็กเหล่เล่นเจอะเจอเกลือเดินเกลือกคั่วกลิ้งร่วมโรงเรียน
+    syls = SylString (
+        "m_Xw0@3,l_x_3@6,d_ek1@10,l_E_1@14,l_en2@18,j_w_1@22,j_W_0@25,"
+        "klZ_0@30,d_Wn0@34,klZk1@40,c_T_2@44,klig2@49,r_Tm2@53,r_Og0@56,"
+        "r_Yn0@61"
+    );
+    rawPronun = output->output (syls);
+    if (rawPronun !=
+        "m_Xw0@3,l_x_3@6,d_ek1@10,l_E_1@14,l_en2@18,j_w_1@22,j_W_0@25,"
+        "klZ_0@30,d_Wn0@34,klZk1@40,c_T_2@44,klig2@49,r_Tm2@53,r_Og0@56,"
+        "r_Yn0@61")
+    {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
+    syls = SylString (
+        "m_V_0@3,m_Vt2@6,krIt1@10,k_ug2@14,P_Un3@18,n_vg1@23,s_ig1@27,"
+        "m_i_3@29,m_I_0@31,g_U_0@33,l_u_3@35,r_v_3@37"
+    );
+    rawPronun = output->output (syls);
+    if (rawPronun !=
+        "m_V_0@3,m_Vt2@6,krIt1@10,k_ug2@14,P_Un3@18,n_vg1@23,s_ig1@27,"
+        "m_i_3@29,m_I_0@31,g_U_0@33,l_u_3@35,r_v_3@37")
+    {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    // เกินเลยเม้ย
+    syls = SylString ("k_Wn0@4,l_Wy0@7,m_Wy3@11");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_Wn0@4,l_Wy0@7,m_Wy3@11") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
+bool
 TestJson()
 {
     bool isSuccess = true;
@@ -588,6 +728,7 @@ TestJson()
 
     return isSuccess;
 }
+
 int
 main()
 {
@@ -602,6 +743,10 @@ main()
     }
 
     if (!TestPhonetic()) {
+        isSuccess = false;
+    }
+
+    if (!TestRawPronun()) {
         isSuccess = false;
     }
 
