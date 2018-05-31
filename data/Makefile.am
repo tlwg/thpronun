@@ -3,6 +3,7 @@ pkgdata_DATA = \
 	$(NULL)
 
 EXCEPT_SRC = \
+	ex-elong.tsv	\
 	ex-montho-d.tsv	\
 	ex-misc.tsv	\
 	ex-multi-end.tsv	\
