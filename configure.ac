@@ -14,7 +14,7 @@ AM_INIT_AUTOMAKE(dist-xz no-dist-gzip)
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX
-AX_CXX_COMPILE_STDCXX_11
+AX_CXX_COMPILE_STDCXX_14
 AM_PROG_LIBTOOL
 
 # Checks for libraries.
