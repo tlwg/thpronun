@@ -500,6 +500,33 @@ TestExceptDict()
     return isSuccess;
 }
 
+bool
+TestWordBreak()
+{
+    bool isSuccess = true;
+
+    list<string> longSamples = {
+        u8"กุมบังเหียนชีวิตประชาชน",
+        u8"กองบัญชาการทหารสูงสุด",
+    };
+
+    cout << "Test parsing without word break..." << endl;
+    Parser noBrkParser (false);
+    if (!ParseAll (noBrkParser, longSamples)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    cout << "Test parsing with word break..." << endl;
+    Parser brkParser (true);
+    if (!ParseAll (brkParser, longSamples)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -526,6 +553,10 @@ main()
     }
 
     if (!TestExceptDict()) {
+        isSuccess = false;
+    }
+
+    if (!TestWordBreak()) {
         isSuccess = false;
     }
 

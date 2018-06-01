@@ -12,6 +12,7 @@
 #include <cassert>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 using namespace std;
 
@@ -56,12 +57,15 @@ ThCharToAboveBelowVowel (char16_t c)
 
 struct ParseState {
     int         pos;
+    int         stopPos;
     PronunDAG   pronDAG;
     bool        isLinked;
 
 public:
     ParseState();
-    ParseState (int pos, const PronunDAG& pronDAG, bool isLinked = false);
+    ParseState (int pos, int stopPos);
+    ParseState (int pos, int stopPos, const PronunDAG& pronDAG,
+                bool isLinked = false);
     ParseState (const ParseState& other);
     ParseState (ParseState&& other);
 
@@ -70,19 +74,26 @@ public:
 
 inline
 ParseState::ParseState()
-    : pos (0), pronDAG(), isLinked (false) {}
+    : pos (0), stopPos (0), pronDAG(), isLinked (false) {}
 
 inline
-ParseState::ParseState (int pos, const PronunDAG& pronDAG, bool isLinked)
-    : pos (pos), pronDAG (pronDAG), isLinked (isLinked) {}
+ParseState::ParseState (int pos, int stopPos)
+    : pos (pos), stopPos (stopPos), pronDAG(), isLinked (false) {}
+
+inline
+ParseState::ParseState (int pos, int stopPos, const PronunDAG& pronDAG,
+                        bool isLinked)
+    : pos (pos), stopPos (stopPos), pronDAG (pronDAG), isLinked (isLinked) {}
 
 inline
 ParseState::ParseState (const ParseState& other)
-    : pos (other.pos), pronDAG (other.pronDAG), isLinked (other.isLinked) {}
+    : pos (other.pos), stopPos (other.stopPos), pronDAG (other.pronDAG),
+      isLinked (other.isLinked) {}
 
 inline
 ParseState::ParseState (ParseState&& other)
     : pos (other.pos),
+      stopPos (other.stopPos),
       pronDAG (move (other.pronDAG)),
       isLinked (other.isLinked) {}
 
@@ -90,6 +101,7 @@ ParseState&
 ParseState::operator= (const ParseState& other)
 {
     pos       = other.pos;
+    stopPos   = other.stopPos;
     pronDAG   = other.pronDAG;
     isLinked  = other.isLinked;
 }
@@ -261,7 +273,8 @@ static void
 AddState (StatePool& pool, int pos, const ParseState& prevState,
           PartialSyl& partialSyl, bool isLinked)
 {
-    pool.add (ParseState (pos, AddSyl (prevState, partialSyl, pos), isLinked));
+    pool.add (ParseState (pos, prevState.stopPos,
+                          AddSyl (prevState, partialSyl, pos), isLinked));
 }
 
 static inline bool
@@ -272,8 +285,11 @@ IsSylStart (char16_t c)
 
 // Match initial consonant part of the syllable form
 static list<PartialSyl>
-MatchInitCons (const u16string& u16word, int pos, bool isLinked)
+MatchInitCons (const u16string& u16word, int pos, int stopPos, bool isLinked)
 {
+    assert (stopPos <= u16word.size());
+    assert (pos < stopPos);
+
     list<PartialSyl> partialSyls;
 
     auto firstCons = u16word.at (pos);
@@ -283,7 +299,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
     auto firstConsSound = InitConsSound (firstCons);
     auto firstConsClass = InitConsClass (firstCons);
 
-    if (pos + 1 < u16word.size()) {
+    if (pos + 1 < stopPos) {
         auto secChar = u16word.at (pos + 1);
 
         if (th_wcisthcons (secChar)) {
@@ -302,7 +318,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
                     if (isLinked)
                         break;
                     // add อักษรควบไม่แท้, but not for cรร, which is ร หัน
-                    if (pos + 2 >= u16word.size() ||
+                    if (pos + 2 >= stopPos ||
                         UTH_RO_RUA != u16word.at (pos + 2))
                     {
                         partialSyls.push_back (
@@ -328,7 +344,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
                 case UTH_TO_TAO:
                 case UTH_PO_PLA:
                     // add อักษรควบแท้, but not for cรร, which is ร หัน
-                    if (pos + 2 >= u16word.size() ||
+                    if (pos + 2 >= stopPos ||
                         UTH_RO_RUA != u16word.at (pos + 2))
                     {
                         partialSyls.push_back (
@@ -358,7 +374,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
                     UTH_O_ANG,          // อรดี, อรสา
                 };
 
-                if (pos + 2 < u16word.size()
+                if (pos + 2 < stopPos
                     && UTH_RO_RUA != u16word.at (pos + 2)) // prevent cรร
                 {
                     auto nextChar = u16word.at (pos + 2);
@@ -479,7 +495,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
                 EInitConsClass::LOWS == secConsClass)
             {
                 // add อักษรนำเสียงสนิท, but not for หรร, which is ร หัน
-                if (pos + 2 >= u16word.size() ||
+                if (pos + 2 >= stopPos ||
                     UTH_RO_RUA != secChar ||
                     UTH_RO_RUA != u16word.at (pos + 2))
                 {
@@ -496,7 +512,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
             //   e.g. ขนม, ขมิบ, จรวด, จมูก, เฉลิม, โตนด, ตลาด, ผลิต, สนิม, สยบ,
             //   สรุป, สลาย, สวรรค์, สวัสดี, อร่อย, อร่าม
             // - but not for cรร, which is ร หัน
-            if (pos + 2 >= u16word.size() ||
+            if (pos + 2 >= stopPos ||
                 UTH_RO_RUA != secChar ||
                 UTH_RO_RUA != u16word.at (pos + 2))
             {
@@ -515,7 +531,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
 
             // special case: บดี, บดินทร์
             if (UTH_BO_BAIMAI == firstCons && UTH_DO_DEK == secChar
-                && pos + 2 < u16word.size())
+                && pos + 2 < stopPos)
             {
                 auto nextChar = u16word.at (pos + 2);
                 if (UTH_SARA_I == nextChar || UTH_SARA_II == nextChar) {
@@ -536,7 +552,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
         } else if (UTH_RU == secChar) {
             // make sure it's not ฤๅ
             // note: "ตฤๅ" is supposed to be in exception dict here
-            if (pos + 2 >= u16word.size() || (
+            if (pos + 2 >= stopPos || (
                     UTH_LAKKHANGYAO != u16word.at (pos + 2) &&
                     UTH_SARA_AA != u16word.at (pos + 2)
                 ))
@@ -641,7 +657,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
                     );
                 } else if (ruCons.find (firstCons) != ruCons.end()) {
                     // peek next possible end cons
-                    if (pos + 2 < u16word.size() &&
+                    if (pos + 2 < stopPos &&
                         EEndConsClass::NONE != EndConsClass (u16word.at (pos + 2)))
                     {
                         // คฤนถ์, คฤธระ, พฤกษ์, พฤศจิก
@@ -740,7 +756,7 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
     );
 
     // add Pali-Sanskrit -a consonant sound
-    if (pos + 1 < u16word.size() && IsSylStart (u16word.at (pos + 1))) {
+    if (pos + 1 < stopPos && IsSylStart (u16word.at (pos + 1))) {
         partialSyls.push_back (
             PartialSyl (
                 pos + 1,
@@ -761,9 +777,12 @@ MatchInitCons (const u16string& u16word, int pos, bool isLinked)
 // Simple Karan: single consonant + THANTHAKHAT
 // return end position of the matched string
 static int
-MatchKaranSimple (const u16string& u16word, int pos)
+MatchKaranSimple (const u16string& u16word, int pos, int stopPos)
 {
-    if (pos + 1 < u16word.size() &&
+    assert (stopPos <= u16word.size());
+    assert (pos <= stopPos);
+
+    if (pos + 1 < stopPos &&
         UTH_THANTHAKHAT == u16word.at (pos + 1) &&
         th_wcisthcons (u16word.at (pos)))
     {
@@ -779,13 +798,16 @@ MatchKaranSimple (const u16string& u16word, int pos)
 //   - consonant + { SARA I, SARA U } + THANTHAKHAT
 // return end position of the matched string
 static int
-MatchKaranComplex (const u16string& u16word, int pos)
+MatchKaranComplex (const u16string& u16word, int pos, int stopPos)
 {
-    auto p = MatchKaranSimple (u16word, pos);
+    assert (stopPos <= u16word.size());
+    assert (pos <= stopPos);
+
+    auto p = MatchKaranSimple (u16word, pos, stopPos);
     if (p != pos)
         return p;
 
-    if (pos + 2 < u16word.size() &&
+    if (pos + 2 < stopPos &&
         UTH_THANTHAKHAT == u16word.at (pos + 2) &&
         th_wcisthcons (u16word.at (pos)) && (
             th_wcisthcons (u16word.at (pos + 1)) ||
@@ -815,6 +837,9 @@ EatEndConsSimple (const u16string& u16word, const ParseState& state,
                   PartialSyl& p, StatePool& pool,
                   const unordered_set<char16_t>& excludedECons)
 {
+    assert (state.stopPos <= u16word.size());
+    assert (p.pos <= state.stopPos);
+
     auto c = u16word.at (p.pos);
     if (th_wcisthcons (c) && EEndConsClass::NONE != EndConsClass (c)
         && excludedECons.find (c) == excludedECons.end())
@@ -822,7 +847,7 @@ EatEndConsSimple (const u16string& u16word, const ParseState& state,
         p.eConsClass = EndConsClass (c);
         ++p.pos; // skip the end cons
 
-        p.pos = MatchKaranComplex (u16word, p.pos);
+        p.pos = MatchKaranComplex (u16word, p.pos, state.stopPos);
         // add single non-linking ending consonant
         AddState (pool, p.pos, state, p);
 
@@ -839,6 +864,9 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
                    PartialSyl& p, StatePool& pool,
                    const unordered_set<char16_t>& excludedECons)
 {
+    assert (state.stopPos <= u16word.size());
+    assert (p.pos <= state.stopPos);
+
     static const unordered_set<char16_t> afterClusterVowels = {
         UTH_SARA_A,
         UTH_MAI_HAN_AKAT,
@@ -873,7 +901,7 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
     {
         p.eConsClass = EndConsClass (firstECons);
 
-        auto karanEnd = MatchKaranComplex (u16word, p.pos + 1);
+        auto karanEnd = MatchKaranComplex (u16word, p.pos + 1, state.stopPos);
         // add single non-linking ending consonant
         AddState (pool, karanEnd, state, p);
         if (karanEnd > p.pos + 1)
@@ -881,7 +909,7 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
 
         // check for sylable-linking case like จัตุรัส, จักรี, จักรา, มาตรา,
         // มัสยา, มัสมั่น, ศัตรู
-        if (p.pos + 1 < u16word.size()) {
+        if (p.pos + 1 < state.stopPos) {
             auto clusterEnd = p.pos + 1;
             auto secEChar = u16word.at (clusterEnd);
             auto nextChar = secEChar;
@@ -889,27 +917,27 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
                 ++clusterEnd; // skip second ending consonant
                 if (UTH_RO_RUA == secEChar &&
                     eConsWithRo.find (firstECons) != eConsWithRo.end() && (
-                        clusterEnd >= u16word.size() ||
+                        clusterEnd >= state.stopPos ||
                         IsSylStart (u16word.at (clusterEnd))
                     ))
                 {
                     // จักร, สมัคร, วัตร, มาตร, โคตร
                     AddState (pool, clusterEnd, state, p);
                 }
-                if (clusterEnd == u16word.size())
+                if (clusterEnd == state.stopPos)
                     goto word_done;
                 nextChar = u16word.at (clusterEnd);
             } else if (UTH_SARA_I == secEChar || UTH_SARA_U == secEChar) {
                 ++clusterEnd; // skip SARA I/U
                 if (eConsWithIU.find (firstECons) != eConsWithIU.end() && (
-                        clusterEnd >= u16word.size() ||
+                        clusterEnd >= state.stopPos ||
                         IsSylStart (u16word.at (clusterEnd))
                     ))
                 {
                     // ชาติ, ธาตุ, เกตุ, เหตุ, พยาธิ, ขัดสมาธิ, เมรุ
                     AddState (pool, clusterEnd, state, p);
                 }
-                if (clusterEnd == u16word.size())
+                if (clusterEnd == state.stopPos)
                     goto word_done;
             }
             if (afterClusterVowels.find (nextChar) != afterClusterVowels.end()
@@ -932,11 +960,15 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
 static void
 ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
 {
+    assert (state.stopPos <= u16word.size());
+    assert (state.pos < state.stopPos);
+
     list<PartialSyl> partialSyls = MatchInitCons (u16word, state.pos,
+                                                  state.stopPos,
                                                   state.isLinked);
 
     for (auto& p : partialSyls) {
-        if (p.pos >= u16word.size()) {
+        if (p.pos >= state.stopPos) {
             continue;
         }
         if (p.isComplete) {
@@ -947,21 +979,21 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
         p.tone = ETone::SAMAN;
         if (UTH_MAI_HAN_AKAT == c) {
             ++p.pos; // skip MAI HAN AKAT
-            if (p.pos >= u16word.size())
+            if (p.pos >= state.stopPos)
                 continue;
             c = u16word.at (p.pos);
             if (th_wcisthtone (c)) {
                 // read tone
                 p.tone = ThCharToTone (c);
                 ++p.pos; // skip the tone mark
-                if (p.pos >= u16word.size())
+                if (p.pos >= state.stopPos)
                     continue;
                 c = u16word.at (p.pos);
             }
             if (UTH_WO_WAEN == c) {
                 // วัว, รั้ว, ยัวะ, จั๊วะ
                 ++p.pos; // skip WO WAEN
-                if (p.pos < u16word.size() && UTH_SARA_A == u16word.at (p.pos))
+                if (p.pos < state.stopPos && UTH_SARA_A == u16word.at (p.pos))
                 {
                     // ยัวะ, จั๊วะ
                     ++p.pos; // skip SARA A
@@ -971,7 +1003,7 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                     p.vowel = EVowel::UAA;
                 }
                 p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
             } else {
                 // วัน, จักรี
@@ -988,7 +1020,7 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
             // อุ, อุ๊, อุด, กุ๊น, รู, ปู่, รูด, ปู๊น
             p.vowel = ThCharToAboveBelowVowel (c);
             ++p.pos; // skip the vowel
-            if (p.pos < u16word.size()) {
+            if (p.pos < state.stopPos) {
                 // check tone mark
                 c = u16word.at (p.pos);
                 if (th_wcisthtone (c)) {
@@ -997,17 +1029,17 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                     ++p.pos; // skip the tone
                 }
             }
-            if (p.pos >= u16word.size() ||
+            if (p.pos >= state.stopPos ||
                 th_wcisldvowel (u16word.at (p.pos)) ||
                 EVowel::UEE != p.vowel)
             {
                 // มิ, ซิ่, มี, ชี้, อึ, อึ๊, อุ, อุ๊, รู, ปู่
                 // note: คื, มื, and alike is allowed here at word end
                 p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
             }
-            if (p.pos < u16word.size() && !th_wcisldvowel (u16word.at (p.pos)))
+            if (p.pos < state.stopPos && !th_wcisldvowel (u16word.at (p.pos)))
             {
                 // check end cons
                 if (EVowel::UEE == p.vowel) {
@@ -1015,7 +1047,8 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                         // มือ, รื้อ
                         p.eConsClass = EEndConsClass::NONE;
                         ++p.pos; // skip O ANG
-                        p.pos = MatchKaranSimple (u16word, p.pos);
+                        p.pos = MatchKaranSimple (u16word, p.pos,
+                                                  state.stopPos);
                         AddState (pool, p.pos, state, p);
                     } else {
                         // มืด, ปื๊ด
@@ -1043,7 +1076,7 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                 p.tone = ThCharToTone (c);
                 ++p.pos; // skip tone mark
             }
-            if (p.pos >= u16word.size()) {
+            if (p.pos >= state.stopPos) {
                 continue;
             }
             switch (u16word.at (p.pos)) {
@@ -1051,7 +1084,7 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                 ++p.pos; // skip SARA A
                 p.vowel = EVowel::A;
                 p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
                 break;
 
@@ -1059,11 +1092,11 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                 ++p.pos; // skip SARA AA
                 p.vowel = EVowel::AA;
                 p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
 
                 // check optional end cons
-                if (p.pos < u16word.size()) {
+                if (p.pos < state.stopPos) {
                     // ค่าง, มาตรา
                     EatEndConsComplex (u16word, state, p, pool);
                 }
@@ -1073,7 +1106,7 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                 ++p.pos; // skip SARA AM
                 p.vowel = EVowel::A;
                 p.eConsClass = EEndConsClass::KOM;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
                 break;
 
@@ -1083,7 +1116,7 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                 p.vowel = EVowel::UAA;
 
                 // check mandatory end cons
-                if (p.pos < u16word.size()) {
+                if (p.pos < state.stopPos) {
                     EatEndConsSimple (u16word, state, p, pool);
                 }
                 break;
@@ -1093,17 +1126,17 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                 ++p.pos; // skip O ANG
                 p.vowel = EVowel::AUU;
                 p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
 
                 // check optional end cons
-                if (p.pos < u16word.size()) {
+                if (p.pos < state.stopPos) {
                     EatEndConsSimple (u16word, state, p, pool);
                 }
                 break;
 
             case UTH_RO_RUA:
-                if (p.pos + 1 == u16word.size() || (
+                if (p.pos + 1 == state.stopPos || (
                         UTH_RO_RUA != u16word.at (p.pos + 1) &&
                         IsSylStart (u16word.at (p.pos + 1))
                     ))
@@ -1113,7 +1146,8 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                     if (EInitConsSound::RA != p.iConsSound) {
                         p.vowel = EVowel::AUU;
                         p.eConsClass = EEndConsClass::KON;
-                        p.pos = MatchKaranSimple (u16word, p.pos);
+                        p.pos = MatchKaranSimple (u16word, p.pos,
+                                                  state.stopPos);
                         AddState (pool, p.pos, state, p);
                     }
                 } else if (UTH_RO_RUA == u16word.at (p.pos + 1)) {
@@ -1121,11 +1155,12 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                     p.pos += 2; // skip two RO RUA's
                     p.vowel = EVowel::A;
                     p.eConsClass = EEndConsClass::KON;
-                    auto karanEnd = MatchKaranSimple (u16word, p.pos);
+                    auto karanEnd = MatchKaranSimple (u16word, p.pos,
+                                                      state.stopPos);
                     AddState (pool, karanEnd, state, p);
 
                     // check optional end cons
-                    if (karanEnd == p.pos && p.pos < u16word.size()) {
+                    if (karanEnd == p.pos && p.pos < state.stopPos) {
                         EatEndConsSimple (u16word, state, p, pool);
                     }
                 }
@@ -1166,13 +1201,16 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
 static void
 ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
 {
+    assert (state.stopPos <= u16word.size());
+    assert (state.pos < state.stopPos);
     assert (UTH_SARA_E == u16word.at (state.pos));
 
-    if (state.pos + 1 >= u16word.size()) {
+    if (state.pos + 1 >= state.stopPos) {
         return;
     }
 
     list<PartialSyl> partialSyls = MatchInitCons (u16word, state.pos + 1,
+                                                  state.stopPos,
                                                   state.isLinked);
 
     for (auto& p : partialSyls) {
@@ -1181,7 +1219,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
             continue;
         }
         p.tone = ETone::SAMAN;
-        if (p.pos >= u16word.size()) {
+        if (p.pos >= state.stopPos) {
             // add EE-syllable except เธอ -> ทะ-เอ
             if (!p.hasPreSyl || EInitConsSound::A != p.iConsSound) {
                 p.vowel = EVowel::EE;
@@ -1196,7 +1234,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
             // เดิน, เปิ่น
             ++p.pos; // skip SARA I
             p.vowel = EVowel::OEE;
-            if (p.pos >= u16word.size()) {
+            if (p.pos >= state.stopPos) {
                 continue;
             }
             c = u16word.at (p.pos);
@@ -1205,16 +1243,16 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                 p.tone = ThCharToTone (c);
                 ++p.pos; // skip tone mark
             }
-            p.pos = MatchKaranSimple (u16word, p.pos);
+            p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
             // check mandatory end cons
-            if (p.pos < u16word.size()) {
+            if (p.pos < state.stopPos) {
                 EatEndConsSimple (u16word, state, p, pool);
             }
             break;
         case UTH_SARA_II:
             // เลียะ, เปี๊ยะ, เสีย, เสี่ย, เสียม, เยี่ยง
             ++p.pos; // skip SARA II
-            if (p.pos >= u16word.size()) {
+            if (p.pos >= state.stopPos) {
                 continue;
             }
             c = u16word.at (p.pos);
@@ -1223,28 +1261,28 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                 p.tone = ThCharToTone (c);
                 ++p.pos; // skip tone mark
             }
-            if (p.pos >= u16word.size() || UTH_YO_YAK != u16word.at (p.pos)) {
+            if (p.pos >= state.stopPos || UTH_YO_YAK != u16word.at (p.pos)) {
                 continue;
             }
             ++p.pos; // skip YO YAK
-            if (p.pos < u16word.size() && UTH_SARA_A == u16word.at (p.pos)) {
+            if (p.pos < state.stopPos && UTH_SARA_A == u16word.at (p.pos)) {
                 ++p.pos; // skip SARA A
                 p.vowel = EVowel::IA;
             } else {
                 p.vowel = EVowel::IAA;
             }
             p.eConsClass = EEndConsClass::NONE;
-            p.pos = MatchKaranSimple (u16word, p.pos);
+            p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
             AddState (pool, p.pos, state, p);
             // check optional end cons
-            if (EVowel::IAA == p.vowel && p.pos < u16word.size()) {
+            if (EVowel::IAA == p.vowel && p.pos < state.stopPos) {
                 EatEndConsComplex (u16word, state, p, pool);
             }
             break;
         case UTH_SARA_UEE:
             // เสือ, เสื่อ, เกือะ, เกื๊อะ, เคือง, เชื่อม
             ++p.pos; // skip SARA UEE
-            if (p.pos >= u16word.size()) {
+            if (p.pos >= state.stopPos) {
                 continue;
             }
             c = u16word.at (p.pos);
@@ -1253,21 +1291,21 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                 p.tone = ThCharToTone (c);
                 ++p.pos; // skip tone mark
             }
-            if (p.pos >= u16word.size() || UTH_O_ANG != u16word.at (p.pos)) {
+            if (p.pos >= state.stopPos || UTH_O_ANG != u16word.at (p.pos)) {
                 continue;
             }
             ++p.pos; // skip O ANG
-            if (p.pos < u16word.size() && UTH_SARA_A == u16word.at (p.pos)) {
+            if (p.pos < state.stopPos && UTH_SARA_A == u16word.at (p.pos)) {
                 ++p.pos; // skip SARA A
                 p.vowel = EVowel::UEA;
             } else {
                 p.vowel = EVowel::UEAA;
             }
             p.eConsClass = EEndConsClass::NONE;
-            p.pos = MatchKaranSimple (u16word, p.pos);
+            p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
             AddState (pool, p.pos, state, p);
             // check optional end cons
-            if (EVowel::UEAA == p.vowel && p.pos < u16word.size()) {
+            if (EVowel::UEAA == p.vowel && p.pos < state.stopPos) {
                 EatEndConsSimple (u16word, state, p, pool);
             }
             break;
@@ -1275,7 +1313,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
             // เป็น
             ++p.pos; // skip MAITAIKHU
             // check mandatory end cons
-            if (p.pos < u16word.size()) {
+            if (p.pos < state.stopPos) {
                 p.vowel = EVowel::E;
                 EatEndConsSimple (u16word, state, p, pool);
             }
@@ -1285,7 +1323,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                 // read tone
                 p.tone = ThCharToTone (c);
                 ++p.pos; // skip tone mark
-                if (p.pos >= u16word.size()) {
+                if (p.pos >= state.stopPos) {
                     // เก๋, เท่, เบ้
                     p.vowel = EVowel::EE;
                     p.eConsClass = EEndConsClass::NONE;
@@ -1297,7 +1335,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
             case UTH_O_ANG:
                 // เธอ, เพ้อ, เลอะ, เบ๊อะ
                 ++p.pos; // skip O ANG
-                if (p.pos < u16word.size() && UTH_SARA_A == u16word.at (p.pos))
+                if (p.pos < state.stopPos && UTH_SARA_A == u16word.at (p.pos))
                 {
                     // เลอะ
                     ++p.pos; // skip SARA A
@@ -1307,7 +1345,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                     p.vowel = EVowel::OEE;
                 }
                 p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
                 break;
             case UTH_SARA_A:
@@ -1317,14 +1355,14 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                     ++p.pos; // skip SARA A
                     p.vowel = EVowel::E;
                     p.eConsClass = EEndConsClass::NONE;
-                    p.pos = MatchKaranSimple (u16word, p.pos);
+                    p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                     AddState (pool, p.pos, state, p);
                 }
                 break;
             case UTH_SARA_AA:
                 // เบา, เก่า, เกาะ, เอ๊าะ
                 ++p.pos; // skip SARA AA
-                if (p.pos < u16word.size() && UTH_SARA_A == u16word.at (p.pos))
+                if (p.pos < state.stopPos && UTH_SARA_A == u16word.at (p.pos))
                 {
                     // เกาะ
                     ++p.pos; // skip SARA A
@@ -1334,7 +1372,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                     p.vowel = EVowel::A;
                     p.eConsClass = EEndConsClass::KOEW;
                 }
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
                 break;
             case UTH_YO_YAK:
@@ -1342,7 +1380,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                 ++p.pos; // skip YO YAK
                 p.vowel = EVowel::OEE;
                 p.eConsClass = EEndConsClass::KOEY;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
                 break;
             default:
@@ -1351,10 +1389,10 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                     // เก, เก๋, เบน, เก่ง
                     p.vowel = EVowel::EE;
                     p.eConsClass = EEndConsClass::NONE;
-                    p.pos = MatchKaranSimple (u16word, p.pos);
+                    p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                     AddState (pool, p.pos, state, p);
                     // check optional end cons
-                    if (p.pos < u16word.size()) {
+                    if (p.pos < state.stopPos) {
                         EatEndConsComplex (u16word, state, p, pool);
                     }
                 }
@@ -1370,13 +1408,15 @@ static void
 ParseOtherLV (const u16string& u16word, const ParseState& state,
               StatePool& pool)
 {
-    assert (state.pos < u16word.size());
+    assert (state.stopPos <= u16word.size());
+    assert (state.pos < state.stopPos);
     assert (th_wcisldvowel (u16word.at (state.pos)));
     assert (UTH_SARA_E != u16word.at (state.pos));
 
     auto ldv = u16word.at (state.pos);
 
     list<PartialSyl> partialSyls = MatchInitCons (u16word, state.pos + 1,
+                                                  state.stopPos,
                                                   state.isLinked);
 
     for (auto& p : partialSyls) {
@@ -1385,7 +1425,7 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
             continue;
         }
         p.tone = ETone::SAMAN;
-        if (p.pos < u16word.size()) {
+        if (p.pos < state.stopPos) {
             auto c = u16word.at (p.pos);
             if (th_wcisthtone (c)) {
                 // read tone
@@ -1399,7 +1439,7 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
         switch (ldv) {
         case UTH_SARA_AE:
             // แกะ, แป๊ะ, แก, แก่, แกน, แก่น, แข็ง
-            if (p.pos < u16word.size()) {
+            if (p.pos < state.stopPos) {
                 auto c = u16word.at (p.pos);
                 switch (c) {
                 case UTH_SARA_A:
@@ -1423,12 +1463,12 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
             }
             if (!needsEndCons) {
                 p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
             }
             // check optional end cons for SARA AEE,
             // mandatory end cons for SARA AE with MAITAIKHU
-            if (p.pos < u16word.size() && (
+            if (p.pos < state.stopPos && (
                     EVowel::AEE == p.vowel || needsEndCons
                 ))
             {
@@ -1437,17 +1477,17 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
             break;
         case UTH_SARA_O:
             // โละ, โป๊ะ, โต, โอ่, โกน, โล้น
-            if (p.pos < u16word.size() && UTH_SARA_A == u16word.at (p.pos)) {
+            if (p.pos < state.stopPos && UTH_SARA_A == u16word.at (p.pos)) {
                 ++p.pos;  // skip SARA A
                 p.vowel = EVowel::O;
             } else {
                 p.vowel = EVowel::OO;
             }
             p.eConsClass = EEndConsClass::NONE;
-            p.pos = MatchKaranComplex (u16word, p.pos);
+            p.pos = MatchKaranComplex (u16word, p.pos, state.stopPos);
             AddState (pool, p.pos, state, p);
             // check optional end cons for SARA OO
-            if (EVowel::OO == p.vowel && p.pos < u16word.size()) {
+            if (EVowel::OO == p.vowel && p.pos < state.stopPos) {
                 EatEndConsComplex (u16word, state, p, pool);
             }
             break;
@@ -1455,7 +1495,7 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
         case UTH_SARA_AI_MAIMUAN:
             p.vowel = EVowel::A;
             p.eConsClass = EEndConsClass::KOEY;
-            p.pos = MatchKaranSimple (u16word, p.pos);
+            p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
             AddState (pool, p.pos, state, p);
             break;
         }
@@ -1466,7 +1506,8 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
 static void
 ParseRuLu (const u16string& u16word, const ParseState& state, StatePool& pool)
 {
-    assert (state.pos < u16word.size());
+    assert (state.stopPos <= u16word.size());
+    assert (state.pos < state.stopPos);
     assert (UTH_RU == u16word.at (state.pos) ||
             UTH_LU == u16word.at (state.pos));
 
@@ -1487,7 +1528,7 @@ ParseRuLu (const u16string& u16word, const ParseState& state, StatePool& pool)
         UTH_SO_RUSI,
     };
 
-    if (state.pos + 1 >= u16word.size()) {
+    if (state.pos + 1 >= state.stopPos) {
         // ฤ/ฦ at string end
         p.vowel = EVowel::UE;
         p.eConsClass = EEndConsClass::NONE;
@@ -1502,7 +1543,7 @@ ParseRuLu (const u16string& u16word, const ParseState& state, StatePool& pool)
         } else if (th_wcisthcons (secChar)) {
             auto secConsClass = EndConsClass (secChar);
             if (EEndConsClass::NONE == secConsClass || (
-                    state.pos + 2 < u16word.size() &&
+                    state.pos + 2 < state.stopPos &&
                     !IsSylStart (u16word.at (state.pos + 2))
                 ))
             {
@@ -1529,29 +1570,89 @@ static int
 FindExceptions (const u16string& u16word, const ParseState& state,
                 StatePool& pool, const Dict* exceptDict)
 {
+    assert (state.stopPos <= u16word.size());
+    assert (state.pos < state.stopPos);
+
     int nExcepts = 0;
 
     Match match (u16word, state.pos, exceptDict);
     while (match.findNext()) {
+        if (match.getCurPos() > state.stopPos)
+            continue;
+
         PronunDAG newDAG = state.pronDAG;
         SylString matchedSylStr (match.getData());
         matchedSylStr.shiftEndPos (state.pos);
         newDAG.addSylString (state.pos, matchedSylStr);
-        pool.add (ParseState (match.getCurPos(), newDAG));
+        pool.add (ParseState (match.getCurPos(), state.stopPos, newDAG));
         ++nExcepts;
     }
 
     return nExcepts;
 }
 
-static PronunDAG
-ParseU16 (const u16string& u16word, StatePool& pool, const Dict* exceptDict)
+inline bool
+IsThaiLetter (char16_t c)
 {
-    PronunDAG pronDAG;
+    return th_wcisthcons (c) || th_wcisthvowel (c) || th_wcisthtone (c)
+           || th_wcisthdiac (c);
+}
+
+static int
+SkipNonThai (const u16string& u16word, int start)
+{
+    while (start < u16word.size() && !IsThaiLetter (u16word.at (start))) {
+        ++start;
+    }
+    return start;
+}
+
+static int
+NextThaiStop (const u16string& u16word, int start, const vector<int>& brkPos)
+{
+    assert (IsThaiLetter (u16word.at (start)));
+
+    int nextBrk = u16word.size();
+    for (int i = 0; i < brkPos.size(); ++i) {
+        if (brkPos[i] > start) {
+            nextBrk = brkPos[i];
+            break;
+        }
+    }
+
+    while (start < nextBrk && IsThaiLetter (u16word.at (start))) {
+        ++start;
+    }
+
+    return start;
+}
+
+static PronunDAG
+ParseU16 (const u16string& u16word, const Dict* exceptDict,
+          const vector<int>& brkPos)
+{
+    StatePool pool;
+
     ParseState s;
+    int beginPos = SkipNonThai (u16word, 0);
+    if (beginPos > 0) {
+        s.pronDAG.addEdge (0, beginPos, Syl (beginPos));
+    }
+    s.stopPos = NextThaiStop (u16word, beginPos, brkPos);
+    pool.add (s);
+
+    PronunDAG pronDAG;
     while (pool.pop (s)) {
         if (s.pos >= u16word.size()) {
             pronDAG.unionDAG (s.pronDAG);
+        } else if (s.pos >= s.stopPos) {
+            beginPos = SkipNonThai (u16word, s.pos);
+            if (beginPos > s.pos) {
+                s.pronDAG.addEdge (s.pos, beginPos, Syl (beginPos));
+                s.pos = beginPos;
+            }
+            s.stopPos = NextThaiStop (u16word, s.pos, brkPos);
+            pool.add (s);
         } else {
             if (exceptDict
                 && FindExceptions (u16word, s, pool, exceptDict) > 0)
@@ -1573,15 +1674,30 @@ ParseU16 (const u16string& u16word, StatePool& pool, const Dict* exceptDict)
     return pronDAG;
 }
 
-Parser::Parser()
-    : mExceptDict()
+Parser::Parser (bool isBreakWords)
+    : mExceptDict(),
+      mThBrk (nullptr)
 {
+    if (isBreakWords) {
+        mThBrk = th_brk_new (NULL);
+    }
 }
 
-Parser::Parser (const char* exceptDictPath)
-    : mExceptDict()
+Parser::Parser (const char* exceptDictPath, bool isBreakWords)
+    : mExceptDict(),
+      mThBrk (nullptr)
 {
     loadExceptDict (exceptDictPath);
+    if (isBreakWords) {
+        mThBrk = th_brk_new (NULL);
+    }
+}
+
+Parser::~Parser()
+{
+    if (mThBrk) {
+        th_brk_delete (mThBrk);
+    }
 }
 
 bool
@@ -1591,6 +1707,23 @@ Parser::loadExceptDict (const char* exceptDictPath)
     return mExceptDict->open (exceptDictPath);
 }
 
+vector<int>
+FindBreaks (const u16string& u16word, ThBrk* thBrk)
+{
+    if (!thBrk)
+        return vector<int>();
+
+    wstring wword;
+    for (auto c : u16word) {
+        wword += static_cast<wchar_t> (c);
+    }
+    vector<int> brkPos (u16word.size(), 0);
+    int nBrk = th_brk_wc_find_breaks (thBrk, wword.c_str(),
+                                      brkPos.data(), brkPos.size());
+    brkPos.resize (nBrk);
+    return brkPos;
+}
+
 PronunDAG
 Parser::parseWord (string word) const
 {
@@ -1598,10 +1731,10 @@ Parser::parseWord (string word) const
     wstring_convert<codecvt_utf8_utf16<char16_t>, char16_t> u16conv;
     u16string u16word = u16conv.from_bytes (word);
 
+    auto brkPos = FindBreaks (u16word, mThBrk);
+
     // parse the UTF-16 word
-    StatePool pool;
-    pool.add (ParseState());
-    return ParseU16 (u16word, pool, mExceptDict.get());
+    return ParseU16 (u16word, mExceptDict.get(), brkPos);
 }
 
 /*
