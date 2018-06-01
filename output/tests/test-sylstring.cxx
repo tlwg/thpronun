@@ -145,6 +145,16 @@ TestThaiPronun()
         isSuccess = false;
     }
 
+    // with blank syllable
+    syls += Syl::Blank;
+    syls += SylString ("?_Wy4");
+    thaiPronun = output->output (syls);
+    if (thaiPronun != u8"เกิน-เลย-เม้ย เอ๋ย")
+    {
+        cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 
@@ -277,6 +287,16 @@ TestRomanPronun()
     if (romanized != u8"koenloeimoei")
     {
         cerr << "Wrong romanization '" << romanized << "'" << endl;
+        isSuccess = false;
+    }
+
+    // with blank syllable
+    syls += Syl::Blank;
+    syls += SylString ("?_Wy4");
+    romanized = output->output (syls);
+    if (romanized != u8"koenloeimoei oei")
+    {
+        cerr << "Wrong pronunciation '" << romanized << "'" << endl;
         isSuccess = false;
     }
 
@@ -450,6 +470,16 @@ TestPhonetic()
         isSuccess = false;
     }
 
+    // with blank syllable
+    syls += Syl::Blank;
+    syls += SylString ("?_Wy4");
+    phonetic = output->output (syls);
+    if (phonetic != "koeen0 loeey0 moeey3 oeey4")
+    {
+        cerr << "Wrong pronunciation '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 
@@ -589,6 +619,15 @@ TestRawPronun()
         isSuccess = false;
     }
 
+    // with blank syllable
+    syls += Syl::Blank;
+    syls += SylString ("?_Wy4@15");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_Wn0@4,l_Wy0@7,m_Wy3@11 ?_Wy4@15") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 
@@ -721,6 +760,17 @@ TestJson()
     thaiPronun = output->output (syls);
     if (thaiPronun !=
         u8"[\"เกิน\",\"เลย\",\"เม้ย\"]")
+    {
+        cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    // with blank syllable
+    syls += Syl::Blank;
+    syls += SylString ("?_Wy4");
+    thaiPronun = output->output (syls);
+    if (thaiPronun !=
+        u8"[\"เกิน\",\"เลย\",\"เม้ย\",\" \",\"เอ๋ย\"]")
     {
         cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
         isSuccess = false;

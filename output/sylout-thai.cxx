@@ -623,6 +623,8 @@ ThaiSylOutput::output (const Syl& syl) const
     case EVowel::OEE:
         return ThaiSylOE (syl.iCons1(), syl.iCons2(), false,
                           syl.eCons(), syl.tone());
+    default:
+        return " ";
     }
 }
 

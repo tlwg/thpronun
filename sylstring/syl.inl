@@ -7,13 +7,13 @@
 /////////////////
 
 inline
-Syl::Syl()
+Syl::Syl (int endPos)
   : mICons1 (EInitConsSound::INVALID),
     mICons2 (ESecInitCons::NONE),
     mVowel (EVowel::INVALID),
     mECons (EEndConsClass::NONE),
     mTone (ETone::INVALID),
-    mEndPos (-1)
+    mEndPos (endPos)
 {
 }
 

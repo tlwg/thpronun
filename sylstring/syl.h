@@ -11,7 +11,10 @@
 
 class Syl {
 public:
-    Syl();
+    static const Syl Blank;
+
+public:
+    explicit Syl (int endPos = -1);
     Syl (const Syl& other);
     Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
          EEndConsClass eCons, ETone tone, int endPos = -1);
