@@ -8,13 +8,17 @@
 #include "lattice/pron-dag.h"
 #include "dict/dict.h"
 
+#include <thai/thwchar.h>
+#include <thai/thwbrk.h>
+
 #include <string>
 #include <memory>
 
 class Parser {
 public:
-    Parser();
-    Parser (const char* exceptDictPath);
+    Parser (bool isBreakWords = true);
+    Parser (const char* exceptDictPath, bool isBreakWords = false);
+    ~Parser();
 
     bool loadExceptDict (const char* exceptDictPath);
 
@@ -22,6 +26,7 @@ public:
 
 private:
     std::unique_ptr<Dict>  mExceptDict;
+    ThBrk*                 mThBrk;
 };
 
 #endif // PARSER_H
