@@ -41,6 +41,7 @@ Usage (const char* progName)
          << "    -t    Outputs Thai pronunciation" << endl
          << "    -p    Outputs Phonetic form" << endl
          << "    -w    Outputs Raw pronunciation code" << endl
+         << "    -n    Turns off word segmentation" << endl
          << "    -h    Displays help" << endl
          << endl
          << "If no word is given, standard input will be read." << endl;
@@ -135,6 +136,7 @@ main (int argc, const char* argv[])
     int optCnt = 0;
     bool isJson = false;
     bool isGroup = false;
+    bool isBreakWords = true;
     const char* dictPath = nullptr;
     list<unique_ptr<IOutput>> stringOutputs;
 
@@ -167,6 +169,9 @@ main (int argc, const char* argv[])
             case 'w':
                 stringOutputs.push_back (MakeRawOutput (isJson, isGroup));
                 break;
+            case 'n':
+                isBreakWords = false;
+                break;
             case 'h':
                 Usage (argv[0]);
                 return 1;
@@ -184,7 +189,7 @@ main (int argc, const char* argv[])
         stringOutputs.push_back (MakePhoneticOutput (isJson, isGroup));
     }
 
-    Parser parser;
+    Parser parser (isBreakWords);
     if (!LoadExceptDict (parser, dictPath)) {
         cerr << "Warning: Working without exception dictionary" << endl;
     }
