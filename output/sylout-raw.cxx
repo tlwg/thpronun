@@ -108,6 +108,9 @@ RawToneTbl_ = {
 string
 RawSylOutput::output (const Syl& syl) const
 {
+    if (syl == Syl::Blank)
+        return " ";
+
     return RawInitConsTbl_.at (syl.iCons1())
            + RawSecInitConsTbl_.at (syl.iCons2())
            + RawVowelTbl_.at (syl.vowel())

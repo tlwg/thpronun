@@ -10,6 +10,8 @@ using namespace std;
 //  class Syl  //
 /////////////////
 
+const Syl Syl::Blank;
+
 Syl::Syl (const std::string& desc, int endPos)
   : mICons1 (InitConsCodeToSound (desc[0])),
     mICons2 (static_cast<ESecInitCons> (desc[1])),

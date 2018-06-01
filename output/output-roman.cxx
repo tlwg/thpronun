@@ -18,14 +18,21 @@ RomanOutput::output (const SylString& sylStr) const
     if (mIsCapitalize) {
         outStr[0] = toupper (outStr[0]);
     }
+    bool isBegin = false;
     for (auto prev = i++; i != sylStr.end(); prev = i++) {
+        if (*i == Syl::Blank) {
+            outStr += " ";
+            isBegin = true;
+            continue;
+        }
         // According to Royal Institute, insert hyphen for 3 cases:
         //   1. prev->eCons == NONE and i->iCons1 == NGA
         //   2. prev->eCons == KONG and i->iCons1 == A
         //   3. i->iCons1 == A
-        if (EInitConsSound::A == i->iCons1()
-            || (EEndConsClass::NONE == prev->eCons()
-                && EInitConsSound::NGA == i->iCons1()))
+        if (!isBegin
+            && (EInitConsSound::A == i->iCons1()
+                || (EEndConsClass::NONE == prev->eCons()
+                    && EInitConsSound::NGA == i->iCons1())))
         {
             outStr += '-';
         }

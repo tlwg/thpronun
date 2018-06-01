@@ -112,6 +112,9 @@ PhoneticToneTbl_ = {
 string
 PhoneticSylOutput::output (const Syl& syl) const
 {
+    if (syl == Syl::Blank)
+        return " ";
+
     return PhoneticInitConsTbl_.at (syl.iCons1())
            + PhoneticSecInitConsTbl_.at (syl.iCons2())
            + PhoneticVowelTbl_.at (syl.vowel())

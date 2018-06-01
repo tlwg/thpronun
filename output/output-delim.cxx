@@ -11,10 +11,18 @@ DelimOutput::output (const SylString& sylStr) const
 {
     string outStr;
 
-    auto i = sylStr.begin();
-    outStr = mSylOutput->output (*i);
-    while (++i != sylStr.end()) {
-        outStr += mDelim + mSylOutput->output (*i);
+    bool isBegin = true;
+    for (const auto& syl : sylStr) {
+        if (syl == Syl::Blank) {
+            outStr += " ";
+            isBegin = true;
+        } else {
+            if (!isBegin) {
+                outStr += mDelim;
+            }
+            outStr += mSylOutput->output (syl);
+            isBegin = false;
+        }
     }
 
     return outStr;
