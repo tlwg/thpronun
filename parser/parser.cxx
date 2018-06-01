@@ -1484,7 +1484,7 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
                 p.vowel = EVowel::OO;
             }
             p.eConsClass = EEndConsClass::NONE;
-            p.pos = MatchKaranComplex (u16word, p.pos, state.stopPos);
+            p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
             AddState (pool, p.pos, state, p);
             // check optional end cons for SARA OO
             if (EVowel::OO == p.vowel && p.pos < state.stopPos) {
