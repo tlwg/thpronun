@@ -369,6 +369,7 @@ MatchInitCons (const u16string& u16word, int pos, int stopPos, bool isLinked)
                     UTH_PO_PLA,         // ปรโลก
                     UTH_PHO_SAMPHAO,    // ภรณี
                     UTH_MO_MA,          // มรณะ, มรดก
+                    UTH_WO_WAEN,        // วรกาย, วรลักษณ์
                     UTH_SO_SUA,         // สรพงษ์, สรยุทธ์, สรศักดิ์
                     UTH_HO_HIP,         // หรคุณ, หรดี
                     UTH_O_ANG,          // อรดี, อรสา
