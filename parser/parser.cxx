@@ -1493,6 +1493,18 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
             }
             break;
         case UTH_SARA_AI_MAIMALAI:
+            p.vowel = EVowel::A;
+            p.eConsClass = EEndConsClass::KOEY;
+            // match optional YO YAK, e.g. ไทย, อธิปไตย
+            if (p.pos < state.stopPos && UTH_YO_YAK == u16word.at (p.pos)
+                && (p.pos + 1 == state.stopPos
+                    || IsSylStart (u16word.at (p.pos + 1))))
+            {
+                AddState (pool, p.pos + 1, state, p);
+            }
+            p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
+            AddState (pool, p.pos, state, p);
+            break;
         case UTH_SARA_AI_MAIMUAN:
             p.vowel = EVowel::A;
             p.eConsClass = EEndConsClass::KOEY;
