@@ -1162,7 +1162,7 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
 
                     // check optional end cons
                     if (karanEnd == p.pos && p.pos < state.stopPos) {
-                        EatEndConsSimple (u16word, state, p, pool);
+                        EatEndConsComplex (u16word, state, p, pool);
                     }
                 }
                 // No else here. The cases like ฟรี, (นา)ครี, etc. should be
