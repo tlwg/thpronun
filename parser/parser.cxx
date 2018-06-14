@@ -1579,6 +1579,25 @@ ParseRuLu (const u16string& u16word, const ParseState& state, StatePool& pool)
     }
 }
 
+static list<SylString>
+MakeSylStrings (const string& desc)
+{
+    list<SylString> sylStrings;
+
+    size_t beginPos = 0;
+    size_t endPos;
+    while ((endPos = desc.find (';', beginPos)) != string::npos) {
+        sylStrings.push_back (
+            SylString (desc.substr (beginPos, endPos - beginPos))
+        );
+        beginPos = endPos + 1;
+    }
+    // last one
+    sylStrings.push_back (SylString (desc.substr (beginPos)));
+
+    return sylStrings;
+}
+
 static int
 FindExceptions (const u16string& u16word, const ParseState& state,
                 StatePool& pool, const Dict* exceptDict)
@@ -1594,9 +1613,10 @@ FindExceptions (const u16string& u16word, const ParseState& state,
             continue;
 
         PronunDAG newDAG = state.pronDAG;
-        SylString matchedSylStr (match.getData());
-        matchedSylStr.shiftEndPos (state.pos);
-        newDAG.addSylString (state.pos, matchedSylStr);
+        for (auto& s : MakeSylStrings (match.getData())) {
+            s.shiftEndPos (state.pos);
+            newDAG.addSylString (state.pos, s);
+        }
         pool.add (ParseState (match.getCurPos(), state.stopPos, newDAG));
         ++nExcepts;
     }
