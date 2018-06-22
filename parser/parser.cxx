@@ -1545,7 +1545,7 @@ ParseRuLu (const u16string& u16word, const ParseState& state, StatePool& pool)
         // ฤ/ฦ at string end
         p.vowel = EVowel::UE;
         p.eConsClass = EEndConsClass::NONE;
-        AddState (pool, state.pos, state, p);
+        AddState (pool, state.pos + 1, state, p);
     } else {
         auto secChar = u16word.at (state.pos + 1);
         if (UTH_LAKKHANGYAO == secChar || UTH_SARA_AA == secChar) {
