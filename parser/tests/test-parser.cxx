@@ -176,6 +176,18 @@ TestThCons()
     }
     cout << endl;
 
+    list<string> nbTests = {
+        u8"อุดรรัถยา",
+        u8"อุดรรโหฐาน",
+    };
+
+    cout << "TestThCons: no word break..." << endl;
+    Parser nbParser (false);
+    if (!ParseAll (nbParser, nbTests)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
     return isSuccess;
 }
 
