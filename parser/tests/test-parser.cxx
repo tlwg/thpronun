@@ -501,6 +501,8 @@ TestExceptDict()
     list<string> exceptSamples = {
         u8"สามารถปรารถนาได้",
         u8"ได้ปรารถนาเป็นสามารถ",
+        u8"สวัสดิการ",
+        u8"สวัสดิ์",
     };
 
     cout << "Test parsing with exception dictionary..." << endl;

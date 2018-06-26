@@ -1609,6 +1609,12 @@ FindExceptions (const u16string& u16word, const ParseState& state,
         if (match.getCurPos() > state.stopPos)
             continue;
 
+        if (match.getCurPos() < state.stopPos &&
+            !IsSylStart (u16word.at (match.getCurPos())))
+        {
+            continue;
+        }
+
         PronunDAG newDAG = state.pronDAG;
         for (auto& s : MakeSylStrings (match.getData())) {
             s.shiftEndPos (state.pos);
