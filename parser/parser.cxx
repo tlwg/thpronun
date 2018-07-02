@@ -1677,8 +1677,13 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
             beginPos,
             Syl (beginPos, u16word.substr (0, beginPos))
         );
+        s.pos = beginPos;
     }
-    s.stopPos = NextWordStop (u16word, beginPos, brkPos);
+    if (s.pos < u16word.size()) {
+        s.stopPos = NextWordStop (u16word, s.pos, brkPos);
+    } else {
+        s.stopPos = s.pos;
+    }
     pool.add (s);
 
     PronunDAG pronDAG;

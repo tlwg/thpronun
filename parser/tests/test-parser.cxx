@@ -550,6 +550,8 @@ TestNonWordChar()
         u8"กรุงเทพฯ",
         u8"กรุงเทพฯ 10800 ประเทศไทย",
         u8"งูๆ ปลาๆ",
+        u8"@ปื๊ด",
+        u8"a",
     };
 
     cout << "Test parsing non-word chars..." << endl;
