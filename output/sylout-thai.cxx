@@ -548,6 +548,10 @@ ThaiSylOE (EInitConsSound iCons1, ESecInitCons iCons2, bool isShort,
 string
 ThaiSylOutput::output (const Syl& syl) const
 {
+    // literal
+    if (syl.isLiteral())
+        return outputLiteral (syl.literal());
+
     // determine vowel form
     switch (syl.vowel()) {
     case EVowel::A:

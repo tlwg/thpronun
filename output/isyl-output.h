@@ -14,6 +14,8 @@ public:
     virtual ~ISylOutput() {}
 
     virtual std::string output (const Syl& syl) const = 0;
+
+    std::string outputLiteral (std::u16string lit) const;
 };
 
 #endif  // ISYL_OUTPUT_H

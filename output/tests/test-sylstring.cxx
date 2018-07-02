@@ -155,6 +155,15 @@ TestThaiPronun()
         isSuccess = false;
     }
 
+    // with literal
+    syls += Syl (20, u"hello");
+    thaiPronun = output->output (syls);
+    if (thaiPronun != u8"เกิน-เลย-เม้ย เอ๋ย-(hello)")
+    {
+        cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 
@@ -295,6 +304,15 @@ TestRomanPronun()
     syls += SylString ("?_Wy4");
     romanized = output->output (syls);
     if (romanized != u8"koenloeimoei oei")
+    {
+        cerr << "Wrong pronunciation '" << romanized << "'" << endl;
+        isSuccess = false;
+    }
+
+    // with literal
+    syls += Syl (20, u"hello");
+    romanized = output->output (syls);
+    if (romanized != u8"koenloeimoei oei(hello)")
     {
         cerr << "Wrong pronunciation '" << romanized << "'" << endl;
         isSuccess = false;
@@ -480,6 +498,15 @@ TestPhonetic()
         isSuccess = false;
     }
 
+    // with literal
+    syls += Syl (20, u"hello");
+    phonetic = output->output (syls);
+    if (phonetic != "koeen0 loeey0 moeey3 oeey4 (hello)")
+    {
+        cerr << "Wrong pronunciation '" << phonetic << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 
@@ -624,6 +651,14 @@ TestRawPronun()
     syls += SylString ("?_Wy4@15");
     rawPronun = output->output (syls);
     if (rawPronun != "k_Wn0@4,l_Wy0@7,m_Wy3@11 ?_Wy4@15") {
+        cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
+        isSuccess = false;
+    }
+
+    // with literal
+    syls += Syl (20, u"hello");
+    rawPronun = output->output (syls);
+    if (rawPronun != "k_Wn0@4,l_Wy0@7,m_Wy3@11 ?_Wy4@15,(hello)@20") {
         cerr << "Wrong pronunciation '" << rawPronun << "'" << endl;
         isSuccess = false;
     }
@@ -776,6 +811,16 @@ TestJson()
         isSuccess = false;
     }
 
+    // with literal
+    syls += Syl (20, u"hello");
+    thaiPronun = output->output (syls);
+    if (thaiPronun !=
+        u8"[\"เกิน\",\"เลย\",\"เม้ย\",\" \",\"เอ๋ย\",\"(hello)\"]")
+    {
+        cerr << "Wrong pronunciation '" << thaiPronun << "'" << endl;
+        isSuccess = false;
+    }
+
     return isSuccess;
 }
 
@@ -784,22 +829,27 @@ main()
 {
     bool isSuccess = true;
 
+    cout << "Testing Thai Pronunciation" << endl;
     if (!TestThaiPronun()) {
         isSuccess = false;
     }
 
+    cout << "Testing Romanization" << endl;
     if (!TestRomanPronun()) {
         isSuccess = false;
     }
 
+    cout << "Testing Phonetic Pronunciation" << endl;
     if (!TestPhonetic()) {
         isSuccess = false;
     }
 
+    cout << "Testing Raw Pronunciation" << endl;
     if (!TestRawPronun()) {
         isSuccess = false;
     }
 
+    cout << "Testing JSON output" << endl;
     if (!TestJson()) {
         isSuccess = false;
     }

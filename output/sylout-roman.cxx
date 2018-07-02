@@ -100,6 +100,9 @@ RomanSylOutput::output (const Syl& syl) const
     if (syl == Syl::Blank)
         return " ";
 
+    if (syl.isLiteral())
+        return outputLiteral (syl.literal());
+
     return RomanInitConsTbl_.at (syl.iCons1())
            + RomanSecInitConsTbl_.at (syl.iCons2())
            + RomanVowelTbl_.at (syl.vowel())
