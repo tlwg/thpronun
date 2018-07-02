@@ -1672,7 +1672,11 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
     ParseState s;
     int beginPos = SkipNonWord (u16word, 0);
     if (beginPos > 0) {
-        s.pronDAG.addEdge (0, beginPos, Syl (beginPos));
+        s.pronDAG.addEdge (
+            0,
+            beginPos,
+            Syl (beginPos, u16word.substr (0, beginPos))
+        );
     }
     s.stopPos = NextWordStop (u16word, beginPos, brkPos);
     pool.add (s);
@@ -1684,7 +1688,11 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
         } else if (s.pos >= s.stopPos) {
             beginPos = SkipNonWord (u16word, s.pos);
             if (beginPos > s.pos) {
-                s.pronDAG.addEdge (s.pos, beginPos, Syl (beginPos));
+                s.pronDAG.addEdge (
+                    s.pos,
+                    beginPos,
+                    Syl (beginPos, u16word.substr (s.pos, beginPos - s.pos))
+                );
                 s.pos = beginPos;
             }
             if (s.pos < u16word.size()) {
