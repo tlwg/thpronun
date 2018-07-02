@@ -1687,7 +1687,11 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
                 s.pronDAG.addEdge (s.pos, beginPos, Syl (beginPos));
                 s.pos = beginPos;
             }
-            s.stopPos = NextWordStop (u16word, s.pos, brkPos);
+            if (s.pos < u16word.size()) {
+                s.stopPos = NextWordStop (u16word, s.pos, brkPos);
+            } else {
+                s.stopPos = s.pos;
+            }
             pool.add (s);
         } else {
             if (exceptDict
