@@ -18,6 +18,7 @@ Syl::Syl (const std::string& desc, int endPos)
     mVowel (static_cast<EVowel> (desc[2])),
     mECons (EndConsCodeToClass (desc[3])),
     mTone (ToneCodeToTone (desc[4])),
+    mLiteral(),
     mEndPos (endPos)
 {
     if (desc.size() > 6 && desc[5] == '@') {
@@ -28,6 +29,15 @@ Syl::Syl (const std::string& desc, int endPos)
 bool
 Syl::operator== (const Syl& other) const
 {
+    if (isLiteral()) {
+        if (other.isLiteral()) {
+            return literal() == other.literal();
+        }
+        return false;
+    } else {
+        if (other.isLiteral()) return false;
+    }
+
     return (
         mICons1 == other.mICons1 &&
         mICons2 == other.mICons2 &&
@@ -40,6 +50,17 @@ Syl::operator== (const Syl& other) const
 bool
 Syl::operator< (const Syl& other) const
 {
+    if (isLiteral()) {
+        if (other.isLiteral()) {
+            if (literal() < other.literal()) return true;
+            if (literal() > other.literal()) return false;
+            return mEndPos < other.mEndPos;
+        }
+        return true;
+    } else {
+        if (other.isLiteral()) return false;
+    }
+
     if (mICons1 < other.mICons1) return true;
     if (mICons1 > other.mICons1) return false;
     if (mICons2 < other.mICons2) return true;
@@ -56,6 +77,17 @@ Syl::operator< (const Syl& other) const
 bool
 Syl::operator> (const Syl& other) const
 {
+    if (isLiteral()) {
+        if (other.isLiteral()) {
+            if (literal() > other.literal()) return true;
+            if (literal() < other.literal()) return false;
+            return mEndPos > other.mEndPos;
+        }
+        return false;
+    } else {
+        if (other.isLiteral()) return true;
+    }
+
     if (mICons1 > other.mICons1) return true;
     if (mICons1 < other.mICons1) return false;
     if (mICons2 > other.mICons2) return true;

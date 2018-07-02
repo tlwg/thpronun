@@ -15,6 +15,7 @@ public:
 
 public:
     explicit Syl (int endPos = -1);
+    Syl (int endPos, std::u16string literal);
     Syl (const Syl& other);
     Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
          EEndConsClass eCons, ETone tone, int endPos = -1);
@@ -28,6 +29,9 @@ public:
     EVowel          vowel() const;
     EEndConsClass   eCons() const;
     ETone           tone() const;
+
+    bool            isLiteral() const;
+    std::u16string  literal() const;
 
     int             endPos() const;
     void            setEndPos (int pos);
@@ -47,6 +51,8 @@ private:
     EVowel          mVowel;
     EEndConsClass   mECons;
     ETone           mTone;
+
+    std::u16string  mLiteral;
 
     int             mEndPos;
 };

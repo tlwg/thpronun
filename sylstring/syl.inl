@@ -13,6 +13,19 @@ Syl::Syl (int endPos)
     mVowel (EVowel::INVALID),
     mECons (EEndConsClass::NONE),
     mTone (ETone::INVALID),
+    mLiteral(),
+    mEndPos (endPos)
+{
+}
+
+inline
+Syl::Syl (int endPos, std::u16string literal)
+  : mICons1 (EInitConsSound::INVALID),
+    mICons2 (ESecInitCons::NONE),
+    mVowel (EVowel::INVALID),
+    mECons (EEndConsClass::NONE),
+    mTone (ETone::INVALID),
+    mLiteral (literal),
     mEndPos (endPos)
 {
 }
@@ -24,6 +37,7 @@ Syl::Syl (const Syl& other)
     mVowel (other.mVowel),
     mECons (other.mECons),
     mTone (other.mTone),
+    mLiteral (other.mLiteral),
     mEndPos (other.mEndPos)
 {
 }
@@ -36,6 +50,7 @@ Syl::Syl (EInitConsSound iCons1, ESecInitCons iCons2, EVowel vowel,
     mVowel (vowel),
     mECons (eCons),
     mTone (tone),
+    mLiteral(),
     mEndPos (endPos)
 {
 }
@@ -48,6 +63,7 @@ Syl::Syl (char iCons1, char iCons2, char vowel, char eCons, char tone,
     mVowel (static_cast<EVowel> (vowel)),
     mECons (EndConsCodeToClass (eCons)),
     mTone (ToneCodeToTone (tone)),
+    mLiteral(),
     mEndPos (endPos)
 {
 }
@@ -80,6 +96,18 @@ inline ETone
 Syl::tone() const
 {
     return mTone;
+}
+
+inline bool
+Syl::isLiteral() const
+{
+    return mLiteral.size() != 0;
+}
+
+inline std::u16string
+Syl::literal() const
+{
+    return mLiteral;
 }
 
 inline int

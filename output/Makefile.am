@@ -6,6 +6,7 @@ noinst_LTLIBRARIES = liboutput.la
 
 liboutput_la_SOURCES = \
 	isyl-output.h		\
+	isyl-output.cxx		\
 	ioutput.h		\
 	ioutput.cxx		\
 	sylout-thai.h		\

@@ -111,6 +111,9 @@ RawSylOutput::output (const Syl& syl) const
     if (syl == Syl::Blank)
         return " ";
 
+    if (syl.isLiteral())
+        return outputLiteral (syl.literal()) + "@" + to_string (syl.endPos());
+
     return RawInitConsTbl_.at (syl.iCons1())
            + RawSecInitConsTbl_.at (syl.iCons2())
            + RawVowelTbl_.at (syl.vowel())

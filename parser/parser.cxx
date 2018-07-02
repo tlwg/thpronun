@@ -1628,25 +1628,25 @@ FindExceptions (const u16string& u16word, const ParseState& state,
 }
 
 inline bool
-IsThaiLetter (char16_t c)
+IsWordChar (char16_t c)
 {
     return th_wcisthcons (c) || th_wcisthvowel (c) || th_wcisthtone (c)
-           || th_wcisthdiac (c);
+           || UTH_MAITAIKHU == c || UTH_THANTHAKHAT == c;
 }
 
 static int
-SkipNonThai (const u16string& u16word, int start)
+SkipNonWord (const u16string& u16word, int start)
 {
-    while (start < u16word.size() && !IsThaiLetter (u16word.at (start))) {
+    while (start < u16word.size() && !IsWordChar (u16word.at (start))) {
         ++start;
     }
     return start;
 }
 
 static int
-NextThaiStop (const u16string& u16word, int start, const vector<int>& brkPos)
+NextWordStop (const u16string& u16word, int start, const vector<int>& brkPos)
 {
-    assert (IsThaiLetter (u16word.at (start)));
+    assert (IsWordChar (u16word.at (start)));
 
     int nextBrk = u16word.size();
     for (int i = 0; i < brkPos.size(); ++i) {
@@ -1656,7 +1656,7 @@ NextThaiStop (const u16string& u16word, int start, const vector<int>& brkPos)
         }
     }
 
-    while (start < nextBrk && IsThaiLetter (u16word.at (start))) {
+    while (start < nextBrk && IsWordChar (u16word.at (start))) {
         ++start;
     }
 
@@ -1670,11 +1670,15 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
     StatePool pool;
 
     ParseState s;
-    int beginPos = SkipNonThai (u16word, 0);
+    int beginPos = SkipNonWord (u16word, 0);
     if (beginPos > 0) {
-        s.pronDAG.addEdge (0, beginPos, Syl (beginPos));
+        s.pronDAG.addEdge (
+            0,
+            beginPos,
+            Syl (beginPos, u16word.substr (0, beginPos))
+        );
     }
-    s.stopPos = NextThaiStop (u16word, beginPos, brkPos);
+    s.stopPos = NextWordStop (u16word, beginPos, brkPos);
     pool.add (s);
 
     PronunDAG pronDAG;
@@ -1682,12 +1686,20 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
         if (s.pos >= u16word.size()) {
             pronDAG.unionDAG (s.pronDAG);
         } else if (s.pos >= s.stopPos) {
-            beginPos = SkipNonThai (u16word, s.pos);
+            beginPos = SkipNonWord (u16word, s.pos);
             if (beginPos > s.pos) {
-                s.pronDAG.addEdge (s.pos, beginPos, Syl (beginPos));
+                s.pronDAG.addEdge (
+                    s.pos,
+                    beginPos,
+                    Syl (beginPos, u16word.substr (s.pos, beginPos - s.pos))
+                );
                 s.pos = beginPos;
             }
-            s.stopPos = NextThaiStop (u16word, s.pos, brkPos);
+            if (s.pos < u16word.size()) {
+                s.stopPos = NextWordStop (u16word, s.pos, brkPos);
+            } else {
+                s.stopPos = s.pos;
+            }
             pool.add (s);
         } else {
             if (exceptDict

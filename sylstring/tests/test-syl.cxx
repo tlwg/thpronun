@@ -329,6 +329,209 @@ TestOrdering()
     return isSuccess;
 }
 
+bool
+TestLiteral()
+{
+    bool isSuccess = true;
+
+    Syl lit1 (5, u"hello");
+    cout << "Testing operations on literal Syl" << endl;
+    cout << "- isLiteral(): ";
+    if (lit1.isLiteral()) {
+        cout << "OK" << endl;
+    } else {
+        cout << "FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "- literal(): ";
+    if (lit1.literal() == u"hello") {
+        cout << "OK" << endl;
+    } else {
+        cout << "FAIL" << endl;
+        isSuccess = false;
+    }
+
+    // Test comparison with Blank
+    cout << "Testing operator == on literal and blank" << endl;
+    if (lit1 == Syl::Blank) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator != on literal and blank" << endl;
+    if (lit1 != Syl::Blank) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator < on literal and blank" << endl;
+    if (lit1 < Syl::Blank) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator > on literal and blank" << endl;
+    if (lit1 > Syl::Blank) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator <= on literal and blank" << endl;
+    if (lit1 <= Syl::Blank) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator >= on literal and blank" << endl;
+    if (lit1 >= Syl::Blank) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+
+    // Test comparison with normal syllable
+    Syl syl1 ("k_ok1", 2);
+    cout << "Testing operator == on literal and 'k_ok1'@2" << endl;
+    if (lit1 == syl1) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator != on literal and 'k_ok1'@2" << endl;
+    if (lit1 != syl1) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator < on literal and 'k_ok1'@2" << endl;
+    if (lit1 < syl1) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator > on literal and 'k_ok1'@2" << endl;
+    if (lit1 > syl1) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator <= on literal and 'k_ok1'@2" << endl;
+    if (lit1 <= syl1) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator >= on literal and 'k_ok1'@2" << endl;
+    if (lit1 >= syl1) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+
+    // Test comparison with self
+    cout << "Testing operator == on lit'hello'@5 and self" << endl;
+    if (lit1 == lit1) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator != on lit'hello'@5 and self" << endl;
+    if (lit1 != lit1) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator < on lit'hello'@5 and self" << endl;
+    if (lit1 < lit1) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator > on lit'hello'@5 and self" << endl;
+    if (lit1 > lit1) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator <= on lit'hello'@5 and self" << endl;
+    if (lit1 <= lit1) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator >= on lit'hello'@5 and self" << endl;
+    if (lit1 >= lit1) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+
+    // Test comparison with another literal
+    Syl lit2 (7, u"goodbye");
+    cout << "Testing operator == on literal and lit'goodbye'@7" << endl;
+    if (lit1 == lit2) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator != on literal and lit'goodbye'@7" << endl;
+    if (lit1 != lit2) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator < on lit'hello'@5 and lit'goodbye'@7" << endl;
+    if (lit1 < lit2) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator > on lit'hello'@5 and lit'goodbye'@7" << endl;
+    if (lit1 > lit2) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+    cout << "Testing operator <= on lit'hello'@5 and lit'goodbye'@7" << endl;
+    if (lit1 <= lit2) {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    } else {
+        cout << "  OK" << endl;
+    }
+    cout << "Testing operator >= on lit'hello'@5 and lit'goodbye'@7" << endl;
+    if (lit1 >= lit2) {
+        cout << "  OK" << endl;
+    } else {
+        cout << "  FAIL" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -339,6 +542,10 @@ main()
     }
 
     if (!TestOrdering()) {
+        isSuccess = false;
+    }
+
+    if (!TestLiteral()) {
         isSuccess = false;
     }
 

@@ -115,6 +115,9 @@ PhoneticSylOutput::output (const Syl& syl) const
     if (syl == Syl::Blank)
         return " ";
 
+    if (syl.isLiteral())
+        return outputLiteral (syl.literal());
+
     return PhoneticInitConsTbl_.at (syl.iCons1())
            + PhoneticSecInitConsTbl_.at (syl.iCons2())
            + PhoneticVowelTbl_.at (syl.vowel())

@@ -541,6 +541,27 @@ TestWordBreak()
     return isSuccess;
 }
 
+bool
+TestNonWordChar()
+{
+    bool isSuccess = true;
+
+    list<string> nonWordSamples = {
+        u8"กรุงเทพฯ",
+        u8"กรุงเทพฯ 10800 ประเทศไทย",
+        u8"งูๆ ปลาๆ",
+    };
+
+    cout << "Test parsing non-word chars..." << endl;
+    Parser parser;
+    if (!ParseAll (parser, nonWordSamples)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -571,6 +592,10 @@ main()
     }
 
     if (!TestWordBreak()) {
+        isSuccess = false;
+    }
+
+    if (!TestNonWordChar()) {
         isSuccess = false;
     }
 
