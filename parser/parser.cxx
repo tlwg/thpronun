@@ -1071,6 +1071,21 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                     }
                 }
             }
+        } else if (UTH_MAITAIKHU == c) {
+            ++p.pos; // skip MAITAIKHU
+            if (p.pos < state.stopPos && UTH_O_ANG == u16word.at (p.pos)) {
+                // ช็อป, บล็อก, ค็อกเทล
+                ++p.pos; // skip O ANG
+                if (p.pos >= state.stopPos)
+                    continue;
+                p.vowel = EVowel::AU;
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
+
+                // check mandatory end cons
+                if (p.pos < state.stopPos) {
+                    EatEndConsSimple (u16word, state, p, pool);
+                }
+            }
         } else {
             if (th_wcisthtone (c)) {
                 // read tone
