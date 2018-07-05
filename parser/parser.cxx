@@ -1374,13 +1374,18 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                 AddState (pool, p.pos, state, p);
                 break;
             case UTH_YO_YAK:
-                // เลย, เม้ย
-                ++p.pos; // skip YO YAK
-                p.vowel = EVowel::OEE;
-                p.eConsClass = EEndConsClass::KOEY;
-                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
-                AddState (pool, p.pos, state, p);
-                break;
+                if (p.pos + 1 >= state.stopPos ||
+                    IsSylStart (u16word.at (p.pos + 1)))
+                {
+                    // เลย, เม้ย
+                    ++p.pos; // skip YO YAK
+                    p.vowel = EVowel::OEE;
+                    p.eConsClass = EEndConsClass::KOEY;
+                    p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
+                    AddState (pool, p.pos, state, p);
+                    break;
+                }
+                // fall through if followed by non-syl-start
             default:
                 // add EE-syllable except เธอ -> ทะ-เอ
                 if (!p.hasPreSyl || EInitConsSound::A != p.iConsSound) {
