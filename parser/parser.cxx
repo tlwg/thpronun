@@ -1076,11 +1076,11 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                 // read tone
                 p.tone = ThCharToTone (c);
                 ++p.pos; // skip tone mark
+                if (p.pos >= state.stopPos)
+                    continue;
+                c = u16word.at (p.pos);
             }
-            if (p.pos >= state.stopPos) {
-                continue;
-            }
-            switch (u16word.at (p.pos)) {
+            switch (c) {
             case UTH_SARA_A: // กะ, ค่ะ
                 ++p.pos; // skip SARA A
                 p.vowel = EVowel::A;
