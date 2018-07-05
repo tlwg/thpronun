@@ -659,6 +659,7 @@ MatchInitCons (const u16string& u16word, int pos, int stopPos, bool isLinked)
                 } else if (ruCons.find (firstCons) != ruCons.end()) {
                     // peek next possible end cons
                     if (pos + 2 < stopPos &&
+                        th_wcisthcons (u16word.at (pos + 2)) &&
                         EEndConsClass::NONE != EndConsClass (u16word.at (pos + 2)))
                     {
                         // คฤนถ์, คฤธระ, พฤกษ์, พฤศจิก
@@ -685,7 +686,10 @@ MatchInitCons (const u16string& u16word, int pos, int stopPos, bool isLinked)
                                 EInitConsSound::RA,
                                 EInitConsClass::LOWS,
                                 ESecInitCons::NONE,
-                                EVowel::UE
+                                EVowel::UE,
+                                EEndConsClass::NONE,
+                                ETone::SAMAN,
+                                true
                             )
                         );
                     }
@@ -730,7 +734,7 @@ MatchInitCons (const u16string& u16word, int pos, int stopPos, bool isLinked)
                             )
                         );
                     }
-                    // หฤทัย
+                    // มฤค
                     partialSyls.push_back (
                         PartialSyl (
                             pos + 2,
@@ -744,6 +748,25 @@ MatchInitCons (const u16string& u16word, int pos, int stopPos, bool isLinked)
                             EInitConsClass::LOWS,
                             ESecInitCons::NONE,
                             EVowel::UE
+                        )
+                    );
+                    // หฤทัย, หฤหรรษ์, หฤโหด
+                    partialSyls.push_back (
+                        PartialSyl (
+                            pos + 2,
+                            Syl (
+                                firstConsSound, ESecInitCons::NONE,
+                                EVowel::A, EEndConsClass::NONE,
+                                ToneFromWritten (firstConsClass,
+                                                 ETone::SAMAN, true, true)
+                            ),
+                            EInitConsSound::RA,
+                            EInitConsClass::LOWS,
+                            ESecInitCons::NONE,
+                            EVowel::UE,
+                            EEndConsClass::NONE,
+                            ETone::SAMAN,
+                            true
                         )
                     );
                 }
