@@ -1369,6 +1369,15 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
             }
             switch (u16word.at (p.pos)) {
             case UTH_O_ANG:
+                // add EE-syllable except เธอ -> ทะ-เอ
+                if (!p.hasPreSyl || EInitConsSound::A != p.iConsSound) {
+                    // กาเฟอีน, เกอิชา, เกอ์
+                    p.vowel = EVowel::EE;
+                    p.eConsClass = EEndConsClass::NONE;
+                    auto karanEnd = MatchKaranSimple (u16word, p.pos,
+                                                      state.stopPos);
+                    AddState (pool, karanEnd, state, p);
+                }
                 // เธอ, เพ้อ, เลอะ, เบ๊อะ
                 ++p.pos; // skip O ANG
                 if (p.pos < state.stopPos && UTH_SARA_A == u16word.at (p.pos))
