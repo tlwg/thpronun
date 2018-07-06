@@ -34,7 +34,7 @@ public:
     DAG (DAG<TEdgeVal>&& other);
 
     bool addEdge (int from, int to, const TEdgeVal& edgeVal);
-    bool removeEdge (int from, int to, const TEdgeVal& edgeVal);
+    bool removeEdge (int from, int to, TEdgeVal edgeVal);
     bool removeDirectEdges (int from, int to);
 
     void unionDAG (const DAG<TEdgeVal>& other);

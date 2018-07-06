@@ -41,5 +41,6 @@ AC_CONFIG_FILES([Makefile
                  data/Makefile
                  parser/Makefile
                  parser/tests/Makefile
-                 thpronun/Makefile])
+                 thpronun/Makefile
+                 thpronun/tests/Makefile])
 AC_OUTPUT

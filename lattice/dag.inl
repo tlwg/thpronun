@@ -163,7 +163,7 @@ DAG<TEdgeVal>::addEdge (int from, int to, const TEdgeVal& edgeVal)
 
 template<typename TEdgeVal>
 bool
-DAG<TEdgeVal>::removeEdge (int from, int to, const TEdgeVal& edgeVal)
+DAG<TEdgeVal>::removeEdge (int from, int to, TEdgeVal edgeVal)
 {
     bool isRemoved = false;
 

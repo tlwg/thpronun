@@ -1,3 +1,5 @@
+SUBDIRS = tests
+
 bin_PROGRAMS = \
 	thpronun	\
 	$(NULL)
