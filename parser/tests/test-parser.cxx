@@ -105,6 +105,9 @@ TestThCons()
         u8"มาตรา",
         u8"จักรี",
         u8"จัตุรัส",
+        u8"อัฐิ",
+        u8"วุฒิบัตร",
+        u8"คุณวุฒิ",
     };
 
     list<string> thConsComplicated = {

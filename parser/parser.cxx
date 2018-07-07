@@ -960,9 +960,9 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
                 {
                     // ชาติ, ธาตุ, เกตุ, เหตุ, พยาธิ, ขัดสมาธิ, เมรุ
                     AddState (pool, clusterEnd, state, p);
+                    if (clusterEnd == state.stopPos)
+                        goto word_done;
                 }
-                if (clusterEnd == state.stopPos)
-                    goto word_done;
             }
             if (afterClusterVowels.find (nextChar) != afterClusterVowels.end()
                 || th_wcisthcons (nextChar))
