@@ -1517,6 +1517,7 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
         }
 
         bool needsEndCons = false;
+        int  karanEnd;
 
         switch (ldv) {
         case UTH_SARA_AE:
@@ -1566,7 +1567,16 @@ ParseOtherLV (const u16string& u16word, const ParseState& state,
                 p.vowel = EVowel::OO;
             }
             p.eConsClass = EEndConsClass::NONE;
-            p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
+            karanEnd = MatchKaranSimple (u16word, p.pos, state.stopPos);
+            if (karanEnd == p.pos) {
+                // โพธิ์
+                karanEnd = MatchKaranIU (u16word, p.pos, state.stopPos);
+                if (karanEnd != p.pos) {
+                    AddState (pool, karanEnd, state, p);
+                    continue;
+                }
+            }
+            p.pos = karanEnd;
             AddState (pool, p.pos, state, p);
             // check optional end cons for SARA OO
             if (EVowel::OO == p.vowel && p.pos < state.stopPos) {
