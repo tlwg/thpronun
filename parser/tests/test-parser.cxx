@@ -275,6 +275,7 @@ TestSaraE()
         u8"เสลา",
         u8"เหมา",
         u8"เสาร์",
+        u8"เชาวน์",
     };
 
     list<string> saraAU = {
