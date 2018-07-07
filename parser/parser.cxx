@@ -816,6 +816,28 @@ MatchKaranSimple (const u16string& u16word, int pos, int stopPos)
     return pos;
 }
 
+// I/U Karan:
+//   - consonant + { SARA I, SARA U } + THANTHAKHAT
+// return end position of the matched string
+static int
+MatchKaranIU (const u16string& u16word, int pos, int stopPos)
+{
+    assert (stopPos <= u16word.size());
+    assert (pos <= stopPos);
+
+    if (pos + 2 < stopPos &&
+        UTH_THANTHAKHAT == u16word.at (pos + 2) &&
+        th_wcisthcons (u16word.at (pos)) && (
+            UTH_SARA_I == u16word.at (pos + 1) ||
+            UTH_SARA_U == u16word.at (pos + 1)
+        ))
+    {
+        return pos + 3; // skip cons + {SARA I, SARA U} + THANTHAKHAT
+    }
+
+    return pos;
+}
+
 // Complex Karan:
 //   - single consonant + THANTHAKHAT
 //   - consonant + consonant + THANTHAKHAT
@@ -1060,7 +1082,17 @@ ParseThCons (const u16string& u16word, const ParseState& state, StatePool& pool)
                 // มิ, ซิ่, มี, ชี้, อึ, อึ๊, อุ, อุ๊, รู, ปู่
                 // note: คื, มื, and alike is allowed here at word end
                 p.eConsClass = EEndConsClass::NONE;
-                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
+                auto karanEnd = MatchKaranSimple (u16word, p.pos,
+                                                  state.stopPos);
+                if (karanEnd == p.pos) {
+                    // ปรีดิ์
+                    karanEnd = MatchKaranIU (u16word, p.pos, state.stopPos);
+                    if (karanEnd != p.pos) {
+                        AddState (pool, karanEnd, state, p);
+                        continue;
+                    }
+                }
+                p.pos = karanEnd;
                 AddState (pool, p.pos, state, p);
             }
             if (p.pos < state.stopPos && !th_wcisldvowel (u16word.at (p.pos)))
