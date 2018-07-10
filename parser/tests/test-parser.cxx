@@ -577,6 +577,28 @@ TestNonWordChar()
     return isSuccess;
 }
 
+bool
+TestAbbr()
+{
+    bool isSuccess = true;
+
+    list<string> abbrSamples = {
+        u8"พ.ศ.",
+        u8"วศ.บ.",
+        u8"ก ข ก กา",
+        u8"พ..ศ..",
+    };
+
+    cout << "Test abbreviations..." << endl;
+    Parser parser;
+    if (!ParseAll (parser, abbrSamples)) {
+        isSuccess = false;
+    }
+    cout << endl;
+
+    return isSuccess;
+}
+
 int
 main()
 {
@@ -611,6 +633,10 @@ main()
     }
 
     if (!TestNonWordChar()) {
+        isSuccess = false;
+    }
+
+    if (!TestAbbr()) {
         isSuccess = false;
     }
 

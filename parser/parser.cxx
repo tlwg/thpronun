@@ -1721,11 +1721,78 @@ FindExceptions (const u16string& u16word, const ParseState& state,
     return nExcepts;
 }
 
+static bool
+FindAbbr (const u16string& u16word, const ParseState& state, StatePool& pool)
+{
+    assert (state.stopPos <= u16word.size());
+    assert (state.pos < state.stopPos);
+
+    // Abbreviation should be at word begin or within abbreviation
+    if (state.pos > 0
+            && u16word.at (state.pos - 1) != u' '
+            && u16word.at (state.pos - 1) != u'.')
+    {
+        return false;
+    }
+
+    // Abbreviation patterns:
+    // - {cons} + <space>
+    // - {cons}*(1..4) + <period>
+    int abbrEnd = state.pos;
+    int nCons = 0;
+    char16_t c = 0;
+    while (abbrEnd < state.stopPos) {
+        c = u16word.at (abbrEnd++);
+        if (th_wcisthcons (c)) {
+            if (++nCons > 4) return false;
+        } else if (u'.' == c) {
+            if (nCons > 4) return false;
+            break;
+        } else {
+            return false;
+        }
+    }
+    if (nCons > 1 && u'.' != c)
+        return false;
+
+    PronunDAG newDAG = state.pronDAG;
+    for (auto pos = state.pos; pos < abbrEnd; /*nop*/) {
+        auto c = u16word.at (pos);
+        auto sylEnd = pos + 1;
+        if (th_wcisthcons (c)) {
+            if (sylEnd < abbrEnd && !th_wcisthcons (u16word.at (sylEnd))) {
+                ++sylEnd; // skip period
+            }
+            newDAG.addEdge (
+                pos, sylEnd,
+                Syl (
+                    InitConsSound (c),
+                    ESecInitCons::NONE,
+                    EVowel::AUU,
+                    EEndConsClass::NONE,
+                    EInitConsClass::HIGH == InitConsClass (c) ?
+                        ETone::CHATTAWA : ETone::SAMAN,
+                    sylEnd
+                )
+            );
+        } else {
+            newDAG.addEdge (
+                pos, sylEnd,
+                Syl (sylEnd, u16word.substr (pos, 1))
+            );
+        }
+        pos = sylEnd;
+    }
+    pool.add (ParseState (abbrEnd, state.stopPos, newDAG));
+
+    return true;
+}
+
 inline bool
 IsWordChar (char16_t c)
 {
     return th_wcisthcons (c) || th_wcisthvowel (c) || th_wcisthtone (c)
-           || UTH_MAITAIKHU == c || UTH_THANTHAKHAT == c;
+           || UTH_MAITAIKHU == c || UTH_THANTHAKHAT == c || u'.' == c;
 }
 
 static int
@@ -1804,6 +1871,9 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
             if (exceptDict
                 && FindExceptions (u16word, s, pool, exceptDict) > 0)
             {
+                continue;
+            }
+            if (FindAbbr (u16word, s, pool)) {
                 continue;
             }
             auto c = u16word.at (s.pos);
