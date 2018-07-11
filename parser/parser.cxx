@@ -1450,7 +1450,7 @@ ParseSaraE (const u16string& u16word, const ParseState& state, StatePool& pool)
                     p.vowel = EVowel::A;
                     p.eConsClass = EEndConsClass::KOEW;
                 }
-                p.pos = MatchKaranComplex (u16word, p.pos, state.stopPos);
+                p.pos = MatchKaranSimple (u16word, p.pos, state.stopPos);
                 AddState (pool, p.pos, state, p);
                 break;
             case UTH_YO_YAK:
