@@ -4,6 +4,7 @@ TESTS = \
 	test-rajgruh.sh	\
 	test-bhumi.sh	\
 	test-petch.sh	\
+	test-chaowana.sh	\
 	$(NULL)
 
 check_SCRIPTS = \
@@ -12,6 +13,7 @@ check_SCRIPTS = \
 	test-rajgruh.sh	\
 	test-bhumi.sh	\
 	test-petch.sh	\
+	test-chaowana.sh	\
 	$(NULL)
 
 EXTRA_DIST = \
