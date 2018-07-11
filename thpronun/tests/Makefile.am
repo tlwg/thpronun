@@ -2,12 +2,14 @@ TESTS = \
 	test-kaset.sh	\
 	test-thyroid.sh	\
 	test-rajgruh.sh	\
+	test-bhumi.sh	\
 	$(NULL)
 
 check_SCRIPTS = \
 	test-kaset.sh	\
 	test-thyroid.sh	\
 	test-rajgruh.sh	\
+	test-bhumi.sh	\
 	$(NULL)
 
 EXTRA_DIST = \
