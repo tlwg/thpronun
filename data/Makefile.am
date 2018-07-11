@@ -8,6 +8,7 @@ EXCEPT_SRC = \
 	ex-montho-d.tsv	\
 	ex-misc.tsv	\
 	ex-multi-end.tsv	\
+	ex-short.tsv	\
 	ex-tone.tsv	\
 	ex-tr-so.tsv	\
 	$(NULL)
