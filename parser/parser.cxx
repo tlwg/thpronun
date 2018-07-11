@@ -914,6 +914,7 @@ EatEndConsComplex (const u16string& u16word, const ParseState& state,
     assert (p.pos <= state.stopPos);
 
     static const unordered_set<char16_t> afterClusterVowels = {
+        UTH_RU,
         UTH_SARA_A,
         UTH_MAI_HAN_AKAT,
         UTH_SARA_AA,
