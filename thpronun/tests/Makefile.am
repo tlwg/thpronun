@@ -9,8 +9,7 @@ check_SCRIPTS = \
 	$(NULL)
 
 EXTRA_DIST = \
-	test-kaset.sh	\
-	test-thyroid.sh	\
+	$(check_SCRIPTS)	\
 	$(NULL)
 
 CLEANFILES = \
