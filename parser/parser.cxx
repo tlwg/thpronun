@@ -104,6 +104,8 @@ ParseState::operator= (const ParseState& other)
     stopPos   = other.stopPos;
     pronDAG   = other.pronDAG;
     isLinked  = other.isLinked;
+
+    return *this;
 }
 
 //////////////////
