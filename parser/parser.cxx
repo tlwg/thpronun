@@ -1795,7 +1795,13 @@ inline bool
 IsWordChar (char16_t c)
 {
     return th_wcisthcons (c) || th_wcisthvowel (c) || th_wcisthtone (c)
-           || UTH_MAITAIKHU == c || UTH_THANTHAKHAT == c || u'.' == c;
+           || UTH_MAITAIKHU == c || UTH_THANTHAKHAT == c;
+}
+
+inline bool
+IsThaiTokenChar (char16_t c)
+{
+    return u'.' == c || IsWordChar (c);
 }
 
 static int
@@ -1808,9 +1814,18 @@ SkipNonWord (const u16string& u16word, int start)
 }
 
 static int
+SkipNonThai (const u16string& u16word, int start)
+{
+    while (start < u16word.size() && !IsThaiTokenChar (u16word.at (start))) {
+        ++start;
+    }
+    return start;
+}
+
+static int
 NextWordStop (const u16string& u16word, int start, const vector<int>& brkPos)
 {
-    assert (IsWordChar (u16word.at (start)));
+    assert (IsThaiTokenChar (u16word.at (start)));
 
     int nextBrk = u16word.size();
     for (int i = 0; i < brkPos.size(); ++i) {
@@ -1820,7 +1835,7 @@ NextWordStop (const u16string& u16word, int start, const vector<int>& brkPos)
         }
     }
 
-    while (start < nextBrk && IsWordChar (u16word.at (start))) {
+    while (start < nextBrk && IsThaiTokenChar (u16word.at (start))) {
         ++start;
     }
 
@@ -1834,7 +1849,7 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
     StatePool pool;
 
     ParseState s;
-    int beginPos = SkipNonWord (u16word, 0);
+    int beginPos = SkipNonThai (u16word, 0);
     if (beginPos > 0) {
         s.pronDAG.addEdge (
             0,
@@ -1855,7 +1870,7 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
         if (s.pos >= u16word.size()) {
             pronDAG.unionDAG (s.pronDAG);
         } else if (s.pos >= s.stopPos) {
-            beginPos = SkipNonWord (u16word, s.pos);
+            beginPos = SkipNonThai (u16word, s.pos);
             if (beginPos > s.pos) {
                 s.pronDAG.addEdge (
                     s.pos,
@@ -1888,6 +1903,19 @@ ParseU16 (const u16string& u16word, const Dict* exceptDict,
                 ParseOtherLV (u16word, s, pool);
             } else if (UTH_RU == c || UTH_LU == c) {
                 ParseRuLu (u16word, s, pool);
+            } else if (u'.' == c) {
+                // เอ., เอ็ม. ฯลฯ
+                // stretch every in-edge of s.pos to s.pos + 1
+                while (s.pronDAG.inDegree (s.pos) > 0) {
+                    auto i = s.pronDAG.inEdges (s.pos).first;
+                    Syl iSyl = i->second.edgeVal;
+                    iSyl.setEndPos (s.pos + 1);
+                    s.pronDAG.addEdge (i->second.target, s.pos + 1, iSyl);
+                    s.pronDAG.removeEdge (i->second.target, s.pos,
+                                          i->second.edgeVal);
+                }
+                ++s.pos; // skip '.'
+                pool.add (s);
             }
         }
     }

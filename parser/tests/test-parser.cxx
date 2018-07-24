@@ -586,6 +586,7 @@ TestAbbr()
         u8"วศ.บ.",
         u8"ก ข ก กา",
         u8"พ..ศ..",
+        u8"เอ.ซี.แอล.",
     };
 
     cout << "Test abbreviations..." << endl;
