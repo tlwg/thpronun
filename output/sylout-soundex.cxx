@@ -91,7 +91,7 @@ SoundexSylOutput::output (const Syl& syl) const
         return " ";
 
     if (syl.isLiteral())
-        return outputLiteral (syl.literal()) + "@" + to_string (syl.endPos());
+        return outputLiteral (syl.literal());
 
     return SoundexInitConsTbl_.at (syl.iCons1())
            + SoundexVowelTbl_.at (syl.vowel())

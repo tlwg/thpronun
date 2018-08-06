@@ -810,7 +810,7 @@ TestSoundex()
     // with literal
     syls += Syl (20, u"hello");
     soundex = output->output (syls);
-    if (soundex != "kwn-lwy-mwy ?wy-(hello)@20") {
+    if (soundex != "kwn-lwy-mwy ?wy-(hello)") {
         cerr << "Wrong pronunciation '" << soundex << "'" << endl;
         isSuccess = false;
     }
