@@ -17,6 +17,8 @@ liboutput_la_SOURCES = \
 	sylout-phonetic.cxx	\
 	sylout-raw.h		\
 	sylout-raw.cxx		\
+	sylout-soundex.h	\
+	sylout-soundex.cxx	\
 	output-delim.h	\
 	output-delim.inl	\
 	output-delim.cxx	\

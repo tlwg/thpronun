@@ -3,6 +3,7 @@
 #include "output/sylout-roman.h"
 #include "output/sylout-phonetic.h"
 #include "output/sylout-raw.h"
+#include "output/sylout-soundex.h"
 #include "output/output-delim.h"
 #include "output/output-roman.h"
 #include "output/output-json.h"
@@ -41,6 +42,7 @@ Usage (const char* progName)
          << "    -t    Outputs Thai pronunciation" << endl
          << "    -p    Outputs Phonetic form" << endl
          << "    -w    Outputs Raw pronunciation code" << endl
+         << "    -s    Outputs Soundex code" << endl
          << "    -n    Turns off word segmentation" << endl
          << "    -h    Displays help" << endl
          << endl
@@ -111,6 +113,22 @@ MakeRawOutput (bool isJson, bool isGroup)
     }
 }
 
+static unique_ptr<IOutput>
+MakeSoundexOutput (bool isJson, bool isGroup)
+{
+    auto soundexSylOutput = make_unique<SoundexSylOutput>();
+
+    if (isJson) {
+        if (isGroup) {
+            return make_unique<GroupedJsonOutput> (move (soundexSylOutput));
+        } else {
+            return make_unique<JsonOutput> (move (soundexSylOutput));
+        }
+    } else {
+        return make_unique<DelimOutput> (move (soundexSylOutput), '-');
+    }
+}
+
 static bool
 LoadExceptDict (Parser& parser, const char* dictPath)
 {
@@ -159,6 +177,9 @@ main (int argc, const char* argv[])
                 break;
             case 'r':
                 stringOutputs.push_back (MakeRomanOutput (isJson, isGroup));
+                break;
+            case 's':
+                stringOutputs.push_back (MakeSoundexOutput (isJson, isGroup));
                 break;
             case 't':
                 stringOutputs.push_back (MakeThaiOutput (isJson, isGroup));

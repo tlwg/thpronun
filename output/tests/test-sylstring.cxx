@@ -2,6 +2,7 @@
 #include "output/sylout-roman.h"
 #include "output/sylout-phonetic.h"
 #include "output/sylout-raw.h"
+#include "output/sylout-soundex.h"
 #include "output/output-delim.h"
 #include "output/output-roman.h"
 #include "output/output-json.h"
@@ -667,6 +668,157 @@ TestRawPronun()
 }
 
 bool
+TestSoundex()
+{
+    bool isSuccess = true;
+    SylString syls;
+    auto output
+        = make_unique<DelimOutput> (make_unique<SoundexSylOutput>(), '-');
+
+    // กกต้นหูกฺวางเหฺลียวเลาะร้องเป็นตาแซ่บ
+    syls = Syl ("k_ok1@2");
+
+    auto soundex = output->output (syls);
+    if (soundex != "kok") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("t_on2@5");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("h_U_4@7");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton-hu_") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("kwAg0@11");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton-hu_-kag") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("l_Yw4@17");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton-hu_-kag-lyw") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("l_c_3@21");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton-hu_-kag-lyw-lc_") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("r_Cg3@25");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton-hu_-kag-lyw-lc_-lcg") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("p_en0@29");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton-hu_-kag-lyw-lc_-lcg-pen") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("t_A_0@31");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton-hu_-kag-lyw-lc_-lcg-pen-ta_") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    syls += Syl ("s_xp2@35");
+    soundex = output->output (syls);
+    if (soundex != "kok-ton-hu_-kag-lyw-lc_-lcg-pen-ta_-sxp") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    // ละลันหลั่นล้า
+    syls = SylString ("l_a_3@2,l_an0@5,l_an1@10,l_A_3@13");
+    soundex = output->output (syls);
+    if (soundex != "la_-lan-lan-la_") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    // ใครใคร่ขายไข่ไก่คราคร่ำไม้ไหมเล่า
+    syls = SylString (
+        "cray0@3,cray2@7,c_Ay4@10,c_ay1@13,k_ay1@16,crA_0@19,cram2@23,m_Ay3@26,m_ay4@29,l_aw2@33"
+    );
+    soundex = output->output (syls);
+    if (soundex != "cay-cay-cay-cay-kay-ca_-cam-may-may-law") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    // แมวและเด็กเหล่เล่นเจอะเจอเกลือเดินเกลือกคั่วกลิ้งร่วมโรงเรียน
+    syls = SylString (
+        "m_Xw0@3,l_x_3@6,d_ek1@10,l_E_1@14,l_en2@18,j_w_1@22,j_W_0@25,"
+        "klZ_0@30,d_Wn0@34,klZk1@40,c_T_2@44,klig2@49,r_Tm2@53,r_Og0@56,"
+        "r_Yn0@61"
+    );
+    soundex = output->output (syls);
+    if (soundex !=
+        "mxw-lx_-dek-le_-len-jw_-jw_-kz_-dwn-kzk-ct_-kig-ltm-log-lyn")
+    {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    // มือมืดกฺรีดกุ้งพู้นหฺนึ่งสิ่งมิมีงูลุรึ
+    syls = SylString (
+        "m_V_0@3,m_Vt2@6,krIt1@10,k_ug2@14,P_Un3@18,n_vg1@23,s_ig1@27,"
+        "m_i_3@29,m_I_0@31,g_U_0@33,l_u_3@35,r_v_3@37"
+    );
+    soundex = output->output (syls);
+    if (soundex != "mv_-mvt-kit-kug-Pun-nvg-sig-mi_-mi_-gu_-lu_-lv_") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    // เกินเลยเม้ย
+    syls = SylString ("k_Wn0@4,l_Wy0@7,m_Wy3@11");
+    soundex = output->output (syls);
+    if (soundex != "kwn-lwy-mwy") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    // with blank syllable
+    syls += Syl::Blank;
+    syls += SylString ("?_Wy4@15");
+    soundex = output->output (syls);
+    if (soundex != "kwn-lwy-mwy ?wy") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    // with literal
+    syls += Syl (20, u"hello");
+    soundex = output->output (syls);
+    if (soundex != "kwn-lwy-mwy ?wy-(hello)@20") {
+        cerr << "Wrong pronunciation '" << soundex << "'" << endl;
+        isSuccess = false;
+    }
+
+    return isSuccess;
+}
+
+bool
 TestJson()
 {
     bool isSuccess = true;
@@ -846,6 +998,11 @@ main()
 
     cout << "Testing Raw Pronunciation" << endl;
     if (!TestRawPronun()) {
+        isSuccess = false;
+    }
+
+    cout << "Testing Soundex" << endl;
+    if (!TestSoundex()) {
         isSuccess = false;
     }
 
