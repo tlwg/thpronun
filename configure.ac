@@ -27,6 +27,15 @@ PKG_CHECK_MODULES(LIBDATRIE, datrie-0.2)
 
 # Checks for library functions.
 
+# Check commandline options
+AC_ARG_ENABLE(debug,
+              [AC_HELP_STRING([--enable-debug],
+                              [enable assertion checks])],
+              , enable_debug="no")
+if test "x$enable_debug" = "xno"; then
+  CPPFLAGS="$CPPFLAGS -DNDEBUG"
+fi
+
 AC_CONFIG_FILES([Makefile
                  thortho/Makefile
                  thortho/tests/Makefile
