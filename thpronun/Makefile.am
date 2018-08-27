@@ -5,7 +5,7 @@ bin_PROGRAMS = \
 	$(NULL)
 
 AM_CPPFLAGS = -I$(top_srcdir)
-DEFS = -DEXCEPT_DICT_DIR=\"$(pkgdatadir)\"
+DEFS = -DEXCEPT_DICT_DIR=\"$(pkgdatadir)\" -DVERSION=\"$(VERSION)\"
 
 thpronun_SOURCES = \
 	thpronun.cxx	\

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <list>
 #include <memory>
+#include <cstring>
 
 #define EXCEPT_DICT_NAME "except.dic"
 #define EXCEPT_DICT_PATH EXCEPT_DICT_DIR "/" EXCEPT_DICT_NAME
@@ -30,28 +31,57 @@ DoParse (const Parser& parser, string word,
 }
 
 void
+Version (const char* progName)
+{
+    cout << progName << " " VERSION << endl
+         << endl
+         << "Copyright (C) 2018 Theppitak Karoonboonyanan <theppitak@gmail.com>"
+            << endl
+         << "License GPLv3+: GNU GPL version 3 or later "
+             "<http://gnu.org/licenses/gpl.html>." << endl
+         << "This is free software: you are free to change and redistribute it."
+            << endl
+         << "There is NO WARRANTY, to the extent permitted by law."
+            << endl
+         << endl
+         << "Written by Theppitak Karoonboonyanan, under the sponsorship"
+            << endl
+         << "of Metamedia Technology Co., Ltd." << endl;
+}
+
+void
 Usage (const char* progName)
 {
-    cerr << "Usage: " << progName << " [options] [word...]" << endl
+    cout << "Usage: " << progName << " [OPTION] [WORD...]" << endl
+         << endl
+         << "Thai word pronunciation program." << endl
+         << endl
+         << "It reads Thai words from command-line arguments, "
+            "or from standard input" << endl
+         << "if no argument is given, and generates all possible "
+            "pronunciations" << endl
+         << "of the words." << endl
+         << endl
          << "Options:" << endl
          << endl
          << "General:" << endl
-         << "    -h    Displays help" << endl
-         << "    -d<dict-path>  Use exception dict from <dict-path>" << endl
-         << "    -n    Turns off word segmentation" << endl
+         << "  -V, --version  Displays program version info" << endl
+         << "  -h, --help     Displays help" << endl
+         << "  -d<DICTPATH>   Use exception dict from <DICTPATH>" << endl
+         << "  -n             Turns off word segmentation" << endl
          << endl
          << "Output structures:" << endl
-         << "    -j    Turns on JSON output" << endl
-         << "    -g    Turns on grouping in JSON output (implies '-j')" << endl
+         << "  -j             Turns on JSON output" << endl
+         << "  -g             Turns on grouping in JSON output (implies '-j')"
+            << endl
          << endl
          << "Output notations:" << endl
-         << "    -r    Outputs Romanization" << endl
-         << "    -t    Outputs Thai pronunciation" << endl
-         << "    -p    Outputs Phonetic form" << endl
-         << "    -w    Outputs Raw pronunciation code" << endl
-         << "    -s    Outputs Soundex code" << endl
-         << endl
-         << "If no word is given, standard input will be read." << endl;
+         << "  -r             Outputs Romanization" << endl
+         << "  -t             Outputs Thai pronunciation" << endl
+         << "  -p             Outputs Phonetic form" << endl
+         << "  -w             Outputs Raw pronunciation code" << endl
+         << "  -s             Outputs Soundex code" << endl
+         << endl;
 }
 
 static unique_ptr<IOutput>
@@ -167,6 +197,21 @@ main (int argc, const char* argv[])
     for (int i = 1; i < argc; ++i) {
         if ('-' == argv[i][0]) {
             switch (argv[i][1]) {
+            case '-':
+                if (strcmp (argv[i]+2, "version") == 0) {
+                    Version (argv[0]);
+                    return 1;
+                } else if (strcmp (argv[1]+2, "help") == 0) {
+                    Usage (argv[0]);
+                    return 1;
+                } else {
+                    cerr << "Unknown option '" << argv[i] << "'" << endl;
+                    return 1;
+                }
+                break;
+            case 'V':
+                Version (argv[0]);
+                return 1;
             case 'h':
                 Usage (argv[0]);
                 return 1;
