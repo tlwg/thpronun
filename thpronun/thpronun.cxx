@@ -157,21 +157,28 @@ int
 main (int argc, const char* argv[])
 {
     int optCnt = 0;
+    const char* dictPath = nullptr;
+    bool isBreakWords = true;
     bool isJson = false;
     bool isGroup = false;
-    bool isBreakWords = true;
-    const char* dictPath = nullptr;
     list<unique_ptr<IOutput>> stringOutputs;
 
+    // first pass: general options
     for (int i = 1; i < argc; ++i) {
         if ('-' == argv[i][0]) {
             switch (argv[i][1]) {
+            case 'h':
+                Usage (argv[0]);
+                return 1;
             case 'd':
                 if (!argv[i][2]) {
                     cerr << "Missing <dict-path> argument for -d" << endl;
                     return 1;
                 }
                 dictPath = argv[i] + 2;
+                break;
+            case 'n':
+                isBreakWords = false;
                 break;
             case 'j':
                 isJson = true;
@@ -180,6 +187,25 @@ main (int argc, const char* argv[])
                 isJson = true;
                 isGroup = true;
                 break;
+            case 'r':
+            case 's':
+            case 't':
+            case 'p':
+            case 'w':
+                // do nothing in first pass
+                break;
+            default:
+                cerr << "Unknown option '-" << argv[i][1] << "'" << endl;
+                Usage (argv[0]);
+                return 1;
+            }
+            ++optCnt;
+        }
+    }
+    // second pass: output modules
+    for (int i = 1; i < argc; ++i) {
+        if ('-' == argv[i][0]) {
+            switch (argv[i][1]) {
             case 'r':
                 stringOutputs.push_back (MakeRomanOutput (isJson, isGroup));
                 break;
@@ -195,18 +221,9 @@ main (int argc, const char* argv[])
             case 'w':
                 stringOutputs.push_back (MakeRawOutput (isJson, isGroup));
                 break;
-            case 'n':
-                isBreakWords = false;
-                break;
-            case 'h':
-                Usage (argv[0]);
-                return 1;
             default:
-                cerr << "Unknown option '-" << argv[i][1] << "'" << endl;
-                Usage (argv[0]);
-                return 1;
+                break;
             }
-            ++optCnt;
         }
     }
     if (stringOutputs.empty()) {
