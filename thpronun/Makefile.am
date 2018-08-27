@@ -15,3 +15,17 @@ thpronun_LDADD = \
 	$(top_builddir)/output/liboutput.la	\
 	$(NULL)
 
+if ENABLE_MAN
+
+man_MANS = \
+	thpronun.1	\
+	$(NULL)
+
+thpronun.1: thpronun
+	$(HELP2MAN) --no-info $(<D)/$(<F) -o $@
+
+endif
+
+CLEANFILES = \
+	thpronun.1	\
+	$(NULL)

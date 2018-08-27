@@ -36,6 +36,14 @@ if test "x$enable_debug" = "xno"; then
   CPPFLAGS="$CPPFLAGS -DNDEBUG"
 fi
 
+AC_ARG_ENABLE(man,
+              [AC_HELP_STRING([--disable-man],
+                              [disable automatic manpage generation])])
+if test "x$enable_man" != "xno"; then
+  AC_PATH_PROG(HELP2MAN, help2man, false)
+fi
+AM_CONDITIONAL(ENABLE_MAN,test "x$enable_man" != "xno")
+
 AC_CONFIG_FILES([Makefile
                  thortho/Makefile
                  thortho/tests/Makefile
