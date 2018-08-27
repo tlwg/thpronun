@@ -34,17 +34,22 @@ Usage (const char* progName)
 {
     cerr << "Usage: " << progName << " [options] [word...]" << endl
          << "Options:" << endl
-         << "    -d<dict-path>  Use exception dict from <dict-path>" << endl
          << endl
+         << "General:" << endl
+         << "    -h    Displays help" << endl
+         << "    -d<dict-path>  Use exception dict from <dict-path>" << endl
+         << "    -n    Turns off word segmentation" << endl
+         << endl
+         << "Output structures:" << endl
          << "    -j    Turns on JSON output" << endl
          << "    -g    Turns on grouping in JSON output (implies '-j')" << endl
+         << endl
+         << "Output notations:" << endl
          << "    -r    Outputs Romanization" << endl
          << "    -t    Outputs Thai pronunciation" << endl
          << "    -p    Outputs Phonetic form" << endl
          << "    -w    Outputs Raw pronunciation code" << endl
          << "    -s    Outputs Soundex code" << endl
-         << "    -n    Turns off word segmentation" << endl
-         << "    -h    Displays help" << endl
          << endl
          << "If no word is given, standard input will be read." << endl;
 }
