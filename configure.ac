@@ -41,6 +41,9 @@ AC_ARG_ENABLE(man,
                               [disable automatic manpage generation])])
 if test "x$enable_man" != "xno"; then
   AC_PATH_PROG(HELP2MAN, help2man, false)
+  if test "x$HELP2MAN" == "xfalse"; then
+    AC_MSG_ERROR([You need help2man to generate manpage, or use --disable-man to skip.])
+  fi
 fi
 AM_CONDITIONAL(ENABLE_MAN,test "x$enable_man" != "xno")
 
