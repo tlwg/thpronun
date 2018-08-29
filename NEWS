@@ -1,4 +1,16 @@
-0.1.1 (2018-05-21)
+0.2.0 (2018-08-29)
+=====
+- Raw pronunciation output
+- Soundex output
+- Exception dictionary support
+- Allow non-Thai and non-word characters in input
+- Support pronunciation of abbreviations
+- Support more written forms of Thai words
+- Break words before analyzing (can be turned off)
+- Improved performance
+- Bug fixes
+
+0.1.0 (2018-05-21)
 =====
 - First release
 - Thai pronunciation analyzer
