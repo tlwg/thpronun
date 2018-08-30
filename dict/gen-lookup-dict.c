@@ -7,7 +7,6 @@
 #include <datrie/trie.h>
 
 #include <stdio.h>
-#include <iconv.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -137,15 +136,54 @@ NewTrie()
 }
 
 int
-ReadInput (iconv_t conv, uint32_t *word, int wordMax,
-           char *data, int dataMax, FILE* input)
+GetUTF8 (const unsigned char **input, uint32_t *output)
+{
+    const unsigned char *in = *input;
+    unsigned char h = *in++;
+    uint32_t uc;
+
+    if (!h)
+        return EXIT_FAILURE;
+
+    if ((h & 0x80) == 0x00) {
+        /* 0xxx-xxxx -> ASCII */
+        uc = h;
+    } else {
+        unsigned char check = 0x40;
+        unsigned char mask = 0x3f;
+        while (h & check) {
+            check >>= 1;
+            mask >>= 1;
+        }
+        if (check == 0x40) {
+            /* 10xx-xxxx -> invalid first byte */
+            return EXIT_FAILURE;
+        }
+        uc = (h & mask);
+        while (check != 0x40) {
+            if ((*in & 0xc0) != 0x80) {
+                /* following byte is not 10xx-xxxx -> invalid */
+                return EXIT_FAILURE;
+            }
+            uc = (uc << 6) | (*in & 0x3f);
+            ++in;
+            check <<= 1;
+        }
+    }
+
+    *input = in;
+    *output = uc;
+
+    return EXIT_SUCCESS;
+}
+
+int
+ReadInput (uint32_t *word, int wordMax, char *data, int dataMax, FILE* input)
 {
     char *line = (char *) malloc (wordMax);
     char *pLine;
     size_t lineLeft;
-    char *pWord;
-    size_t wordLeft;
-    size_t res;
+    uint32_t *pWord;
 
     if (!fgets (line, wordMax, input))
         goto eof;
@@ -164,19 +202,22 @@ ReadInput (iconv_t conv, uint32_t *word, int wordMax,
         goto err;
     }
     *pLine = '\0';
+
+    /* copy data field */
     strncpy (data, pLine + 1, dataMax);
 
+    /* read UTF-8-encoded word */
     pLine = line;
-    lineLeft = strlen (line);
-    pWord = (char *) word;
-    wordLeft = wordMax * sizeof(word[0]);
-
-    res = iconv (conv, &pLine, &lineLeft, &pWord, &wordLeft);
-    if (res == (size_t) -1) {
-        fprintf (stderr, "Fail to convert word '%s'.\n", line);
-        goto err;
+    pWord = word;
+    while (*pLine && pWord - word < wordMax - 1) {
+        if (GetUTF8 ((const unsigned char **)&pLine, pWord) == EXIT_SUCCESS) {
+            pWord++;
+        } else {
+            fprintf (stderr, "Fail to convert word '%s'.\n", line);
+            goto err;
+        }
     }
-    *(uint32_t *)pWord = 0;
+    *pWord = 0;
 
     free (line);
     return EXIT_SUCCESS;
@@ -194,9 +235,8 @@ GenDict (FILE *input, FILE *output)
     char data[256];
     Trie *trie = NewTrie();
     DataBank *bank = NewDataBank();
-    iconv_t uConv = iconv_open ("UCS-4LE", "UTF-8");
 
-    while (ReadInput (uConv, word, N_ELM (word),
+    while (ReadInput (word, N_ELM (word),
                       data, N_ELM (data), input) == EXIT_SUCCESS)
     {
         int dataIdx = DataBankAddData (bank, data);
@@ -221,8 +261,6 @@ GenDict (FILE *input, FILE *output)
         }
     }
 
-    iconv_close (uConv);
-
     trie_fwrite (trie, output);
     DataBankWrite (bank, output);
 
@@ -231,7 +269,6 @@ GenDict (FILE *input, FILE *output)
     return EXIT_SUCCESS;
 
 err:
-    iconv_close (uConv);
     FreeDataBank (bank);
     trie_free (trie);
     return EXIT_FAILURE;
