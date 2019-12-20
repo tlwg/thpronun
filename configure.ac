@@ -4,7 +4,7 @@
 AC_PREREQ([2.69])
 AC_INIT([thpronun],
         m4_esyscmd([build-aux/git-version-gen]),
-        [theppitak@gmail.com])
+        [https://github.com/tlwg/thpronun/issues])
 AC_CONFIG_SRCDIR([sylstring/sylcomp.h])
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIRS([m4])
